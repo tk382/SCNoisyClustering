@@ -1,16 +1,3 @@
-library(matrixStats)
-library(irlba)
-T1 = as.matrix(read.csv('../RMSC/T1.csv', header = FALSE))
-T2 = as.matrix(read.csv('../RMSC/T2.csv', header = FALSE))
-T3 = as.matrix(read.csv('../RMSC/T3.csv', header = FALSE))
-T = array(0,dim=c(2000,2000,3))
-T[,,1] = T1; T[,,2] = T2; T[,,3] = T3
-lambda = 0.005
-verbose=TRUE
-eps = 1e-6
-max_iter = 300
-rm(T1, T2, T3)
-
 RMSC = function(T, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=FALSE){
   dims = dim(T);
   m = dims[1]; p = dims[2]; n = dims[3];
