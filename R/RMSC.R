@@ -14,7 +14,6 @@ RMSC = function(T, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=F
   e     = rep(1, m)
 
   step = 0
-  funVal = numeric()
   while(1){
     step = step + 1
     max_inf_norm = -1
@@ -31,9 +30,9 @@ RMSC = function(T, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=F
     tmp = P-Q
     max_inf_norm2 = norm(tmp, 'I')
     if(verbose){
-      print(paste('iter',step,': max_inf_norm=',max_inf_norm,
-            ', relChg=',relChg, ',mu=',mu,', inf_norm2=', max_inf_norm2,
-            ', funV=',funV))
+      cat(paste0('iter',step,': \n max_inf_norm=',round(max_inf_norm,4),
+            ',\n relChg=',round(relChg,4), ',\n mu=',round(mu,4),', \n inf_norm2=', round(max_inf_norm2,4),
+            ',\n funV=',round(funV,4), '\n'))
     }
     if (step > 1 && max_inf_norm < eps){
       break;
@@ -46,8 +45,8 @@ RMSC = function(T, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=F
     #update P
     B = 1/(n+1) * (Q-Z/mu + apply(T-E-Y/mu, c(1,2),sum))
     P = nonnegASC(B)
-    for (i in 1:m){
-      if (sum(P[i,])-1.0 > 1e-10){stop('sum to 1 error')}
+    if (norm(rowSums(P) - rep(1,nrow(P)),2) > 1e-10){
+      stop('sum to 1 error')
     }
 
     #update Q
@@ -60,28 +59,30 @@ RMSC = function(T, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=F
       Sigma = Sigma[1:svp]-C;
       Q = U[, 1:svp] %*% diag(Sigma) %*% t(V[,1:svp])
     }else if(svp==1){
-      svp=1
       Sigma = Sigma[1]-C;
       Q = as.matrix(U[,1]) %*% matrix(Sigma, nrow=1) %*%  as.matrix(t(V[,1]))
     }else{
       svp=1
-      Sigma = 0
       Q = matrix(0,m,m)
     }
-    #update Ei
+
+    #update Ei and Yi
     for (i in 1:n){
       C = T[,,i]-P-Y[,,i]/mu
-      E[,,i] = pmax(C-lambda/mu,0)+pmin(C+lambda/mu,0)
-      Y[,,i] = Y[,,i] + mu*(P+E[,,i]-T[,,i]);
+      E[,,i] = pmax(C-lambda/mu,0) + pmin(C+lambda/mu,0)
+      Y[,,i] = Y[,,i] + mu * (P + E[,,i] - T[,,i]);
     }
+    #update Z
     Z = Z+mu*(P-Q)
+    #update mu
     mu = min(rho*mu, 1e+10)
   }
   pi = irlba(t(P), 1)$v
-  Dist = pi / sum(pi)
-  pi = (diag(as.numeric(Dist)))
-  sspi = sqrt(solve(pi))
-  spi = sqrt(pi)
+
+  Dist = as.numeric(pi)/sum(pi)
+  Dist2 = sum(pi)/as.numeric(pi)
+  sspi = sqrt(diag(Dist2))
+  spi = sqrt(diag(Dist))
   P = (spi %*% P %*% sspi + sspi %*% t(P) %*% spi)/2
-  return(P)
+  return(list(P=P, E=E))
 }
