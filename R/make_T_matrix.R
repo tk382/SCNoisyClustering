@@ -1,4 +1,4 @@
-make_T_matrix = function(X, shuffled, n){
+make_T_matrix = function(X, shuffled, n, sigma){
   #shuffled is a index vector with random or user-specific (needs editing)
   skip = floor(nrow(X) / n)
   T = array(0, dim=c(ncol(X), ncol(X), n))
@@ -9,7 +9,7 @@ make_T_matrix = function(X, shuffled, n){
     if(i==n){
       Xi = X[shuffled[(skip*(i-1) + 1) : nrow(X)], ]
     }
-    Ki = constructKernel(t(Xi), 5)
+    Ki = constructKernel(t(Xi), sigma)
     D = diag(1/rowSums(Ki))
     Ti = D %*% Ki
     T[,,i] = Ti
