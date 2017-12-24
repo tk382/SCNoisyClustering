@@ -1,5 +1,3 @@
-// includes from the plugin
-//#define ARMA_DONT_PRINT_ERRORS
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
 
@@ -8,13 +6,13 @@ using namespace std;
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat armapmax(arma::mat A, double bound){
+arma::mat armapmax(arma::mat A, double bounds){
   int n = A.n_rows;
   int p = A.n_cols;
   arma::mat out = arma::mat(n,p);
   for (int i=0; i<n; ++i){
     for (int j=0; j<p; ++j){
-      out(i,j) = max(A(i,j), bound);
+      out(i,j) = max(A(i,j), bounds);
     }
   }
   return out;
