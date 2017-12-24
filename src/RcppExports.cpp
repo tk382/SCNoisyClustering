@@ -6,26 +6,89 @@
 
 using namespace Rcpp;
 
-// ic_c
-arma::vec ic_c(int k, arma::mat Y, arma::vec phi, arma::rowvec xi, arma::mat theta, int p, int n);
-RcppExport SEXP _SCNoisyClustering_ic_c(SEXP kSEXP, SEXP YSEXP, SEXP phiSEXP, SEXP xiSEXP, SEXP thetaSEXP, SEXP pSEXP, SEXP nSEXP) {
+// armapmax
+arma::mat armapmax(arma::mat A, double bounds);
+RcppExport SEXP _SCNoisyClustering_armapmax(SEXP ASEXP, SEXP boundsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< arma::rowvec >::type xi(xiSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< int >::type p(pSEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(ic_c(k, Y, phi, xi, theta, p, n));
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type bounds(boundsSEXP);
+    rcpp_result_gen = Rcpp::wrap(armapmax(A, bounds));
+    return rcpp_result_gen;
+END_RCPP
+}
+// armapmin
+arma::mat armapmin(arma::mat A, double bound);
+RcppExport SEXP _SCNoisyClustering_armapmin(SEXP ASEXP, SEXP boundSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type bound(boundSEXP);
+    rcpp_result_gen = Rcpp::wrap(armapmin(A, bound));
+    return rcpp_result_gen;
+END_RCPP
+}
+// nonnegASC_c
+arma::mat nonnegASC_c(arma::mat B);
+RcppExport SEXP _SCNoisyClustering_nonnegASC_c(SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(nonnegASC_c(B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dist_c
+arma::mat dist_c(arma::mat X);
+RcppExport SEXP _SCNoisyClustering_dist_c(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(dist_c(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// constructKernel_c
+arma::mat constructKernel_c(arma::mat X, double sigma);
+RcppExport SEXP _SCNoisyClustering_constructKernel_c(SEXP XSEXP, SEXP sigmaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    rcpp_result_gen = Rcpp::wrap(constructKernel_c(X, sigma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// RMSC_c
+Rcpp::List RMSC_c(arma::cube T, double lambda, double mu, double rho, int max_iter, double eps, bool verbose);
+RcppExport SEXP _SCNoisyClustering_RMSC_c(SEXP TSEXP, SEXP lambdaSEXP, SEXP muSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::cube >::type T(TSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(RMSC_c(T, lambda, mu, rho, max_iter, eps, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SCNoisyClustering_ic_c", (DL_FUNC) &_SCNoisyClustering_ic_c, 7},
+    {"_SCNoisyClustering_armapmax", (DL_FUNC) &_SCNoisyClustering_armapmax, 2},
+    {"_SCNoisyClustering_armapmin", (DL_FUNC) &_SCNoisyClustering_armapmin, 2},
+    {"_SCNoisyClustering_nonnegASC_c", (DL_FUNC) &_SCNoisyClustering_nonnegASC_c, 1},
+    {"_SCNoisyClustering_dist_c", (DL_FUNC) &_SCNoisyClustering_dist_c, 1},
+    {"_SCNoisyClustering_constructKernel_c", (DL_FUNC) &_SCNoisyClustering_constructKernel_c, 2},
+    {"_SCNoisyClustering_RMSC_c", (DL_FUNC) &_SCNoisyClustering_RMSC_c, 7},
     {NULL, NULL, 0}
 };
 
