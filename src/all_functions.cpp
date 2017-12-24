@@ -1,3 +1,5 @@
+// includes from the plugin
+//#define ARMA_DONT_PRINT_ERRORS
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
 
@@ -6,13 +8,13 @@ using namespace std;
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat armapmax(arma::mat A, double bounds){
+arma::mat armapmax(arma::mat A, double bound){
   int n = A.n_rows;
   int p = A.n_cols;
   arma::mat out = arma::mat(n,p);
   for (int i=0; i<n; ++i){
     for (int j=0; j<p; ++j){
-      out(i,j) = max(A(i,j), bounds);
+      out(i,j) = max(A(i,j), bound);
     }
   }
   return out;
@@ -81,12 +83,12 @@ arma::mat constructKernel_c(arma::mat X, double sigma){
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 Rcpp::List RMSC_c(arma::cube T,
-               double lambda,
-               double mu=1e-3,
-               double rho = 1.9,
-               int max_iter=100,
-               double eps = 1e-9,
-               bool verbose = false){
+                  double lambda,
+                  double mu=1e-3,
+                  double rho = 1.9,
+                  int max_iter=100,
+                  double eps = 1e-9,
+                  bool verbose = false){
   int m = T.n_rows; int p = T.n_cols; int n = T.n_slices;
   if(m!=p){
     Rcerr << "input matrix T must be square transition matrix\n";
@@ -121,10 +123,10 @@ Rcpp::List RMSC_c(arma::cube T,
     if(verbose && step%10==0){
       cout << "iter" << step <<
         ": \n max_inf_norm = " << max_inf_norm <<
-        "\n max_inf_norm2 = " << max_inf_norm2 <<
-        "\n relChg = " << relChg <<
-        "\n mu = " << mu <<
-        "\n funV = " << funV << "\n";
+          "\n max_inf_norm2 = " << max_inf_norm2 <<
+            "\n relChg = " << relChg <<
+              "\n mu = " << mu <<
+                "\n funV = " << funV << "\n";
     }
     if(step > 1 & max_inf_norm < eps){
       break;
@@ -133,7 +135,7 @@ Rcpp::List RMSC_c(arma::cube T,
       cout << "reached max iteration \n";
       break;
     }
-
+    
     //Update P
     arma::mat temp = sum(T-E-Y/mu, 2);
     arma::mat B = (Q- Z/mu + temp)/(n+1);
@@ -143,7 +145,7 @@ Rcpp::List RMSC_c(arma::cube T,
         Rcerr << "rowsum 1 error";
       }
     }
-
+    
     //Update Q;
     arma::mat M = P+Z/mu;
     double C = 1/mu;
@@ -161,7 +163,7 @@ Rcpp::List RMSC_c(arma::cube T,
       svp = 1;
       Q = arma::zeros<arma::mat>(m,m);
     }
-
+    
     //Update Ei and Yi
     for (int i=0; i < n; ++i){
       arma::mat C = T.slice(i) - P - Y.slice(i) / mu;
@@ -193,17 +195,17 @@ Rcpp::List RMSC_c(arma::cube T,
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 arma::vec baseline_spectral_c(arma::mat Phat, int numClust, arma::vec truth){
-  arma::mat Utemp;
-  arma::vec s;
-  arma::mat V;
-  svd(Utemp, s, V, Phat);
-  arma::mat U = Utemp.rows(0,numClust-1);
-  arma::vec Urowsum = sum(U%U,1);
-  arma::mat norm_mat(U.n_rows, numClust);
-  norm_mat.each_col() = Urowsum;
-  arma::uvec errorind = find(U.col(0)==0);
-  norm_mat.rows(errorind).fill(1);
-  U /= norm_mat;
+arma::mat Utemp;
+arma::vec s;
+arma::mat V;
+svd(Utemp, s, V, Phat);
+arma::mat U = Utemp.rows(0,numClust-1);
+arma::vec Urowsum = sum(U%U,1);
+arma::mat norm_mat(U.n_rows, numClust);
+norm_mat.each_col() = Urowsum;
+arma::uvec errorind = find(U.col(0)==0);
+norm_mat.rows(errorind).fill(1);
+U /= norm_mat;
 
 
 }
