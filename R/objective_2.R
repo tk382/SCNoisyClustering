@@ -1,27 +1,25 @@
-objective_2 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-11, verbose=FALSE){
-  if(verbose){
-    print('computing kernel..')
+objective_2 = function(X, numClust, P = NA, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=FALSE){
+  if(is.na(P[1,1,1])){
+    if(verbose){
+      print('computing kernel..')
+    }
+    K = multiple_kernel_new(t(X), 1)
+    P = array(0,dim=c(ncol(X),ncol(X),22))
+    for (i in 1:22){
+      P[,,i] = as.matrix(K[[i]])
+    }
+    rm(K)
   }
-  K = multiple_kernel_new(t(X), 1)
-  P = array(0,dim=c(ncol(X),ncol(X),22))
-  for (i in 1:22){
-    P[,,i] = as.matrix(K[[i]])
-  }
-  rm(K)
   #start algorithm with P
   dims = dim(P);
-  funV = rep(0,max_iter)
   m = dims[1]; p = dims[2]; n = dims[3];
+  funV = rep(0,max_iter)
   sigma = rep(1, n)
-  if(m!=p){
-    stop('input matrix P must be square transition matrix')
-  }
   Q     = array(0, dim=c(m,p,n))
   B     = array(0, dim=c(m,p,n))
   Y     = array(0, dim=c(m,p,n))
   S     = array(0, dim=c(m,p))
   S_old = matrix(rnorm(m*p), m, p)
-  e     = rep(1, m)
 
   step = 0
   while(1){
@@ -46,7 +44,7 @@ objective_2 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-11,
       break;
     }
     if (step > max_iter){
-      print(paste('reached max iteration : ', step))
+      print('reached max iteration')
       break;
     }
     #update Qi
@@ -57,20 +55,21 @@ objective_2 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-11,
       U = s$u; d = s$d; V = s$v
       d[(numClust+1):length(d)] = 0
       Q[,,i] = U %*% diag(d) %*% t(V)
-      Q[,,i] = Q[,,i] / rowSums(Q[,,i])
+      #Q[,,i] = Q[,,i] / rowSums(Q[,,i])
     }
 
     #update S
-    tmp = apply(mu*Q - Y, c(1,2), sum) / (mu * n);
-    s = svd(tmp)
-    U = s$u; d = s$d; V = s$v;
-    d[(numClust+1):(length(d))] = 0
-    S = U %*% diag(d) %*% t(V)
-    S = S/rowSums(S)
+    # tmp = apply(mu*Q - Y, c(1,2), sum) / (mu * n);
+    # s = svd(tmp)
+    # U = s$u; d = s$d; V = s$v;
+    # d[(numClust+1):(length(d))] = 0
+    # S = U %*% diag(d) %*% t(V)
+    #S = S/rowSums(S)
+    S = nonnegASC(apply(mu*Q - Y, c(1,2),sum)/(mu*n))
 
     # #update sigma
     sigma = apply(Q-P, 3, function(x) norm(x, 'F'))
-    sigma = sigma/(m^2)
+    sigma = sigma^2/(m^2)
 
     #update Y
     for (i in 1:n){
@@ -79,8 +78,8 @@ objective_2 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-11,
     #update mu
     mu = min(rho*mu, 1e+10)
   }
-  #ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
-  #  scale_color_gradient()+ggtitle(step)
+
+
   pi = irlba(t(S), 1)$v
   Dist = as.numeric(pi)/sum(pi)
   Dist2 = sum(pi)/as.numeric(pi)

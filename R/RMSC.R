@@ -1,5 +1,5 @@
 RMSC = function(P, tau, gamma, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=FALSE){
-  dims = dim(P);
+  dims = dim(P)
   funV = rep(0,max_iter)
   m = dims[1]; p = dims[2]; n = dims[3];
   if(m!=p){
@@ -41,16 +41,18 @@ RMSC = function(P, tau, gamma, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-
             ', \n S-R=', round(max_inf_norm3, 4),
             ',\n funV=',round(funV[step],4), '\n'))
     }
-    if (step > 1 && max_inf_norm < eps){
+    if (step > 1 && max_inf_norm < eps && relChg<eps){
       break;
     }
     if (step > max_iter){
       print(paste('reached max iteration : ', step))
       break;
     }
+
     #update S
     B = 1/(n+2) * (Q + R -Z/mu - Y/mu + apply(E-P-W/mu, c(1,2),sum))
     S = nonnegASC(B)
+
     #update Q
     M = S+Y/mu
     C = tau/mu
@@ -67,6 +69,7 @@ RMSC = function(P, tau, gamma, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-
       svp=1
       Q = matrix(0,m,m)
     }
+
     #update R
     R = pmax(S+Z/mu - gamma/mu, 0) + pmin(S+Z/mu - gamma/mu, 0)
 
@@ -76,6 +79,12 @@ RMSC = function(P, tau, gamma, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-
       inversenorms = 1/(norms^2)
       lambda = inversenorms / sum(inversenorms)
     }
+    # Dmat = diag(n)
+    # dvec = apply(P, 3, function(x) norm(x-S, 'F'))
+    # Amat = cbind(rep(1,n), diag(n))
+    # bvec = c(1, rep(0, n))
+    # qp = solve.QP(Dmat, -dvec, Amat, bvec, meq=1)
+    # lambda = qp$solution
 
     #update Ei and Wi
     for (i in 1:n){
@@ -90,7 +99,8 @@ RMSC = function(P, tau, gamma, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-
     Y = Y+mu*(S-Q)
 
     #update mu
-    mu = min(rho*mu, 1e+10)
+    mu = 1
+    # mu = min(rho*mu, 1e+10)
   }
   #ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
   #  scale_color_gradient()+ggtitle(step)

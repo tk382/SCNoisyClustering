@@ -1,5 +1,5 @@
 RMSC_fixedrank = function(P, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-11, verbose=FALSE){
-  dims = dim(P);
+  dims = dim(P)
   funV = rep(0,max_iter)
   m = dims[1]; p = dims[2]; n = dims[3];
   sigma = rep(1, n)

@@ -1,4 +1,4 @@
-RMSC_multiview = function(X, lambda, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=FALSE){
+RMSC_multiview = function(X, lambda, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=FALSE){
   if(verbose){
     print('splitting data and computing kernel..')
   }
@@ -6,9 +6,9 @@ RMSC_multiview = function(X, lambda, numClust, mu=1e-3, rho = 1.9, max_iter=100,
   X1 = X[1:skip, ]
   X2 = X[(skip+1) : (2*skip),]
   X3 = X[(2*skip+1) : nrow(X), ]
-  K1 = multiple_kernel_new(t(X1), 1)[[21]]
-  K2 = multiple_kernel_new(t(X2), 1)[[21]]
-  K3 = multiple_kernel_new(t(X3), 1)[[21]]
+  K1 = multiple_kernel_new(t(X1), 1)[[5]]
+  K2 = multiple_kernel_new(t(X2), 1)[[5]]
+  K3 = multiple_kernel_new(t(X3), 1)[[5]]
   K = array(0, dim=c(ncol(X), ncol(X), 3))
   K[,,1] = as.matrix(K1)
   K[,,2] = as.matrix(K2)
@@ -39,7 +39,6 @@ RMSC_multiview = function(X, lambda, numClust, mu=1e-3, rho = 1.9, max_iter=100,
   Q     = array(0, dim=c(m,p))
   P     = array(0, dim=c(m,p))
   P_old = matrix(rnorm(m*p), m, p)
-  L     = eigen((P_old+t(P_old))/2)$vectors[, 1:(numClust)]
   e     = rep(1, m)
 
   step = 0
@@ -104,7 +103,7 @@ RMSC_multiview = function(X, lambda, numClust, mu=1e-3, rho = 1.9, max_iter=100,
   sspi = sqrt(diag(Dist2))
   spi = sqrt(diag(Dist))
   P = (spi %*% P %*% sspi + sspi %*% t(P) %*% spi)/2
-  return(list(P=P, E=E))
+  return(list(S=P, E=E))
 }
 
 updateQ = function(P,Z,mu,m){
@@ -125,23 +124,3 @@ updateQ = function(P,Z,mu,m){
   }
   return(Q)
 }
-
-# newupdateQ = function(P,Z,L,mu,m){
-#   M = t(L) %*% (P + Z/mu) %*% L
-#   C = 1/mu
-#   USigV = svd(M)
-#   U = USigV$u; Sigma = USigV$d; V = USigV$v;
-#   svp = sum(Sigma > C)
-#   if(svp>=2){
-#     Sigma = Sigma[1:svp]-C;
-#     Q = U[, 1:svp] %*% diag(Sigma) %*% t(V[,1:svp])
-#   }else if(svp==1){
-#     Sigma = Sigma[1]-C;
-#     Q = as.matrix(U[,1]) %*% matrix(Sigma, nrow=1) %*%  as.matrix(t(V[,1]))
-#   }else{
-#     svp=1
-#     Q = matrix(0,ncol(L),ncol(L))
-#   }
-#   Q = L %*% Q %*% t(L)
-#   return(Q)
-# }

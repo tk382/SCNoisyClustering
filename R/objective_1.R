@@ -1,19 +1,23 @@
-objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=TRUE){
-  if(verbose){
-    print('computing kernel..')
+objective_1 = function(X, numClust, allk = seq(2,20,by=2), sigma=seq(2,1,by=-0.25), P = NA, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, verbose=TRUE){
+  if(length(dim(P))==0){
+    if(verbose){
+      print('computing kernel..')
+    }
+    K = multiple_kernel_new(t(X), 1)
+    P = array(0,dim=c(ncol(X),ncol(X),22))
+    for (i in 1:22){
+      P[,,i] = as.matrix(K[[i]])
+    }
+    rm(K)
   }
-  K = multiple_kernel_new(t(X), 1)
-  P = array(0,dim=c(ncol(X),ncol(X),22))
-  for (i in 1:22){
-    P[,,i] = as.matrix(K[[i]])
-  }
-  rm(K)
   #start algorithm
   library(quadprog)
   dims = dim(P);
   funV = rep(0,max_iter)
-  m = dims[1]; p = dims[2]; n = dims[3];
-  w     = rep(1/n, n)
+  m = dims[1]
+  p = dims[2]
+  n = dims[3]
+  w = rep(1/n, n)
   if(m!=p){
     stop('input matrix P must be square transition matrix')
   }
@@ -25,6 +29,10 @@ objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, 
   step = 0
   while(1){
     step = step + 1
+    if (step > max_iter){
+      print(paste('reached max iteration : ', max_iter))
+      break;
+    }
     max_inf_norm = -1
     for (i in 1:n){
       Qi = Q[,,i]
@@ -32,7 +40,7 @@ objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, 
       inf_norm_of_i = norm(diff, 'I')
       max_inf_norm = max(max_inf_norm, inf_norm_of_i)
     }
-    funV[step] =  + sum(w^2) +
+    funV[step] =  sum(w^2) +
       sum(apply(Q-P, 3, function(x) norm(x, 'F'))*w)
     relChg = norm(S-S_old, 'F')/max(1, norm(S_old, 'F'))
     S_old = S;
@@ -44,10 +52,7 @@ objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, 
     if (step > 1 && max_inf_norm < eps && relChg < eps){
       break;
     }
-    if (step > max_iter){
-      print(paste('reached max iteration : ', step))
-      break;
-    }
+
 
     #update Qi
     for (i in 1:n){
@@ -57,23 +62,25 @@ objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, 
       U = s$u; d = s$d; V = s$v
       d[(numClust+1):length(d)] = 0
       Q[,,i] = U %*% diag(d) %*% t(V)
-      Q[,,i] = Q[,,i] / rowSums(Q[,,i])
+      #Q[,,i] = Q[,,i] / rowSums(Q[,,i])
+      #Q[,,i] = nonnegASC(Q[,,i])
     }
 
     #update S
-    tmp = apply(Q - Y/mu, c(1,2), sum) / n;
-    s = svd(tmp)
-    U = s$u; d = s$d; V = s$v;
-    d[(numClust+1):(length(d))] = 0
-    S = U %*% diag(d) %*% t(V)
-    S = S / rowSums(S)
+    #tmp = apply(Q - Y/mu, c(1,2), sum) / n;
+    #s = svd(tmp)
+    #U = s$u; d = s$d; V = s$v;
+    #d[(numClust+1):(length(d))] = 0
+    #S = U %*% diag(d) %*% t(V)
+    ##S = S / rowSums(S)
+    S = nonnegASC(apply(Q-Y/mu, c(1,2), sum)/n)
 
     #update w
     Dmat = diag(n)
     dvec = apply(Q-P, 3, function(x) norm(x, 'F'))
     Amat = cbind(rep(1,n), diag(n))
     bvec = c(1, rep(0, n))
-    qp = solve.QP(Dmat, dvec, Amat, bvec, meq=1)
+    qp = solve.QP(Dmat, -dvec, Amat, bvec, meq=1)
     w = qp$solution
 
     #update Y
@@ -83,10 +90,9 @@ objective_1 = function(X, numClust, mu=1e-3, rho = 1.9, max_iter=100, eps=1e-9, 
 
     #update mu
     mu = min(rho*mu, 1e+10)
-
   }
-  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
-    scale_color_gradient()+ggtitle(step)
+  ggplot(melt(S[ind,ind]), aes(x=X1, y=X2, fill=value)) + geom_tile() +
+    scale_fill_gradient(high='indianred', low='antiquewhite1')+ggtitle(step)
   pi = irlba(t(S), 1)$v
   Dist = as.numeric(pi)/sum(pi)
   Dist2 = sum(pi)/as.numeric(pi)
