@@ -493,7 +493,7 @@ Rcpp::List objective_1_c_one_aux(const arma::cube P,
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-Rcpp::List nuclear_objective_c(const arma::cube P,
+Rcpp::List objective_3_c(const arma::cube P,
                                const double tau,
                                double mu=1e-3,
                                const double rho = 1.9,
@@ -600,4 +600,213 @@ Rcpp::List nuclear_objective_c(const arma::cube P,
     Rcpp::Named("w") = w
   );
 }
+
+
+
+
+// [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::export]]
+Rcpp::List nuclear_scaledlasso_c(const arma::cube P,
+                                 const double tau,
+                                 double mu=1e-3,
+                                 const double rho = 1.9,
+                                 const int max_iter=100,
+                                 const double eps = 1e-9,
+                                 const bool verbose = false){
+  int m = P.n_rows; int p = P.n_cols; int n = P.n_slices;
+  arma::vec funV     = arma::zeros<arma::vec>(max_iter);
+  arma::vec sigma    = arma::ones<arma::vec>(n);
+  arma::mat Y        = arma::zeros<arma::mat>(m,p);
+  arma::mat Q        = arma::zeros<arma::mat>(m,p);
+  arma::mat S        = sum(P, 2)/n;
+  arma::mat S_old    = arma::zeros<arma::mat>(m,p);
+  arma::vec nuc_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec fro_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec noise    = arma::zeros<arma::vec>(max_iter);
+  int step = 0;
+  while(1){
+    if(step > max_iter-1){
+      cout << "reached max iteration \n";
+      break;
+    }
+    step += 1;
+    double max_inf_norm = norm(S-Q, "inf");
+    arma::mat U; arma::vec d; arma::mat V;
+    svd(U,d,V,S);
+    noise(step-1) = sum(sigma)/2;
+    for (int i=0; i < n; ++i){
+      fro_norm(step-1) += norm(Q-P.slice(i), "fro")/(sigma(i) * m * m);
+    }
+    nuc_norm(step-1) += sum(d);
+    funV(step-1) = nuc_norm(step-1) + fro_norm(step-1) + noise(step-1);
+    double relChg = norm(S-S_old, "fro")/max(1.0, norm(S_old, "fro"));
+    S_old = S;
+    if(verbose){
+      cout << "iter" << step <<
+        ": \n max_inf_norm = " << max_inf_norm <<
+          "\n relChg = " << relChg <<
+            "\n mu = " << mu <<
+              "\n funV = " << funV(step-1) << "\n";
+    }
+    if(step > 1 & max_inf_norm < eps & relChg < eps){
+      cout << "converged!\n";
+      break;
+    }
+
+    //Update Qi;
+    arma::mat M = mu*S + Y;
+    double phi = sum(1/(m*m*sigma)) + mu;
+    for (int i=0; i<n; ++i){
+      M += P.slice(i)/(m*m*sigma(i));
+    }
+    M = M/phi;
+    double C = tau/phi;
+    svd(U,d,V,M);
+    arma::uvec svp2 = find(d > C);
+    int svp = svp2.size();
+    if(svp >=2){
+      arma::vec Sigma2 = d.subvec(0,svp-1) - C;
+      Q = U.cols(0,svp-1) * diagmat(Sigma2) * V.cols(0,svp-1).t();
+    }else if(svp==1){
+      double Sigma2 = d(0) - C;
+      Q = U.col(0) * V.col(0).t() * Sigma2;
+    }else{
+      svp = 1;
+      Q = arma::zeros<arma::mat>(m,m);
+    }
+
+    //update S;
+    S = nonnegASC_c(Q-Y/mu);
+
+    //update sigma
+    for (int i=0; i < n; ++i){
+      sigma(i) = norm(P.slice(i) - Q, "fro");
+      sigma(i) /= (m*m);
+    }
+
+    //update Y
+    Y = Y + mu * (S - Q);
+
+    //update mu
+    mu = min(rho*mu, 1e+10);
+  }
+
+  arma::mat U; arma::vec s; arma::mat V;
+  svd(U,s,V,S);
+  arma::vec pi = V.col(0);
+  arma::vec Dist = pi / accu(pi) + 1e-10;
+  arma::vec invDist = 1/Dist;
+  arma::mat Distmat = diagmat(Dist);
+  arma::mat invDistmat = diagmat(invDist);
+  arma::mat sspi = sqrt(invDistmat);
+  arma::mat spi = sqrt(Distmat);
+  S = (spi * S * sspi + sspi * S.t() * spi)/2;
+
+  return Rcpp::List::create(
+    Rcpp::Named("S") = S,
+    Rcpp::Named("f") = funV,
+    Rcpp::Named("sigma") = sigma,
+    Rcpp::Named("nuc_norm") = nuc_norm,
+    Rcpp::Named("fro_norm") = fro_norm,
+    Rcpp::Named("noise") = noise
+  );
+}
+
+// [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::export]]
+Rcpp::List sparse_scaledlasso_c(const arma::cube P,
+                                 const double tau,
+                                 double mu=1e-3,
+                                 const double rho = 1.9,
+                                 const int max_iter=100,
+                                 const double eps = 1e-7,
+                                 const bool verbose = false){
+  int m = P.n_rows; int p = P.n_cols; int n = P.n_slices;
+  arma::vec funV     = arma::zeros<arma::vec>(max_iter);
+  arma::vec sigma    = arma::ones<arma::vec>(n);
+  arma::mat Y        = arma::zeros<arma::mat>(m,p);
+  arma::mat Q        = arma::zeros<arma::mat>(m,p);
+  arma::mat S        = sum(P, 2)/n;
+  arma::mat S_old    = arma::zeros<arma::mat>(m,p);
+  arma::vec nuc_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec fro_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec noise    = arma::zeros<arma::vec>(max_iter);
+  int step = 0;
+  while(1){
+    if(step > max_iter-1){
+      cout << "reached max iteration \n";
+      break;
+    }
+    step += 1;
+    double max_inf_norm = norm(S-Q, "inf");
+    arma::mat U; arma::vec d; arma::mat V;
+    svd(U,d,V,S);
+    noise(step-1) = sum(sigma)/2;
+    for (int i=0; i < n; ++i){
+      fro_norm(step-1) += norm(Q-P.slice(i), "fro")/(sigma(i) * m * m);
+    }
+    nuc_norm(step-1) += sum(d);
+    funV(step-1) = nuc_norm(step-1) + fro_norm(step-1) + noise(step-1);
+    double relChg = norm(S-S_old, "fro")/max(1.0, norm(S_old, "fro"));
+    S_old = S;
+    if(verbose){
+      cout << "iter" << step <<
+        ": \n max_inf_norm = " << max_inf_norm <<
+          "\n relChg = " << relChg <<
+            "\n mu = " << mu <<
+              "\n funV = " << funV(step-1) << "\n";
+    }
+    if(step > 1 & max_inf_norm < eps & relChg < eps){
+      cout << "converged!\n";
+      break;
+    }
+
+    //Update Qi;
+    arma::mat M = mu*S + Y;
+    double phi = sum(1/(m*m*sigma)) + mu;
+    for (int i=0; i<n; ++i){
+      M += P.slice(i)/(m*m*sigma(i));
+    }
+    M = M/phi;
+    double C = tau/phi;
+    Q = armapmax(M-C, 0) + armapmin(M-C,0);
+
+    //update S;
+    S = nonnegASC_c(Q-Y/mu);
+
+    //update sigma
+    for (int i=0; i < n; ++i){
+      sigma(i) = norm(P.slice(i) - Q, "fro");
+      sigma(i) /= (m*m);
+    }
+
+    //update Y
+    Y = Y + mu * (S - Q);
+
+    //update mu
+    mu = min(rho*mu, 1e+10);
+  }
+
+  arma::mat U; arma::vec s; arma::mat V;
+  svd(U,s,V,S);
+  arma::vec pi = V.col(0);
+  arma::vec Dist = pi / accu(pi) + 1e-10;
+  arma::vec invDist = 1/Dist;
+  arma::mat Distmat = diagmat(Dist);
+  arma::mat invDistmat = diagmat(invDist);
+  arma::mat sspi = sqrt(invDistmat);
+  arma::mat spi = sqrt(Distmat);
+  S = (spi * S * sspi + sspi * S.t() * spi)/2;
+
+  return Rcpp::List::create(
+    Rcpp::Named("S") = S,
+    Rcpp::Named("f") = funV,
+    Rcpp::Named("sigma") = sigma,
+    Rcpp::Named("nuc_norm") = nuc_norm,
+    Rcpp::Named("fro_norm") = fro_norm,
+    Rcpp::Named("noise") = noise
+  );
+}
+
+
 

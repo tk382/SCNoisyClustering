@@ -1,14 +1,11 @@
 baseline_spectral = function(S, numClust){
-  #D = diag(apply(S,MARGIN=2,FUN=sum))
-  #L = D - S
-  tmp = irlba(S, numClust)
-  U = tmp$u
-  norm_mat = matrix(rep(sqrt(rowSums(U^2)),numClust), ncol=numClust)
-  errorind = which(norm_mat[,1]==0)
-  norm_mat[errorind, ] = 1
-  U = U/norm_mat
-  #C = kmeans(U, numClust, nstart = 200, iter.max=20)
-  C = kmeans(U, numClust)
+  D = diag(apply(S,MARGIN=2,FUN=sum))
+  L = diag(1/sqrt(diag(D))) %*% (D - S) %*% diag(1/sqrt(diag(D)))
+  evL = eigen(L, symmetric=TRUE)
+  Z   = evL$vectors[,(ncol(evL$vectors)-numClust+1):ncol(evL$vectors)]
+  C = kmeans(Z, numClust, nstart = 200, iter.max=20)
   return(C$cluster)
 }
+
+
 
