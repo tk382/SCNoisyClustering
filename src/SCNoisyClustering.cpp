@@ -231,7 +231,6 @@ Rcpp::List objective_1_c(const arma::cube P,
               "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
@@ -338,7 +337,6 @@ Rcpp::List objective_2_c(const arma::cube P,
               "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
@@ -431,7 +429,6 @@ Rcpp::List objective_1_c_one_aux(const arma::cube P,
               "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
@@ -532,7 +529,6 @@ Rcpp::List objective_3_c(const arma::cube P,
         "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
@@ -649,7 +645,6 @@ Rcpp::List nuclear_scaledlasso_c(const arma::cube P,
               "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
@@ -716,6 +711,7 @@ Rcpp::List nuclear_scaledlasso_c(const arma::cube P,
 // [[Rcpp::export]]
 Rcpp::List sparse_scaledlasso_c(const arma::cube P,
                                  const double tau,
+                                 const double gamma,
                                  double mu=1e-3,
                                  const double rho = 1.9,
                                  const int max_iter=100,
@@ -728,7 +724,8 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
   arma::mat Q        = arma::zeros<arma::mat>(m,p);
   arma::mat S        = sum(P, 2)/n;
   arma::mat S_old    = arma::zeros<arma::mat>(m,p);
-  arma::vec nuc_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec L1_norm = arma::zeros<arma::vec>(max_iter);
+  arma::vec F_norm = arma::zeros<arma::vec>(max_iter);
   arma::vec fro_norm = arma::zeros<arma::vec>(max_iter);
   arma::vec noise    = arma::zeros<arma::vec>(max_iter);
   int step = 0;
@@ -739,31 +736,30 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     }
     step += 1;
     double max_inf_norm = norm(S-Q, "inf");
-    arma::mat U; arma::vec d; arma::mat V;
-    svd(U,d,V,S);
+    L1_norm(step-1) = norm(S, 1);
+    F_norm(step-1) = norm(S, "fro");
     noise(step-1) = sum(sigma)/2;
     for (int i=0; i < n; ++i){
       fro_norm(step-1) += norm(Q-P.slice(i), "fro")/(sigma(i) * m * m);
     }
-    nuc_norm(step-1) += sum(d);
-    funV(step-1) = nuc_norm(step-1) + fro_norm(step-1) + noise(step-1);
+    funV(step-1) = fro_norm(step-1) + noise(step-1) +
+      L1_norm(step-1) + F_norm(step-1);
     double relChg = norm(S-S_old, "fro")/max(1.0, norm(S_old, "fro"));
     S_old = S;
     if(verbose){
       cout << "iter" << step <<
         ": \n max_inf_norm = " << max_inf_norm <<
-          "\n relChg = " << relChg <<
-            "\n mu = " << mu <<
-              "\n funV = " << funV(step-1) << "\n";
+        "\n relChg = " << relChg <<
+        "\n mu = " << mu <<
+        "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
-      cout << "converged!\n";
       break;
     }
 
     //Update Qi;
     arma::mat M = mu*S + Y;
-    double phi = sum(1/(m*m*sigma)) + mu;
+    double phi = sum(1/(m*m*sigma)) + mu + gamma;
     for (int i=0; i<n; ++i){
       M += P.slice(i)/(m*m*sigma(i));
     }
@@ -802,11 +798,180 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     Rcpp::Named("S") = S,
     Rcpp::Named("f") = funV,
     Rcpp::Named("sigma") = sigma,
-    Rcpp::Named("nuc_norm") = nuc_norm,
+    Rcpp::Named("L1_norm") = L1_norm,
+    Rcpp::Named("F_norm") = F_norm,
     Rcpp::Named("fro_norm") = fro_norm,
     Rcpp::Named("noise") = noise
   );
 }
+
+
+
+// [[Rcpp::export]]
+arma::cube corr_kernel_c(arma::mat X,
+                         arma::vec allk_input,
+                         arma::vec sigma_input,
+                         int k = 0){
+  int N = X.n_rows;   int KK = 0;
+  if(k==0){
+    k = round(N/20);
+  }
+
+  arma::vec sigma = sigma_input; int slen = sigma.size();
+  arma::vec allk = allk_input;   int klen = allk.size();
+  int kerlen = slen*klen;
+
+  //compute and sort Diff
+  arma::mat Diff = 1-cor(X.t());
+  arma::mat Diff_sort(N,N);
+  for (int j = 0; j < N; ++j){
+    Diff_sort.row(j) = sort(Diff.row(j));
+  }
+  //compute combined kernels
+  arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
+  for (int l = 0; l < klen; ++l){
+    arma::mat TT(N, 1);
+    TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
+    arma::mat Sig = arma::zeros<arma::mat>(N,N);
+    Sig.each_col() = TT.col(0);
+    Sig = (Sig + Sig.t())/2;
+    for (int j = 0; j < slen; ++j){
+      arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
+      D_Kernels.slice(KK) = (W + W.t())/2;
+      KK = KK + 1;
+    }
+  }
+  for (int i=0; i < kerlen; ++i){
+    arma::mat K = D_Kernels.slice(i);
+    arma::vec dinv = 1/sqrt(K.diag()+1);
+    arma::mat G = K % (dinv * dinv.t());
+    arma::mat G1 = arma::mat(N,N);
+    G1.each_col() = G.diag();
+    arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
+    D_Kernels.slice(i) = D_Kernels_tmp;
+  }
+  arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
+  for (int i=0; i < kerlen; ++i){
+    arma::mat distX = D_Kernels.slice(i);
+    arma::mat distX1(N,N);
+    arma::umat idx(N,N);
+    for (int j=0; j < N; ++j){
+      distX1.row(j) = sort(distX.row(j));
+      idx.row(j)    = sort_index(distX.row(j)).t();
+    }
+
+    //knn
+    arma::mat A = arma::zeros<arma::mat>(N,N);
+    arma::mat di = distX1.cols(1,k+1);
+    arma::umat id = idx.cols(1,k+1);
+    arma::mat numerator(N, k+1);
+    numerator.each_col() = di.col(k);
+    numerator = numerator - di;
+    arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
+    arma::mat denominator(N, k+1);
+    denominator.each_col() = temp;
+    arma::mat div = numerator / denominator;
+    arma::mat a(N, k+1);
+    a.each_col() = arma::linspace(0, N-1, N);
+    for (int row = 0; row < N; ++row){
+      for (int col = 0; col < k+1; ++col){
+        A(a(row,col), id(row,col)) = div(row,col);
+      }
+    }
+    A.elem(find_nonfinite(A)).zeros();
+    out.slice(i) = (A + A.t())/2;
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+arma::mat tsne_c(arma::mat X,
+                 arma::mat initial_config,
+                 int k,
+                 int max_iter=1000,
+                 double min_cost = 1e-3,
+                 int epoch = 100){
+
+  double momentum = 0.8;  //double final_momentum = 0.8;
+  double epsilon = 500;   //double mom_switch_iter = 250;
+  double min_gain = 0.01; double initial_P_gain = 4;
+  double eps = arma::datum::eps;
+  arma::vec gaincheck = arma::zeros<arma::vec>(1000);
+  arma::mat ydata = initial_config;
+  initial_P_gain = 1;
+
+  arma::mat P = (X + X.t())/2;
+  P.elem(find(P<eps)).fill(eps);
+  P = P / accu(P);
+  P = P*initial_P_gain;
+  arma::mat grads = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
+  arma::mat incs = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
+  arma::mat gains = arma::ones<arma::mat>(ydata.n_rows, ydata.n_cols);
+  arma::mat Q; arma::mat stiffness;
+  arma::vec costs = arma::zeros<arma::vec>(max_iter);
+  arma::mat ydata_old = ydata;
+  for (int niter = 0; niter < max_iter; niter++){
+
+    arma::vec sum_ydata = sum(ydata%ydata, 1);
+    arma::mat tmp1 = -2 * ydata * ydata.t();
+    arma::mat tmp2 = tmp1;
+    for (int i=0; i < tmp2.n_cols; ++i){
+      tmp2.row(i) = tmp2.row(i) + sum_ydata.t();
+    }
+    arma::mat tmp3 = tmp2;
+    for (int i=0; i < tmp3.n_cols; ++i){
+      tmp3.col(i) = tmp3.col(i) + sum_ydata + arma::ones<arma::vec>(sum_ydata.size());
+    }
+    arma::mat num = 1/(tmp3);
+    num.diag().fill(0);
+    Q = num/accu(num);
+    Q.elem(find(Q<eps)).fill(eps);
+    arma::mat stiffness = (P-Q) % num;
+    grads = 4 * (diagmat(sum(stiffness, 0)) - stiffness) * ydata;
+    gains = (gains + 0.2) % abs(sign(grads) != sign(incs)) +
+              gains*0.8 % abs(sign(grads) == sign(incs));
+    gains.elem(find(gains < min_gain)).fill(min_gain);
+
+    incs = momentum*incs - epsilon*(gains%grads);
+    ydata = ydata + incs;
+    for (int i=0; i < ydata.n_cols; ++i){
+      arma::vec tmpy = ydata.col(i);
+      tmpy = tmpy - mean(tmpy);
+      ydata.col(i) = tmpy;
+    }
+    ydata.elem(find(ydata<-100)).fill(-100);
+    ydata.elem(find(ydata>100)).fill(100);
+
+    //convergence criterion
+    if(niter % epoch == 99){
+      double cost = norm(ydata-ydata_old, "fro") / (ydata.n_rows * ydata.n_cols);
+      if(cost < min_cost){
+        break;
+      }
+    }
+    ydata_old = ydata;
+  }
+  return ydata;
+}
+
+// // [[Rcpp::export]]
+// arma::vec tsne_spectral_c(arma::mat A, int numClust, int numEigen = 0){
+//   if(numEigen==0){numEigen = numClust;}
+//   arma::vec rs = sum(A, 1);
+//   arma::mat L  = diagmat(1/sqrt(rs)) * (diagmat(rs)-A) * diagmat(1/sqrt(rs));
+//   arma::vec D; arma::mat U;
+//   eig_sym(D, U, L);
+//   arma::vec U_index = arma::linspace(U.n_cols, U.n_cols-numEigen+1);
+//   arma::mat tmpU(A.n_cols, numEigen);
+//   for (int i=0; i < numEigen-1; ++i){
+//     tmpU.col(i) = U.col(U_index(i)-1);
+//   }
+//   arma::mat F_last = tsne_c(A, tmpU, numEigen);
+//   arma::mat means;
+//   kmeans(means, F_last, numClust, arma::random_subset, 10, false);
+//   return means;
+//
+// }
 
 
 
