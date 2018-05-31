@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper, margin=0.8in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usepackage[makeroom]{cancel}
+\usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage{bm}
+\usepackage{enumerate}
+\usepackage{amsfonts} 
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{newfloat}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{bbm}
+\usepackage[overload]{empheq}
+\newcommand{\IF}{\text{if }}
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist 
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand\inner[2]{\langle #1, #2 \rangle}
+\pagestyle{fancy}
+\fancyhf{}
+\captionsetup[figure]{labelfont={bf},name={Figure}}
+\captionsetup[table]{labelfont={bf},name={Table}}
+\rhead{\thepage}
+
+\title{Clustering Single Cells with Noisy Observations}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+
+\section{Method}
+\subsection{Approach 1}
+Based on \textit{Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning} \cite{wang2017visualization}.\\
+
+\noindent 
+Our goal is to minimize the following in terms of $S$, $L$, and $w$. $S$ is the similarity matrix that we hope to be block diagonal, K is a kernel function differently parametrized for each $l$, $w$ is the weight of each kernel, and $Q$ is a set of features which we have prior knowledge that they are important in differentiating the samples into clusters of our interest.
+
+
+\begin{equation}
+\min_{S,L,w} -\sum_{i,j,l} w_l K_l (c_i,c_j) S_{i,j} + \beta \|S\|_F^2 + \gamma tr(L^T(I_N-S)L) + \rho \sum_l w_l log w_l - \sum_{q \in \mathcal{Q}} \frac{f_q^T (I-S) f_q}{f_q^T f_q}
+\end{equation}
+$$\text{such that  } \sum_l w_l = 1,\text{  } w_l \geq 0, \text{  }\sum_{j} S_{ij} = ,\text{  } S_{ij} \geq 0, \text{  }L^TL = I_C $$
+
+\noindent As mentioned in \cite{wang2017visualization}, although the optimization problem formulated above is nonconvex, the objective function for each variable conditional on the other two variables being fixed is convex. \\
+
+\noindent The original problem from \cite{wang2017visualization} is the same except the last term about the prior knowledge $Q$. Only updating the $S$ is changed.\\
+
+\begin{itemize}
+\item \textbf{update $S$ given $L$ and $w$}
+
+\begin{align}
+\max_S \sum_{i,j,l} &w_l K_l (c_i, c_j) S_{ij} +-\beta \|S\|_F^2 - \gamma tr(L^TIL-L^TSL) - \sum_{q \in \mathcal{Q}} \frac{f_q^T S f_q}{f_q^Tf_q}\\
+&= \max_S \sum_{i,j} \left( 
+\sum_l (w_l K_l(c_i,c_j)) - \gamma (LL^T)_{ij} - \sum_{q in \mathcal{Q}} \frac{f_{qi} f_{qj}}{\|f_q\|^2}
+\right)
+S_{ij} - \beta \|S\|_F^2
+\end{align}
+$$\text{subject to     } \sum_j S_{ij} = 1 \text{   and    } S_{ij} \geq 0 \text{  for all  } (i,j) $$
+The first summation term in the objective as well as constraints are all linear, and the second summation in the objective is a simple quadratic form that can be solved in polynomial time.
+
+
+\item \textbf{update $L$ given $S$ and $w$}
+\begin{align}
+max_L tr(L^T(I_N-S)L) \text{  subject to   } L^TL = I_C
+\end{align}
+Then L is the C largest eigenvectors of $I_N-S$.
+
+\item \textbf{update $w$ given $S$ and $L$}
+\begin{align}
+&max_w \sum_l \sum_{i,j} K_l (c_i, c_j)S_{ij} - \rho \sum_l w_l log w_l\\
+&\text{  subject to   } \sum_l w_l = 1, w_l \geq 0
+\end{align}
+This has convex objective and linear constraints and can be solved by any standard convex optimization method.
+\end{itemize}
+\noindent 
+The last step of similarity enhancement by diffusion and the convergence criterion can both be implemented directly according to the original paper by Wang \cite{wang2017visualization}. 
+\subsection{Approach 2}
+Based on \textit{Robust Multi-View Spectral Clustering via Low-Rank and Sparse Decomposition} \cite{xia2014robust}. \\
+
+\noindent Here, we also will observe and combine different similarity matrices, but unlike the above case where different kernels were used, this case will use different sets of features to compute similarity matrices. The idea is that the averaging of information will naturally help the denoising.\\
+
+\noindent This paper is heavily based on the idea of spectral clustering. From a similarity matrix $S^{(i)}$ for a feature set $i$, we will construct graph $G^{(i)}$ and corresponding transition matrix $P^{(i)}$. This matrix $P$ will be the main object for minimization, assuming that there exists a true probability transition matrix $\hat{P}$ and the matrices we observe are
+$$P^{(i)} = \hat{P} + E^{(i)}$$
+where $E$ is the error matrix for each case $i$. The main optimization goal is
+$$\min rank(\hat{P}) + \lambda \sum_i \|E^{(i)}\|_0$$
+but since the nonconvexity, we modify the above to
+$$\min \|\hat{P}\|_* + \lambda \sum_{i=1}^{m} \|E^{(i)}\|_1$$
+where $*$ is the trace norm. Using Augmented Lagrangian Multiplier, the goal becomes
+$$\min_{\hat{P}, Q, E^{(i)}} \|Q\|_* + \lambda \sum_{i=1}^{m} \|E^{(i)}\|_1$$
+such that $i = 1, 2, .., m$, $P^{(i)} = \hat{P} + E^{(i)}$, $\hat{P}\geq 0$, $\hat{P} \bf{1} = \bf{1}$, $\hat{P} = Q$. 
+The corresponding augmented Lagrangian function is
+\begin{align}
+\mathcal{L}(\hat{P},Q,E^{(i)}) = \|Q\|_* &+ \lambda \sum_{i=1}^{m} \|E^{(i)}\|_1 + \sum_{i=1}^{m} \langle Y^{(i)}, \hat{P} + E^{(i)}-P^{(i)} \rangle\\
+&+ \frac{\mu}{2}\sum_{i=1}^{m} \| \hat{P} + E^{(i)} - P^{(i)}\|_F^2 + \langle Z, \hat{P}-Q \rangle + \frac{\mu}{2} \|\hat{P}-Q\|_F^2
+\end{align}
+such that $\hat{P}\geq 0$, $\hat{P} \bf{1} = \bf{1}$.\\
+
+\noindent Although the notation is different, the transition probability matrix is essentially equal to the weight matrix regarding Laplacian Matrix $L = D-W$, but normalized. Consider this : $$P_{i,j} = W_{i,j} / D{i,i}$$ and naturally $$I_{i,j} = D_{i,j} / D_{i,i}$$ because $D_{i,j}$ is 0 for all $i \neq j$. Therefore, our new Laplacian matrix can be written like $L = I_n - P$\\
+
+\noindent One of the properties of Laplacian is that it has rank $n-k$ where $k$ is the number of connected components. Then, the rank of $P$ is $k$. In the approach 2, we minimize the trace of $P$, and therefore we minimize the number of connected component $k$. In the approach 1 however, we minimize the trace of $L^T(I-S)L$ where $L$ here is not Laplacian but an orthogonal matrix with rank C such that $L^TL = I_C$. Does this make sense? Verify. \\
+
+\noindent
+Therefore, we can add the extra optimization term $$\sum_{q \in \mathcal{Q}} \frac{f_q^T (I-\hat{P}) f_q}{\|f_q\|_2^2}$$
+
+\noindent We would like to build an optimization problem that accounts for any prior information about important features. This should be implemented before \\
+
+\noindent 
+Questions : 
+\begin{itemize}
+\item
+Multiplier at the penalty for the prior knowledge?
+\item
+intuition behind trace norm and the multi-kernel problem. Should I try both?
+\item
+Double check the interpretation is correct (that the transition probability matrix is essentially S). 
+
+\end{itemize}
+
+
+
+$$\min_X \|X \|_* + \lambda \sum_{i=1}^{m} \|X - \hat{X}^{(i)}\|_1 \text{ such that } X \geq 0, X1 = 1$$
+
+
+
+\section{KNN-kernel density-based clusteringn for high-dimensional multivariate data}
+
+\subsection*{kernel density estimation}
+Consider $N \times d$ dimensional data. The $d$-dimensional space can be partitioned into a number of equal bins. Consider the density below:
+$$\hat{f}(x) = \frac{1}{NV} \sum_{i=1}^{N} K((x-x_i)./H$$
+The size of the bin is given by a scale vector $H=[h_1, .., h_d]$. $V$ is data volume $\prod_{i=1}^d h_i$. 
+
+
+
+\bibliographystyle{plain}
+\bibliography{cite}
+
+
+
+\end{document}
+
+
+
+
+
+
+

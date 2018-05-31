@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{wang2017visualization}
+Bo~Wang, Junjie Zhu, Emma Pierson, Daniele Ramazzotti, and Serafim Batzoglou.
+\newblock Visualization and analysis of single-cell rna-seq data by
+  kernel-based similarity learning.
+\newblock {\em Nature Methods}, 14(4):414--416, 2017.
+
+\bibitem{xia2014robust}
+Rongkai Xia, Yan Pan, Lei Du, and Jian Yin.
+\newblock Robust multi-view spectral clustering via low-rank and sparse
+  decomposition.
+\newblock In {\em AAAI}, pages 2149--2155, 2014.
+
+\end{thebibliography}
