@@ -2,8 +2,10 @@
 
 # We use alpha = 0.7 for network diffusion
 # We use kratio = 0.05 unless the number of cells are small and we have lower bound of 10
-result = c()
-for (i in 1:8){
+set.seed(1)
+result = matrix(0, 8, 4)
+colnames(result) = c("spearman","pearson","euclidean","combined")
+for (i in 2:8){
   if (i==1){
     load('data/1_Kolod.RData')
     X        = Test_2_Kolod$in_X;
@@ -61,19 +63,31 @@ for (i in 1:8){
     truth$V1 = as.integer(truth$V1)
     numClust = length(unique(truth$V1))
   }
-  ssl_wrapper(X, numClust)
-  # zeros = apply(X, 1, function(x) sum(x==0))
-  # remove = which(zeros > ncol(X)*0.95)
-  # if(length(remove)>0){X = X[-remove,]}
-  # k     = max(round(ncol(X) * 0.05), 10)
-  # allk  = seq(10,30,by=5); allsigma = seq(2,1,by=-0.1)
-  # P = corr_kernel(t(X), k, allk, allsigma)
-  # res = sparse_scaledlasso_c(P, 5, 1, verbose=TRUE)
-  # S = network.diffusion(res$S, k, alpha=0.7)
-  # estimates = tsne_spectral(S, numClust, 5)
-  ari = adj.rand.index(estimates, truth$V1)
-  result = c(result, ari)
+
+  filter=TRUE
+  ####################################
+  res = ssl_wrapper(X, numClust, filter=filter, kerneltype="spearman",verbose=FALSE)
+  result[i,1] = adj.rand.index(res$result, truth$V1)
+  gc()
+  res = ssl_wrapper(X, numClust, filter=filter, kerneltype="pearson",verbose=FALSE)
+  result[i,2] = adj.rand.index(res$result, truth$V1)
+  gc()
+  res = ssl_wrapper(X, numClust, filter=filter, kerneltype="euclidean",verbose=FALSE)
+  result[i,3] = adj.rand.index(res$result, truth$V1)
+  gc()
+  res  = ssl_wrapper(X, numClust, filter=filter, kerneltype="combined",verbose=TRUE)
+  result[i,4] = adj.rand.index(res$result, truth$V1)
+  gc()
+  print(paste('data set',i,'is done!'))
 }
+
+
+
+
+
+
+
+
 
 
 

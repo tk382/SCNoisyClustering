@@ -38,27 +38,48 @@ LSLSL = function(X,
   if (core < 1) {
     core = 1
   }
+  if(core>1){
 
-  cl = makeCluster(core, type="FORK")
-  #clusterEvalQ(cl, {library(Matrix)})
-  myfun = function(l){
-    groups = gl[,l]
-    if(verbose){print(groups)}
-    tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
-    tmpX = log(tmpX+1)
-    estimates = SLSL(X = tmpX, numClust = numClust, kernel_type = kernel_type, verbose=T)
-    return(list(result = estimates$result, groups = groups))
-  }
-  res = parLapply(cl, 1:N, myfun)
+    #set up parallelization
+    cl = makeCluster(core, type="FORK")
+    myfun = function(l){
+      groups = gl[,l]
+      if(verbose){print(groups)}
+      tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
+      tmpX = log(tmpX+1)
+      estimates = SLSL(X = tmpX, numClust = numClust, kernel_type = kernel_type, verbose=T)
+      return(list(result = estimates$result, groups = groups))
+    }
+    res = parLapply(cl, 1:N, myfun)
 
-  final = matrix(NA, nn, N)
-  for (i in 1:N){
-    item = res[[i]]
-    group = item$groups
-    inds = c(indlist[[group[1]]], indlist[[group[2]]])
-    final[shuffle[inds], i] = item$result
+    final = matrix(NA, nn, N)
+    for (i in 1:N){
+      item = res[[i]]
+      group = item$groups
+      inds = c(indlist[[group[1]]], indlist[[group[2]]])
+      final[shuffle[inds], i] = item$result
+    }
+    stopCluster(cl)
+  }else{
+    #don't use parallelization
+    myfun = function(l){
+      groups = gl[,l]
+      if(verbose){print(groups)}
+      tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
+      tmpX = log(tmpX+1)
+      estimates = SLSL(X = tmpX, numClust = numClust, kernel_type = kernel_type, verbose=T)
+      return(list(result = estimates$result, groups = groups))
+    }
+    res = lapply(cl, 1:N, myfun)
+    final = matrix(NA, nn, N)
+    for (i in 1:N){
+      item = res[[i]]
+      group = item$groups
+      inds = c(indlist[[group[1]]], indlist[[group[2]]])
+      final[shuffle[inds], i] = item$result
+    }
+
   }
-  stopCluster(cl)
 
   k = numClust
   if(is.na(k)){

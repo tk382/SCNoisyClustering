@@ -16,6 +16,8 @@ SLSL_setup = function(){
   library(diceR)
   library(gplots)
   library(broom)
+  library(abind)
+
 
   set.seed(1)
   R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
