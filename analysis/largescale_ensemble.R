@@ -62,7 +62,9 @@ dimnames(final)[[2]] = paste0('C',1:ncol(cluster_result))
 dimnames(final)[[3]] = paste0("k")
 dimnames(final)[[4]] = as.character(k)
 
-final2 = CSPA(final, 9)
+
+
+
 adj.rand.index(final2, lab)
 
 

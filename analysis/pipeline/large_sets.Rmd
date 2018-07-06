@@ -1,0 +1,69 @@
+---
+title: "large_sets"
+author: "Tae Kim"
+date: "7/6/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, comment = NA)
+library(matrixStats)
+library(inline)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(scatterplot3d)
+library(igraph) #for nmi
+library(Rtsne)
+library(diceR)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(gdata)
+library(SingleCellExperiment)
+library("SIMLR", lib.loc="~/Library/R/3.5/library")
+library(SC3)
+library(pcaReduce)
+
+set.seed(1)
+R.utils::sourceDirectory("../../R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('../../src/SCNoisyClustering.cpp')
+heat = function(S){
+  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() + scale_fill_gradient()
+}
+```
+
+```{r read_data}
+load('../../data/large_Zeisel.RData')
+X = Zelsel$in_X
+truelabel = Zelsel$true_labs[,1]
+numClust = length(unique(truelabel))
+```
+
+```{r run}
+t1 = Sys.time()
+res = LSLSL(X = X, 
+            numClust = numClust,
+            kernel_type = "combined",
+            verbose=T
+            )
+t2 = Sys.time()
+print(t2 - t1)
+print(adj.rand.index(res, truelabel))
+print(table(res, truelabel))
+```
+
+
+
+
+
+
+
+
+
