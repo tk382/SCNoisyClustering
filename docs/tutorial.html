@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>How to Use SLSL, Case by Case</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">SLSL_workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="tutorial.html">Tutorial</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tk382/SLSL_workflow">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">How to Use SLSL, Case by Case</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-07-11</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
+<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SLSL_workflow/tree/822cb7240c53b06d7f973e6576619ecc89316e78" target="_blank">822cb72</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/tutorial_cache/
+    Ignored:    data/.DS_Store
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/822cb7240c53b06d7f973e6576619ecc89316e78/analysis/tutorial.Rmd" target="_blank">822cb72</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+<td style="text-align:left;">
+wflow_publish(c(“analysis/tutorial.Rmd”, “analysis/index.Rmd”))
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/681825abf492c82f1be32f45d06386ae2589f053/docs/tutorial.html" target="_blank">681825a</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/analysis/tutorial.Rmd" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+<td style="text-align:left;">
+add tutorial section
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/tutorial.html" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+<td style="text-align:left;">
+add tutorial section
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<hr />
+<div id="load-the-slsl-library." class="section level1">
+<h1>Load the SLSL library.</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#library(SLSL)</span>
+<span class="kw">library</span>(inline)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(quadprog)
+<span class="kw">library</span>(irlba)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(reshape)
+<span class="kw">library</span>(caret)
+<span class="kw">library</span>(fossil)
+<span class="kw">library</span>(pracma)
+<span class="kw">library</span>(igraph)
+<span class="kw">library</span>(Rtsne)
+<span class="kw">library</span>(gplots)
+<span class="kw">library</span>(broom)
+<span class="kw">library</span>(abind)
+<span class="kw">library</span>(stargazer)
+<span class="kw">library</span>(scatterplot3d)
+<span class="kw">library</span>(diceR)
+<span class="kw">library</span>(parallel)
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+R.utils<span class="op">::</span><span class="kw">sourceDirectory</span>(<span class="st">&quot;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/&quot;</span>, <span class="dt">modifiedOnly=</span><span class="ot">FALSE</span>)
+Rcpp<span class="op">::</span><span class="kw">sourceCpp</span>(<span class="st">&#39;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp&#39;</span>)
+  
+heat =<span class="st"> </span><span class="cf">function</span>(S){
+  <span class="kw">ggplot</span>(<span class="kw">melt</span>(S), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2, <span class="dt">fill=</span>value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">scale_fill_gradient2</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)
+}</code></pre></div>
+</div>
+<div id="small-good-data-sets" class="section level1">
+<h1>Small, good data sets</h1>
+<p>First, prepare your data set. It should be a normalized count matrix in units such as TPM, CPM, RPKM, or FPKM. True label data is available for the sample data Yan et al. <span class="citation">(L. Yan et al. 2013)</span>, and we will evaluate the performance at the end as an example, but the label information is not expected for most cases.</p>
+<div id="read-data" class="section level2">
+<h2>Read Data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Yan.rda&#39;</span>)
+X         =<span class="st"> </span><span class="kw">as.matrix</span>(yan)
+truelabel =<span class="st"> </span><span class="kw">as.character</span>(ann<span class="op">$</span>cell_type1)
+numClust  =<span class="st"> </span><span class="dv">6</span>
+<span class="kw">rm</span>(ann, yan)</code></pre></div>
+<p>The data should look something like this.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</code></pre></div>
+<pre><code>         Oocyte..1.RPKM. Oocyte..2.RPKM. Oocyte..3.RPKM. Zygote..1.RPKM.
+C9orf152             0.0             0.0             0.0             0.0
+RPS11             1219.9          1021.1           931.6           875.4
+ELMO2                7.0            12.2             9.3            52.1
+CREB3L1              1.0             1.4             1.9             1.8</code></pre>
+<p><span class="math inline">\(X\)</span> must be a matrix with dimension <span class="math inline">\(p \times n\)</span> where <span class="math inline">\(p\)</span> is the gene count and <span class="math inline">\(n\)</span> is the cell count. Each cell is located in each column, and each gene is located in each row. The sample data has the gene names as the row names, but this is not required unless you plan to use the reference panel. The column names are also not required because the package assumes the cell names contain no information about the cell subtypes.</p>
+</div>
+<div id="parameter-set-up" class="section level2">
+<h2>Parameter Set-Up</h2>
+<p>The SLSL wrapper function can be used like below. Below are the explanations of the parameters available for you to fine-tune.</p>
+<p>First, you can specify the number of clusters. The default is “NA”, and SLSL will decide this for you based on the eigenvalues of the learned similarity matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">numClust =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truelabel)) <span class="co">#4</span></code></pre></div>
+<p>A knn parameter <span class="math inline">\(k\)</span> determines how many neighbors the algorithm uses to account for the local structure. The default is k = NA and algorithm will automatically assign it as max(10, number of cells / 20). This parameter is used in building the kernel matrices and in network diffusion.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k =<span class="st"> </span><span class="ot">NA</span></code></pre></div>
+<p>Then decide if you’d like to filter the genes. For each gene, SLSL counts the number of cells that have zero count, and if the proportion of such cells is higher than filter_p1 or lower than filter_p2, such gene is removed. This does not influence the clustering result much, unless filter_p1 is too low or filter_p2 is too high, and reduces the computational burden of the algorithm. The default choice of 0.9 and 0 reasonably selects the genes that do not hold much information for clustering and remove them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#or FALSE</span>
+filter_p1 =<span class="st"> </span><span class="fl">0.9</span> <span class="co">#any value 0 and 1, but something between 0.85 - 0.95 is recommended</span>
+filter_p2 =<span class="st"> </span><span class="dv">0</span> <span class="co">#any value between 0 and 1, but something less than 0.1 is recommended</span></code></pre></div>
+<p>Hicks 2017 showed that a large amount of cell-to-cell variation comes from the detection rate, or the proportion of genes that have greater than zero count. For example, first principal component of the data is often correlated with the zero counts of each cell.</p>
+<p>Hicks explains that log-transforming the datawith pseudo-counts introduces the bias because the mean counts are no longer the same across the cells.</p>
+<p>The first singular vector is plotted below against the detection rate. It is shown that after centering each column of the log transformed matrix removes part of the correlation between the detection rate and the first singular vector. This correction influences the Euclidean distance matrix, and therefore f</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(irlba)
+v =<span class="st"> </span><span class="kw">irlba</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
+det =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
+<span class="kw">plot</span>(v <span class="op">~</span><span class="st"> </span>det)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of pca-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">newX =<span class="st"> </span><span class="kw">scale</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dt">scale=</span>F)
+newv =<span class="st"> </span><span class="kw">irlba</span>(newX, <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
+<span class="kw">plot</span>(newv<span class="op">~</span>det)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/pca-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of pca-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>One way to correct this is to regress out the zero counts of each cell. However, as shown above, some data sets have non-linear relationship with the zero counts, and sometimes it’s better to transform the data accordingly.</p>
+<p>When correct_detection_rate parameter is set to TRUE, the residuals after regressing out the zero counts are used instead of the log of counts.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correct_detection_rate =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#TRUE or FALSE</span></code></pre></div>
+<p>Next argument is kernel_type. This determines the method to meaure the cell to cell distance. SLSL algorithm combines information from many distance matrices computed from different kernel parameters, where the default setting uses 18 different combinations of the kernel parameters. When kernel_type is specified as one of “spearman”, “pearson”, or “euclidean”, SLSL will learn similarity matrix based on those 18 kernel matrices using the specified distance masure. When kernel_type is specified as “combined” (default setting), SLSL will compute three distance matrices using all three distance measures and <span class="math inline">\(18 \times 3\)</span> kernel matrices to learn the similarity matrix. In other words, kernel_type = “combined” requires more memory and computational power, but it will reach higher accuracy by accounting for complex cell to cell variability.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kernel_type =<span class="st"> &quot;combined&quot;</span> <span class="co">#or spearman or pearson or euclidean</span></code></pre></div>
+<p>The user can also specify the kernel parameters. Denoting the distance from cell <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> as <span class="math inline">\(D_{ij}\)</span>, <span class="math inline">\(K_{ij}\)</span> given kernel parameters <span class="math inline">\(k\)</span> and <span class="math inline">\(\sigma\)</span> is <span class="math display">\[K_{ij} = \frac{1}{\sqrt{2\pi}\epsilon_{ij}} exp \left(-\frac{D_{ij}}{2\epsilon^2_{ij}}\right)\]</span> where <span class="math display">\[\epsilon_{ij} = \frac{(\mu_i + \mu_j)\sigma}{2}\]</span></p>
+<p><span class="math display">\[\mu_{i} = \frac{\sum_{j \in KNN(i, k)} \|x_i - x_j\|^2_2}{k}\]</span> <span class="math inline">\(KNN(x_i, k)\)</span> is the <span class="math inline">\(k\)</span> nearest neighbors of cell <span class="math inline">\(i\)</span>, and <span class="math inline">\(x_i\)</span> is the gene expression level profile of cell <span class="math inline">\(i\)</span>. Therefore, the kernel parameters <span class="math inline">\(k\)</span> determines how many neighbors of each cell to use to account for the local structure, and another parameter <span class="math inline">\(\sigma\)</span> determines how to scale the distance to account for the non-linearity.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">klist =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">15</span>, <span class="dv">25</span>, <span class="dt">by=</span><span class="dv">5</span>)
+sigmalist =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dt">by=</span><span class="fl">0.2</span>)</code></pre></div>
+<p><span class="math inline">\(\tau\)</span> and <span class="math inline">\(\gamma\)</span> are the penalty parameters for similarity learning. SLSL combines multiple kernel matrices by giving each of them different weights to reach maximum sparsity (<span class="math inline">\(\tau\)</span>). Some past works showed that imposing penalty <span class="math inline">\(gamma\)</span> on the Frobenius norm of the learned similarity matrix. This prevents the similarity matrix from being too close to the identity matrix (assigning each cell to a separate cluster). However, empirically, removing this penalty and setting <span class="math inline">\(\gamma = 0\)</span> performed well. <span class="math inline">\(\tau\)</span> is set to 5 as a default, and as long as it’s not too small (we recommend <span class="math inline">\(\tau &gt; 1\)</span>), the algorithm works well.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tau =<span class="st"> </span><span class="dv">5</span>
+gamma =<span class="st"> </span><span class="dv">0</span></code></pre></div>
+<p>Lastly, verbose should be set to TRUE if the user would like to see the progress of the algorithm. measuretime should be set to TRUE if the user would like to see how long each step of the algorithm takes. The default settings are FALSE for both parameters, but here, we set them TRUE to see what they do.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">verbose =<span class="st"> </span><span class="ot">TRUE</span>
+measuretime =<span class="st"> </span><span class="ot">TRUE</span></code></pre></div>
+</div>
+<div id="run-the-function" class="section level2">
+<h2>Run the Function</h2>
+<p>Using the prespecified parameters above, run the SLSL function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(<span class="dt">X                      =</span> X,
+           <span class="dt">numClust               =</span> numClust,
+           <span class="dt">k                      =</span> k,
+           <span class="dt">filter                 =</span> filter,
+           <span class="dt">filter_p1              =</span> filter_p1,
+           <span class="dt">filter_p2              =</span> filter_p2,
+           <span class="dt">correct_detection_rate =</span> correct_detection_rate,
+           <span class="dt">kernel_type            =</span> kernel_type,
+           <span class="dt">klist                  =</span> klist,
+           <span class="dt">sigmalist              =</span> sigmalist,
+           <span class="dt">tau                    =</span> tau,
+           <span class="dt">gamma                  =</span> gamma,
+           <span class="dt">verbose                =</span> verbose,
+           <span class="dt">measuretime            =</span> measuretime
+           )</code></pre></div>
+<pre><code>[1] &quot;constructing kernel..&quot;
+[1] &quot;optimizing..&quot;
+[1] &quot;network diffusion..&quot;
+[1] &quot;dimension reduction..&quot;
+gene filter &amp; numClust 0.34 
+constructing kernel 2.39 
+get S 0.03 
+network diffusion 0.1 
+tsne 0.17</code></pre>
+<p>Or, you can also use default parameters, and this will work as well.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(X)</code></pre></div>
+</div>
+<div id="analyze-the-result" class="section level2">
+<h2>Analyze the Result</h2>
+<p>First, let’s evaluate the clustering result. This is not applicable when true labels are not available.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out<span class="op">$</span>result, <span class="kw">as.factor</span>(truelabel))</code></pre></div>
+<pre><code>   
+    16cell 2cell 4cell 8cell blast zygote
+  1      2     0     0     4     0      0
+  2      0     0     0     0    30      0
+  3     14     0     0     0     0      0
+  4      0     0     0    16     0      0
+  5      0     0    12     0     0      0
+  6      0     6     0     0     0      6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out<span class="op">$</span>result, <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
+<pre><code>[1] 0.8954618</code></pre>
+<p>Let’s take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out<span class="op">$</span>S)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/similarity_matrix-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of similarity_matrix-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/similarity_matrix-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>Now let’s visualize the result through the dimension reduction result. The true label information allows us to analyze the errors from the algorithm. For example, the zygotes and 2-cells were clustered into one group, while there are two outliers in the 16 cells that are close to 8 cells.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span>out<span class="op">$</span>tsne
+df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
+df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
+df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
+
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/dimred-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of dimred-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/dimred-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/dimred-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of dimred-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/dimred-2.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
+<p><img src="figure/tutorial.Rmd/dimred-3.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of dimred-3.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/dimred-3.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> df<span class="op">$</span>result)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/dimred-4.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of dimred-4.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/dimred-4.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+</div>
+</div>
+<div id="using-reference-panel" class="section level1">
+<h1>Using Reference Panel</h1>
+<p>The SLSL function also has a hidden argument “ref”. This allows the users to utilize the reference panel data sets <span class="citation">(H. Li et al. 2017)</span>. Two panels are available: cell types and tissue types. One can simply add this parameter in SLSL function.</p>
+<div id="read-data-1" class="section level2">
+<h2>Read Data</h2>
+<p>To demonstrate the use of the reference panel, we use the cell types of human embryonic cells published in <span class="citation">(Chu et al. 2016)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Chu_celltype.Rdata&#39;</span>)
+X =<span class="st"> </span>Chu_celltype<span class="op">$</span>X
+out_cell_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, 
+                    <span class="dt">ref=</span><span class="st">&quot;cell&quot;</span>,
+                    <span class="dt">dir =</span> <span class="st">&quot;..&quot;</span>, 
+                    <span class="dt">numClust =</span> <span class="dv">7</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_cell_ref<span class="op">$</span>projection)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of ref_analyze-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">truelabel =<span class="st"> </span><span class="kw">as.factor</span>(Chu_celltype<span class="op">$</span>label)
+<span class="kw">heat</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_analyze2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of ref_analyze2-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
+<pre><code>   truelabel
+    DEC  EC  H1  H9 HFF NPC  TB
+  1   0   0   0   0   0 173   0
+  2   0   0   0   0 159   0   0
+  3   1 104   0   0   0   0   0
+  4 137   1   0   0   0   0   0
+  5   0   0  97  77   0   0   0
+  6   0   0 115  85   0   0   0
+  7   0   0   0   0   0   0  69</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, 
+               <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
+<pre><code>[1] 0.7377856</code></pre>
+<p>Now look at the visualization from the dimension reduction result.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_cell_ref<span class="op">$</span>SLSL_output
+tsne =<span class="st"> </span>out<span class="op">$</span>tsne
+df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
+df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
+df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_analyze3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of ref_analyze3-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_analyze3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of ref_analyze3-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>Similarly, we can use the tissue reference panel.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out_tissue_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">ref=</span><span class="st">&quot;tissue&quot;</span>, <span class="dt">dir =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">numClust=</span><span class="dv">7</span>)</code></pre></div>
+<p>We can analyze the result like below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>projection)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tissueref_analyze-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/tissueref_analyze-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tissueref_analyze-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/tissueref_analyze-2.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
+<pre><code>   truelabel
+    DEC  EC  H1  H9 HFF NPC  TB
+  1   0   0   0   0   0 172   0
+  2   1  91   0   0   0   0   0
+  3 134  14   1   0   0   1  15
+  4   0   0   0   0 159   0   0
+  5   3   0   0   0   0   0  54
+  6   0   0  96  65   0   0   0
+  7   0   0 115  97   0   0   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
+               <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
+<pre><code>[1] 0.6894567</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_tissue_ref<span class="op">$</span>SLSL_output
+tsne =<span class="st"> </span>out<span class="op">$</span>tsne
+df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
+df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
+df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-3.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tissueref_analyze-3.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/tissueref_analyze-3.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-4.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tissueref_analyze-4.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/tissueref_analyze-4.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>Since using reference panels often throws away a lot of information, users should be careful when to use panels and which panel to use. The data sets should be from human cells, and they should have enough cellular heterogeneity. For example, Yan data are from different stages of human embryonic cells, and once projected on to the reference panels, all the cells belonged to one type : oocytes. The Chu data above also shows a much better performance when clustered without the reference panel.</p>
+</div>
+</div>
+<div id="large-sets-cells-1000" class="section level1">
+<h1>Large Sets (cells &gt; 1000)</h1>
+<p>There is a separate function for data sets that have more than 1,000 cells : LSLSL(Large Similarity Learning with Scaled Lasso).</p>
+<p>The input data matrix is the same as regular SLSL: a count matrix with cells in columns and genes in rows. LSLSL assumes that the number of columns exceed 1000.</p>
+<div id="read-data-2" class="section level2">
+<h2>Read Data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Zeisel.Rdata&#39;</span>)
+X =<span class="st"> </span>Zeisel<span class="op">$</span>X
+truelabel =<span class="st"> </span>Zeisel<span class="op">$</span>label</code></pre></div>
+<p>Note that Zeisel is a Drop-seq data, and coverage is very low. The histogram of the detection rate is below.</p>
+</div>
+<div id="parameter-set-up-1" class="section level2">
+<h2>Parameter Set-Up</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">detection_rate =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
+<span class="kw">hist</span>(detection_rate, <span class="dt">breaks =</span> <span class="dv">20</span>)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/zeisel_coverage-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of zeisel_coverage-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/zeisel_coverage-1.png" target="_blank">8c55246</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-11
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<p>Since we have the true label data, we will use the true number of clusters,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">numClust =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truelabel)) <span class="co">#default is NA</span></code></pre></div>
+<p>For the kernel_type, we will use “combined” as before.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kernel_type =<span class="st"> &quot;combined&quot;</span> <span class="co">#one of &quot;spearman&quot;, &quot;pearson&quot;, or &quot;euclidean&quot;</span></code></pre></div>
+<p>LSLSL uses “parallel” package in CRAN for parallel computing. Users can specify the number of cores to use. The default is NA, and LSLSL will detect the number of cores of your laptop and use everything except 1. Here, we specify it as 2.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">core =<span class="st"> </span><span class="dv">3</span> <span class="co">#default is NA</span></code></pre></div>
+<p>The shuffle argument decides if LSLSL should shuffle the order of the cells. LSLSL divides the cells into groups of approximately the same size, and it works the best if each group contains all subtypes of the cells. Unless the user carefully designed the ordering of the cells so that they are well mixed, we recommend to set shuffle as TRUE.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">shuffle =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#default is TRUE</span></code></pre></div>
+<p>Now run the algorithm with different methods.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">LSLSL</span>(X,
+            <span class="dt">numClust      =</span> numClust,
+            <span class="dt">kernel_type   =</span> kernel_type,
+            <span class="dt">core          =</span> core,
+            <span class="dt">shuffle       =</span> shuffle,
+            <span class="dt">cluster_method =</span> <span class="st">&quot;CSPA&quot;</span>)</code></pre></div>
+</div>
+<div id="analyze-the-result-1" class="section level2">
+<h2>Analyze the Result</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(truelabel, res<span class="op">$</span>result)</code></pre></div>
+<pre><code>[1] 0.6628879</code></pre>
+<p>Let’s try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># construct an array called &quot;out&quot; for specification in diceR package.</span>
+final =<span class="st"> </span>res<span class="op">$</span>array
+out =<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim=</span><span class="kw">c</span>(<span class="kw">nrow</span>(final), <span class="kw">ncol</span>(final), <span class="dv">1</span>, <span class="dv">1</span>))
+out[,,<span class="dv">1</span>,<span class="dv">1</span>] =<span class="st"> </span>final
+k =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truelabel))
+
+<span class="co">#dimension names</span>
+<span class="kw">dimnames</span>(out)[[<span class="dv">1</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;R&#39;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(final)) <span class="co">#random row names</span>
+<span class="kw">dimnames</span>(out)[[<span class="dv">2</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;C&#39;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(final)) <span class="co">#random column names</span>
+<span class="kw">dimnames</span>(out)[[<span class="dv">3</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;k&quot;</span>)
+<span class="kw">dimnames</span>(out)[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw">as.character</span>(k)
+  
+<span class="co">#imputation</span>
+newX =<span class="st"> </span><span class="kw">log</span>(<span class="kw">genefilter</span>(X)<span class="op">+</span><span class="dv">1</span>)
+E =<span class="st"> </span><span class="kw">impute_missing</span>(out, <span class="kw">t</span>(newX), <span class="dv">9</span>)
+kmodes =<span class="st"> </span><span class="kw">k_modes</span>(E, <span class="dv">9</span>)
+majvote =<span class="st"> </span><span class="kw">majority_voting</span>(E, <span class="dv">9</span>)
+lce =<span class="st"> </span><span class="kw">LCE</span>(E, <span class="dv">9</span>)
+<span class="kw">adj.rand.index</span>(kmodes, truelabel)</code></pre></div>
+<pre><code>[1] 0.2859902</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(majvote, truelabel)</code></pre></div>
+<pre><code>[1] 0.2931143</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(lce, truelabel) </code></pre></div>
+<pre><code>[1] 0.2931143</code></pre>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>R version 3.5.0 (2018-04-23)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] diceR_0.5.0          scatterplot3d_0.3-41 stargazer_5.2.2     
+ [4] abind_1.4-5          broom_0.4.4          gplots_3.0.1        
+ [7] Rtsne_0.13           igraph_1.2.1         pracma_2.1.4        
+[10] fossil_0.3.7         shapefiles_0.7       foreign_0.8-70      
+[13] maps_3.3.0           sp_1.2-7             caret_6.0-79        
+[16] lattice_0.20-35      reshape_0.8.7        dplyr_0.7.4         
+[19] ggplot2_2.2.1        irlba_2.3.2          Matrix_1.2-14       
+[22] quadprog_1.5-5       matrixStats_0.53.1   inline_0.3.14       
+
+loaded via a namespace (and not attached):
+ [1] colorspace_1.3-2          class_7.3-14             
+ [3] mclust_5.4                rprojroot_1.3-2          
+ [5] RcppArmadillo_0.8.400.0.0 rstudioapi_0.7           
+ [7] clue_0.3-55               DRR_0.0.3                
+ [9] prodlim_2018.04.18        lubridate_1.7.4          
+[11] codetools_0.2-15          splines_3.5.0            
+[13] R.methodsS3_1.7.1         mnormt_1.5-5             
+[15] robustbase_0.93-0         knitr_1.20               
+[17] RcppRoll_0.2.2            workflowr_1.0.1          
+[19] ddalpha_1.3.2             cluster_2.0.7-1          
+[21] kernlab_0.9-25            R.oo_1.22.0              
+[23] sfsmisc_1.1-2             shiny_1.0.5              
+[25] compiler_3.5.0            backports_1.1.2          
+[27] assertthat_0.2.0          lazyeval_0.2.1           
+[29] later_0.7.1               htmltools_0.3.6          
+[31] tools_3.5.0               bindrcpp_0.2.2           
+[33] gtable_0.2.0              glue_1.2.0               
+[35] reshape2_1.4.3            Rcpp_0.12.16             
+[37] gdata_2.18.0              nlme_3.1-137             
+[39] iterators_1.0.9           psych_1.8.3.3            
+[41] timeDate_3043.102         gower_0.1.2              
+[43] stringr_1.3.0             mime_0.5                 
+[45] miniUI_0.1.1.1            gtools_3.5.0             
+[47] DEoptimR_1.0-8            MASS_7.3-49              
+[49] scales_0.5.0              ipred_0.9-6              
+[51] promises_1.0.1            yaml_2.1.19              
+[53] rpart_4.1-13              stringi_1.1.7            
+[55] highr_0.6                 klaR_0.6-14              
+[57] foreach_1.4.4             caTools_1.17.1           
+[59] lava_1.6.1                geometry_0.3-6           
+[61] rlang_0.2.0               pkgconfig_2.0.1          
+[63] bitops_1.0-6              evaluate_0.10.1          
+[65] purrr_0.2.4               bindr_0.1.1              
+[67] recipes_0.1.2             labeling_0.3             
+[69] CVST_0.2-1                tidyselect_0.2.4         
+[71] plyr_1.8.4                magrittr_1.5             
+[73] R6_2.2.2                  combinat_0.0-8           
+[75] dimRed_0.1.0              pillar_1.2.2             
+[77] whisker_0.3-2             withr_2.1.2              
+[79] survival_2.41-3           nnet_7.3-12              
+[81] tibble_1.4.2              questionr_0.6.2          
+[83] KernSmooth_2.23-15        rmarkdown_1.9            
+[85] grid_3.5.0                git2r_0.21.0             
+[87] ModelMetrics_1.1.0        digest_0.6.15            
+[89] xtable_1.8-2              tidyr_0.8.0              
+[91] httpuv_1.4.1              R.utils_2.6.0            
+[93] stats4_3.5.0              munsell_0.4.3            
+[95] magic_1.5-8              </code></pre>
+<div id="refs" class="references">
+<div id="ref-chu2016single">
+<p>Chu, Li-Fang, Ning Leng, Jue Zhang, Zhonggang Hou, Daniel Mamott, David T Vereide, Jeea Choi, Christina Kendziorski, Ron Stewart, and James A Thomson. 2016. “Single-Cell Rna-Seq Reveals Novel Regulators of Human Embryonic Stem Cell Differentiation to Definitive Endoderm.” <em>Genome Biology</em> 17 (1). BioMed Central: 173.</p>
+</div>
+<div id="ref-li2017reference">
+<p>Li, Huipeng, Elise T Courtois, Debarka Sengupta, Yuliana Tan, Kok Hao Chen, Jolene Jie Lin Goh, Say Li Kong, et al. 2017. “Reference Component Analysis of Single-Cell Transcriptomes Elucidates Cellular Heterogeneity in Human Colorectal Tumors.” <em>Nature Genetics</em> 49 (5). Nature Publishing Group: 708.</p>
+</div>
+<div id="ref-yan2013single">
+<p>Yan, Liying, Mingyu Yang, Hongshan Guo, Lu Yang, Jun Wu, Rong Li, Ping Liu, et al. 2013. “Single-Cell Rna-Seq Profiling of Human Preimplantation Embryos and Embryonic Stem Cells.” <em>Nature Structural and Molecular Biology</em> 20 (9). Nature Publishing Group: 1131.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.0.1
+</p>
+<hr>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

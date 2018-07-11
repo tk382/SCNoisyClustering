@@ -1,0 +1,393 @@
+---
+title: "How to Use SLSL, Case by Case"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+bibliography: bibliography.bib
+---
+
+---
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "../analysis")
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE, 
+                      comment = NA,
+                      cache   = TRUE)
+```
+
+
+# Load the SLSL library.
+
+```{r load_library}
+#library(SLSL)
+library(inline)
+library(matrixStats)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(igraph)
+library(Rtsne)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(scatterplot3d)
+library(diceR)
+library(parallel)
+
+set.seed(1)
+R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')
+  
+heat = function(S){
+  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
+    scale_fill_gradient2() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("") + ylab("")
+}
+```
+
+
+# Small, good data sets
+
+First, prepare your data set. It should be a normalized count matrix in units such as TPM, CPM, RPKM, or FPKM. True label data is available for the sample data Yan et al. [@yan2013single], and we will evaluate the performance at the end as an example, but the label information is not expected for most cases.
+
+## Read Data
+
+```{r read data}
+load('../data/Yan.rda')
+X         = as.matrix(yan)
+truelabel = as.character(ann$cell_type1)
+numClust  = 6
+rm(ann, yan)
+```
+
+The data should look something like this.
+
+```{r peek}
+X[1:4,1:4]
+```
+
+$X$ must be a matrix with dimension $p \times n$ where $p$ is the gene count and $n$ is the cell count. Each cell is located in each column, and each gene is located in each row. The sample data has the gene names as the row names, but this is not required unless you plan to use the reference panel. The column names are also not required because the package assumes the cell names contain no information about the cell subtypes.
+
+## Parameter Set-Up
+
+The SLSL wrapper function can be used like below. Below are the explanations of the parameters available for you to fine-tune. 
+
+First, you can specify the number of clusters. The default is "NA", and SLSL will decide this for you based on the eigenvalues of the learned similarity matrix. 
+
+```{r numclust}
+numClust = length(unique(truelabel)) #4
+```
+
+A knn parameter $k$ determines how many neighbors the algorithm uses to account for the local structure. The default is k = NA and algorithm will automatically assign it as max(10, number of cells / 20). This parameter is used in building the kernel matrices and in network diffusion.
+
+```{r k}
+k = NA
+```
+
+Then decide if you'd like to filter the genes. For each gene, SLSL counts the number of cells that have zero count, and if the proportion of such cells is higher than filter\_p1 or lower than filter\_p2, such gene is removed. This does not influence the clustering result much, unless filter\_p1 is too low or filter\_p2 is too high, and reduces the computational burden of the algorithm. The default choice of 0.9 and 0 reasonably selects the genes that do not hold much information for clustering and remove them.
+
+```{r filter}
+filter = TRUE #or FALSE
+filter_p1 = 0.9 #any value 0 and 1, but something between 0.85 - 0.95 is recommended
+filter_p2 = 0 #any value between 0 and 1, but something less than 0.1 is recommended
+```
+
+Hicks 2017 showed that a large amount of cell-to-cell variation comes from the detection rate, or the proportion of genes that have greater than zero count. For example, first principal component of the data is often correlated with the zero counts of each cell.
+
+Hicks explains that log-transforming the datawith pseudo-counts introduces the bias because the mean counts are no longer the same across the cells. 
+
+The first singular vector is plotted below against the detection rate. It is shown that after centering each column of the log transformed matrix removes part of the correlation between the detection rate and the first singular vector. This correction influences the Euclidean distance matrix, and therefore f 
+
+```{r pca, fig.width=5, fig.height=5}
+library(irlba)
+v = irlba(log(X+1), 1)$v[,1]
+det = 1-colSums(X==0)/nrow(X)
+plot(v ~ det)
+
+newX = scale(log(X+1), scale=F)
+newv = irlba(newX, 1)$v[,1]
+plot(newv~det)
+```
+
+One way to correct this is to regress out the zero counts of each cell. However, as shown above, some data sets have non-linear relationship with the zero counts, and sometimes it's better to transform the data accordingly. 
+
+When correct\_detection\_rate parameter is set to TRUE, the residuals after regressing out the zero counts are used instead of the log of counts. The default is FALSE, and we expect the users to inspect the data like above before setting this to TRUE. 
+
+```{r correct_detection}
+correct_detection_rate = TRUE #default : FALSE
+```
+
+Next argument is kernel\_type. This determines the method to meaure the cell to cell distance. SLSL algorithm combines information from many distance matrices computed from different kernel parameters, where the default setting uses 18 different combinations of the kernel parameters. When kernel\_type is specified as one of "spearman", "pearson", or "euclidean", SLSL will learn similarity matrix based on those 18 kernel matrices using the specified distance masure. When kernel\_type is specified as "combined" (default setting), SLSL will compute three distance matrices using all three distance measures and  $18 \times 3$ kernel matrices to learn the similarity matrix. In other words, kernel\_type = "combined" requires more memory and computational power, but it will reach higher accuracy by accounting for complex cell to cell variability.
+
+```{r kernel_type}
+kernel_type = "combined" #or spearman or pearson or euclidean
+```
+
+The user can also specify the kernel parameters. Denoting the distance from cell $i$ and cell $j$ as $D_{ij}$, $K_{ij}$ given kernel parameters $k$ and $\sigma$ is
+$$K_{ij} = \frac{1}{\sqrt{2\pi}\epsilon_{ij}} exp \left(-\frac{D_{ij}}{2\epsilon^2_{ij}}\right)$$
+where
+$$\epsilon_{ij} = \frac{(\mu_i + \mu_j)\sigma}{2}$$
+
+$$\mu_{i} = \frac{\sum_{j \in KNN(i, k)} \|x_i - x_j\|^2_2}{k}$$
+$KNN(x_i, k)$ is the $k$ nearest neighbors of cell $i$, and $x_i$ is the gene expression level profile of cell $i$. Therefore, the kernel parameters $k$ determines how many neighbors of each cell to use to account for the local structure, and another parameter $\sigma$ determines how to scale the distance to account for the non-linearity.  
+
+```{r kernel_parameters}
+klist = seq(15, 25, by=5)
+sigmalist = seq(1, 2, by=0.2)
+```
+
+$\tau$ and $\gamma$ are the penalty parameters for similarity learning. SLSL combines multiple kernel matrices by giving each of them different weights to reach maximum sparsity ($\tau$). Some past works showed that imposing penalty $gamma$ on the Frobenius norm of the learned similarity matrix. This prevents the similarity matrix from being too close to the identity matrix (assigning each cell to a separate cluster). However, empirically, removing this penalty and setting $\gamma = 0$ performed well. $\tau$ is set to 5 as a default, and as long as it's not too small (we recommend $\tau > 1$), the algorithm works well.
+
+```{r tau_gamma}
+tau = 5
+gamma = 0
+```
+
+Lastly, verbose should be set to TRUE if the user would like to see the progress of the algorithm. measuretime should be set to TRUE if the user would like to see how long each step of the algorithm takes. The default settings are FALSE for both parameters, but here, we set them TRUE to see what they do.
+
+```{r verbose}
+verbose = TRUE
+measuretime = TRUE
+```
+
+## Run the Function
+
+Using the prespecified parameters above, run the SLSL function.
+
+```{r wrapper}
+out = SLSL(X                      = X,
+           numClust               = numClust,
+           k                      = k,
+           filter                 = filter,
+           filter_p1              = filter_p1,
+           filter_p2              = filter_p2,
+           correct_detection_rate = correct_detection_rate,
+           kernel_type            = kernel_type,
+           klist                  = klist,
+           sigmalist              = sigmalist,
+           tau                    = tau,
+           gamma                  = gamma,
+           verbose                = verbose,
+           measuretime            = measuretime
+           )
+```
+
+Or, you can also use default parameters, and this will work as well.
+
+```{r wrapper_not_performed, eval=F}
+out = SLSL(X)
+```
+
+
+## Analyze the Result
+
+First, let's evaluate the clustering result. This is not applicable when true labels are not available.
+
+```{r result}
+table(out$result, as.factor(truelabel))
+adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
+```
+
+Let's take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified. 
+
+```{r similarity_matrix}
+heat(out$S)
+```
+
+Now let's visualize the result through the dimension reduction result. The true label information allows us to analyze the errors from the algorithm. For example, the zygotes and 2-cells were clustered into one group, while there are two outliers in the 16 cells that are close to 8 cells. 
+
+```{r dimred, fig.width=5, fig.height=5}
+tsne = out$tsne
+df = as.data.frame(tsne)
+df$truelabel = as.factor(truelabel)
+df$result = as.factor(out$result)
+
+ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
+ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
+
+scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = as.numeric(as.factor(truelabel)))
+scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = df$result)
+```
+
+# Using Reference Panel
+
+The SLSL function also has a hidden argument "ref". This allows the users to utilize the reference panel data sets [@li2017reference]. Two panels are available: cell types and tissue types. One can simply add this parameter in SLSL function. 
+
+## Read Data
+
+To demonstrate the use of the reference panel, we use the cell types of human embryonic cells published in [@chu2016single]. 
+
+```{r ref_read_data}
+load('../data/Chu_celltype.Rdata')
+```
+
+## Cell Type Panel
+
+```{r ref_run, eval=F}
+X = Chu_celltype$X
+out_cell_ref = SLSL(X        = X, 
+                    ref      = "cell",
+                    dir      = "..", 
+                    numClust = 7)
+```
+
+
+```{r ref_analyze, eval=F}
+heat(out_cell_ref$projection)
+```
+
+One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.
+
+```{r ref_analyze2, eval=F}
+truelabel = as.factor(Chu_celltype$label)
+heat(out_cell_ref$SLSL_output$S)
+table(out_cell_ref$SLSL_output$result, truelabel)
+adj.rand.index(out_cell_ref$SLSL_output$result, 
+               as.numeric(truelabel))
+```
+
+Now look at the visualization from the dimension reduction result.
+
+```{r ref_analyze3, eval=F}
+out = out_cell_ref$SLSL_output
+tsne = out$tsne
+df = as.data.frame(tsne)
+df$truelabel = as.factor(truelabel)
+df$result = as.factor(out$result)
+ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
+ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
+```
+
+## Tissue Type Panel
+
+Similarly, we can use the tissue reference panel.
+
+```{r tissueref}
+out_tissue_ref = SLSL(X, ref="tissue", dir = "..", numClust=7)
+```
+
+We can analyze the result like below. 
+
+```{r tissueref_analyze}
+heat(out_tissue_ref$projection)
+heat(out_tissue_ref$SLSL_output$S)
+table(out_tissue_ref$SLSL_output$result, truelabel)
+adj.rand.index(out_tissue_ref$SLSL_output$result,
+               as.numeric(truelabel))
+
+out = out_tissue_ref$SLSL_output
+tsne = out$tsne
+df = as.data.frame(tsne)
+df$truelabel = as.factor(truelabel)
+df$result = as.factor(out$result)
+ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
+ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
+```
+
+Since using reference panels often throws away a lot of information, users should be careful when to use panels and which panel to use. The data sets should be from human cells, and they should have enough cellular heterogeneity. For example, Yan data are from different stages of human embryonic cells, and once projected on to the reference panels, all the cells belonged to one type : oocytes. The Chu data above also shows a much better performance when clustered without the reference panel. 
+
+# Large Sets (cells > 1000)
+
+There is a separate function for data sets that have more than 1,000 cells : LSLSL(Large Similarity Learning with Scaled Lasso). 
+
+The input data matrix is the same as regular SLSL: a count matrix with cells in columns and genes in rows. LSLSL assumes that the number of columns exceed 1000. We use Zeisel data [@zeisel2015cell]
+
+## Read Data
+```{r zeisel_read}
+load('../data/Zeisel.Rdata')
+X = Zeisel$X
+truelabel = Zeisel$label
+```
+
+Note that Zeisel is a Drop-seq data, and coverage is very low. The histogram of the detection rate is below.
+
+## Parameter Set-Up
+```{r zeisel_coverage}
+detection_rate = 1-colSums(X==0)/nrow(X)
+hist(detection_rate, breaks = 20)
+```
+
+Since we have the true label data, we will use the true number of clusters,
+```{r zeisel_numClust}
+numClust = length(unique(truelabel)) #default is NA
+```
+
+For the kernel\_type, we will use "combined" as before.
+
+```{r zeisel_ker}
+kernel_type = "combined" #one of "spearman", "pearson", or "euclidean"
+```
+
+LSLSL uses "parallel" package in CRAN for parallel computing. Users can specify the number of cores to use. The default is NA, and LSLSL will detect the number of cores of your laptop and use everything except 1. Here, we specify it as 2.
+
+```{r zeisel_core}
+core = 3 #default is NA
+```
+
+The shuffle argument decides if LSLSL should shuffle the order of the cells. LSLSL divides the cells into groups of approximately the same size, and it works the best if each group contains all subtypes of the cells. Unless the user carefully designed the ordering of the cells so that they are well mixed, we recommend to set shuffle as TRUE. 
+
+```{r zeisel_shuffle}
+shuffle = TRUE #default is TRUE
+```
+
+Now run the algorithm with different methods.
+
+```{r zeisel_run, cache = T}
+res = LSLSL(X             = X,
+            numClust      = numClust,
+            kernel_type   = kernel_type,
+            core          = core,
+            shuffle       = shuffle,
+            cluster_method = "CSPA")
+```
+
+## Analyze the Result
+
+```{r zeisel_result}
+adj.rand.index(truelabel, res$result)
+```
+
+Let's try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again. The following chunk arranges the data set into a 4 dimensional array for the specification of package "diceR." [@diceR]
+
+```{r diceR specification}
+# construct an array called "out" for specification in diceR package.
+final = res$array
+out = array(0, dim=c(nrow(final), ncol(final), 1, 1))
+out[,,1,1] = final
+k = length(unique(truelabel))
+
+dimnames(out)[[1]] = paste0('R',1:nrow(final)) #random row names
+dimnames(out)[[2]] = paste0('C',1:ncol(final)) #random column names
+dimnames(out)[[3]] = paste0("k")
+dimnames(out)[[4]] = as.character(k) #This must be the number of clusters
+```
+  
+You must impute the array in order to use other consensus clustering methods. The "impute\_missing" requires the raw data matrix (make sure it is transposed), and here we use the filtered X. This is appropriate especially because this is a Drop-seq data where most genes hold little information. The three methods are "k\_modes", "majority\_voting", and "LCE". For the guidance of which method to use, refer to [@diceR]. 
+  
+```{r othermethods}
+newX = log(genefilter(X)+1)
+E = impute_missing(out, t(newX), 9)
+kmodes = k_modes(E, 9)
+majvote = majority_voting(E, 9)
+lce = LCE(E, 9)
+adj.rand.index(kmodes, truelabel)
+adj.rand.index(majvote, truelabel)
+adj.rand.index(lce, truelabel) 
+```
+
+
+

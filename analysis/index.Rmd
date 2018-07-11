@@ -1,0 +1,17 @@
+---
+title: "Scaled Lasso Similarity Learning for Single Cell Sequencing Data"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+
+---
+
+Welcome to SLSL tutorial page. The tutorial walks the users step by step to use the SLSL package for single cell clustering. You should have your gene expression level matrix, or a smaller version of it for faster learning. We recommend that you start from the count matrix with each cell in each column and gene in each column, with row names specified as the gene names. However, this is not required if you do not intend to use the reference panel or to add prior information. 
+
+

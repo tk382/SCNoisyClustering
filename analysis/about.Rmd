@@ -1,0 +1,13 @@
+---
+title: "About"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: true
+---
+
+
+SLSL (Scaled Lasso Similarity Learning) is an unsupervised learning tool for clustering single cells using their expression level data. SLSL constructs many similarity matrices using different distance measures (Euclidean, Pearson, and Spearman), and different kernel parameters to account for the possible nonlinear structure. Then, SLSL employs scaled lasso to find optimal weights on each of those similarity matrices and infer one final sparse similarity matrix. This procedure does not have rank constraint unlike many popular unsupervised learning tools, because imposing such inflexible structure does not guarantee higher accuracy. Instead, we employ network diffusion to make the final similarity matrix closer to the block diagonal matrix. This is in effect equivalent to shrinking the less important eigenvalues. Lastly, SLSL sequentially performs dimension reduction using tSNE and kmeans for the final clustering result. 
