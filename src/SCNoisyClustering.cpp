@@ -10,22 +10,7 @@ Environment armastats("package:stats");
 Function corr = armastats["cor"];
 
 
-// // [[Rcpp::depends("RcppArmadillo")]]
-// // [[Rcpp::export]]
-// arma::mat genefilter_c(arma::mat X,
-//                        double p1 = 0.9,
-//                        double p2 = 0)
-//   arma::uvec ind = find(X);
-//   arma::vec zeros = sum(ind, 0);
-//   remove = find(zeros > (p1 * X.n_cols));
-//   if(length(remove)>0){ X = X[-remove,]}
-//   zeros = apply(X, 1, function(x) sum(x==0))
-//     remove = which(zeros < (p2 * ncol(X)))
-//     if(length(remove)>0){X = X[-remove,]}
-//     return(X)
-// }
-
-
+// [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 arma::mat armapmax(arma::mat A, double bound){
   int n = A.n_rows;

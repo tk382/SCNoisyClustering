@@ -1,0 +1,3 @@
+importFrom(Rcpp, sourceCpp)
+useDynLib(SCNoisyClustering)
+exportPattern("^[[:alpha:]]+")
