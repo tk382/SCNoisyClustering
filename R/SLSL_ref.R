@@ -14,7 +14,7 @@ SLSL_ref = function(X, ref, numClust){
   projection = t(t(X) %*% as.matrix(ref))/nrow(X)
   projection = scale(projection^4)
 
-  res = SLSL(projection, numClust, log=F)
+  res = SLSL(projection, numClust = numClust, log=F)
   out = list(SLSL_output = res, projection = projection, numGenes=length(int))
   return(out)
 }

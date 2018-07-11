@@ -62,7 +62,7 @@ rownames(measuretime) = data_list
 ```
 
 ```{r read data, eval=F}
-for (i in 2){
+for (i in c(2:6, 8)){
   if(i==1){
     load('../../data/1_Kolod.RData')
     X        = exp(Test_2_Kolod$in_X)-1;
@@ -83,14 +83,12 @@ for (i in 2){
   }else if(i==3){
     load('../../data/3_Usoskin.RData')
     X        = as.matrix(Usoskin$X)
-    #X        = log(X+1)
     truth    = as.character(Usoskin$lab1)
     numClust = 4
     rm(Usoskin)
   }else if(i==4){
     load('../../data/4_Buettner.RData')
     X        = as.matrix(Buettner$X)
-    #X        = log(X+1)
     truth    = as.character(Buettner$label)
     numClust = 3
     rm(Buettner)
@@ -102,7 +100,6 @@ for (i in 2){
   }else if(i==5){
     load('../../data/5_Yan.rda')
     X        = as.matrix(yan)
-    #X        = log(X+1)
     truth    = as.character(ann$cell_type1)
     numClust = 6
     rm(ann, yan)
@@ -112,7 +109,6 @@ for (i in 2){
     truth    = as.numeric(colnames(treutlein))
     ind      = sort(truth, index.return=TRUE)$ix
     X        = X[,ind]
-    #X        = log(X + 1)
     truth    = truth[ind]
     numClust = length(unique(truth))
     rm(treutlein)
@@ -132,53 +128,52 @@ for (i in 2){
   genecount[i] = nrow(X)
   gc()
 
-
-
 ####################################
 
   truth = as.numeric(as.factor(truth))
-  set.seed(1)
-
-  res = SLSL(X,
-             numClust = numClust,
-             correct_detection_rate = T,
-             tau = 5,
-             gamma = 0,
-             kernel_type = "spearman"
-             )
-  ARI[i,1] = adj.rand.index(res$result, truth)
-  gc()
-
-  set.seed(1)
-  res = SLSL(X,
-             numClust = numClust,
-             correct_detection_rate = T,
-             tau = 5,
-             gamma = 0,
-             kernel_type = "pearson"
-             )
-  ARI[i,2] = adj.rand.index(res$result, truth)
-  gc()
-
-  set.seed(1)
-  res = SLSL(X,
-             numClust = numClust,
-             correct_detection_rate = T,
-             tau = 5,
-             gamma = 0,
-             kernel_type = "euclidean"
-             )
-  ARI[i,3] = adj.rand.index(res$result, truth)
-  gc()
-  
+  # 
+  # set.seed(1)
+  # res = SLSL(X,
+  #            numClust = numClust,
+  #            correct_detection_rate = T,
+  #            tau = 5,
+  #            gamma = 0,
+  #            kernel_type = "spearman"
+  #            )
+  # ARI[i,1] = adj.rand.index(res$result, truth)
+  # gc()
+  # 
+  # set.seed(1)
+  # res = SLSL(X,
+  #            numClust = numClust,
+  #            correct_detection_rate = T,
+  #            tau = 5,
+  #            gamma = 0,
+  #            kernel_type = "pearson"
+  #            )
+  # ARI[i,2] = adj.rand.index(res$result, truth)
+  # gc()
+  # 
+  # set.seed(1)
+  # res = SLSL(X,
+  #            numClust = numClust,
+  #            correct_detection_rate = T,
+  #            tau = 5,
+  #            gamma = 0,
+  #            kernel_type = "euclidean"
+  #            )
+  # ARI[i,3] = adj.rand.index(res$result, truth)
+  # gc()
+  # 
   set.seed(1)
   t1 = Sys.time()
   res = SLSL(X,
              numClust = numClust,
-             correct_detection_rate = T,
+             correct_detection_rate = F,
              tau = 5,
              gamma = 0,
-             kernel_type = "combined"
+             kernel_type = "combined",
+             remove_one = T
              )
   t2 = Sys.time()
   ARI[i,4] = adj.rand.index(res$result, truth)
@@ -190,47 +185,47 @@ for (i in 2){
   rm(res)
   gc()
 
-  #SC3
-  set.seed(1)
-  colnames(X) = paste0('C',1:ncol(X))
-  rownames(X) = paste0('R',1:nrow(X))
-  sce = SingleCellExperiment(assays = list(counts = X,
-                                           logcounts = log(X + 1)
-                                           ),
-                             colData = colnames(X)
-                             )
-  rowData(sce)$feature_symbol = rownames(X)
-  t3 = Sys.time()
-  res = sc3(sce, ks = numClust, biology = FALSE)
-  t4 = Sys.time()
-
-  measuretime[i,2] = as.difftime(t4-t3, units="secs")
-
-  sc3_export_results_xls(res, filename = "tmp.xls")
-  x = read.xls("tmp.xls")
-  result = x[,2]
-  SC3[i] = adj.rand.index(result, truth)
-
-  set.seed(1)
-  t5 = Sys.time()
-  res = PCAreduce(t(log(X+1)), 10, numClust, 'M')[[1]][,1]
-  t6 = Sys.time()
-
-  measuretime[i,3] = as.difftime(t6-t5, units="secs")
-
-  pcaReduce[i] = adj.rand.index(res, truth)
-
-  set.seed(1)
-
-  t7 = Sys.time()
-  res = SIMLR(log(X+1), numClust)
-  t8 = Sys.time()
-
-  measuretime[i,4] = as.difftime(t8-t7, units = "secs")
-
-  SIMLR[i] = adj.rand.index(res$y$cluster, truth)
-
-  rm(res); gc()
+  # #SC3
+  # set.seed(1)
+  # colnames(X) = paste0('C',1:ncol(X))
+  # rownames(X) = paste0('R',1:nrow(X))
+  # sce = SingleCellExperiment(assays = list(counts = X,
+  #                                          logcounts = log(X + 1)
+  #                                          ),
+  #                            colData = colnames(X)
+  #                            )
+  # rowData(sce)$feature_symbol = rownames(X)
+  # t3 = Sys.time()
+  # res = sc3(sce, ks = numClust, biology = FALSE)
+  # t4 = Sys.time()
+  # 
+  # measuretime[i,2] = as.difftime(t4-t3, units="secs")
+  # 
+  # sc3_export_results_xls(res, filename = "tmp.xls")
+  # x = read.xls("tmp.xls")
+  # result = x[,2]
+  # SC3[i] = adj.rand.index(result, truth)
+  # 
+  # set.seed(1)
+  # t5 = Sys.time()
+  # res = PCAreduce(t(log(X+1)), 10, numClust, 'M')[[1]][,1]
+  # t6 = Sys.time()
+  # 
+  # measuretime[i,3] = as.difftime(t6-t5, units="secs")
+  # 
+  # pcaReduce[i] = adj.rand.index(res, truth)
+  # 
+  # set.seed(1)
+  # 
+  # t7 = Sys.time()
+  # res = SIMLR(log(X+1), numClust)
+  # t8 = Sys.time()
+  # 
+  # measuretime[i,4] = as.difftime(t8-t7, units = "secs")
+  # 
+  # SIMLR[i] = adj.rand.index(res$y$cluster, truth)
+  # 
+  # rm(res); gc()
 }
 write.table(measuretime, "temp_time.txt", col.names=TRUE, row.names=TRUE, quote=FALSE)
 write.table(ARI, "temp_ari.txt", col.names=TRUE, row.names=TRUE, quote=FALSE)
@@ -272,7 +267,7 @@ ggplot(md3, aes(x=genecount, y=value, col=variable)) + geom_point(label=data) + 
 
 #write.table(measuretime, 'small_good_sets_time.txt', col.names=TRUE, row.names=TRUE, quote=FALSE)
 ind = sort(cellcount, index.return=TRUE)$ix
-stargazer(as.matrix(cbind(cellcount, measuretime[ind, ])))
+stargazer(as.matrix(cbind(cellcount[ind], measuretime[ind, ])))
 
 measuretime$data = c("Kolod","Pollen","Usoskin","Buettner","Yan","Treutlein","Chu(celltype)","Chu(timecourse)")
 mt = melt(measuretime, id='data')

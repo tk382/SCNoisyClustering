@@ -1,4 +1,5 @@
 SLSL = function(X,
+                dir = ".",
                 numClust = NA,
                 ref = "none",
                 k=NA,
@@ -6,14 +7,15 @@ SLSL = function(X,
                 filter = T,
                 filter_p1 = 0.9,
                 filter_p2 = 0,
-                correct_detection_rate = T,
+                correct_detection_rate = F,
                 kernel_type = "combined",
                 klist = seq(15,25,by=5),
                 sigmalist=seq(1,2,by=0.2),
                 tau = 5,
                 gamma = 0,
                 verbose=FALSE,
-                measuretime = FALSE
+                measuretime = FALSE,
+                warning=TRUE
                 ){
   # X           : each column is one cell, each row is one gene
   # k           : number of neighbors for kernel computation and network diffusion
@@ -21,18 +23,24 @@ SLSL = function(X,
   # kernel_type : possible options: "pearson", "euclidean", "spearman", "combined"# klist       : kernel parameters
   # sigmalist   : kernel parameters
 
+
+  if(ncol(X)>1200 & warning){
+    stop("We detected more than 1,200 cells, and system might crash due to memory requirement.
+         We recommend LSLSL function for large matrices.
+         If you'd like to use SLSL anyway, set warning=FALSE")
+  }
+
   if(ref %in% c("tissue", "cell")){
     if(ref=="tissue"){
-      load('data/sysdata.rda')
+      load(paste0(dir,'/data/sysdata.rda'))
       ref = sysdata$GlobalPanel[[2]]
     }else if(ref=="cell"){
-      load('data/sysdata.rda')
+      load(paste0(dir,'/data/sysdata.rda'))
       ref = sysdata$GlobalPanel[[1]]
     }
     X = log(X+1)
-    out = SLSL_ref(X, ref, numClust)
+    out = SLSL_ref(X=X, ref=ref, numClust=numClust)
     return(out)
-
   }else if(ref=="none"){
     if(is.na(k)){
       k = max(10,ncol(X)/20)
@@ -53,19 +61,17 @@ SLSL = function(X,
     if(log){X = log(X+1)}
 
     X2 = X
-
     if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
-      zeros = apply(X2, 2, function(x) sum(x==0))
+      zeros = colSums(X==0)
       pc1 = irlba(X2, 1)$v[,1]
       mod = lm(pc1~zeros)
       if(tidy(mod)[2,5] < 0.05){
-        if(verbose){print('correcting for the detection rate..')}
-        scalar = sqrt(ncol(X)-1)
-        X3 = scale(t(X2)) / scalar
-        x = scale(zeros) / scalar
-        # x = scale(pc1)/scalar
-        X2 = t(X3 - x  %*% (t(x) %*% X3)) * scalar
+        x = cbind(rep(1,ncol(X)), pc1)
+        H = x %*% solve(t(x) %*% x) %*% t(x)
+        X2 = t(t(X2) - H %*% t(X2))
       }
+      X2 = scale(X2, scale=F, center=T)
+    }else{
       X2 = scale(X2, scale=F, center=T)
     }
 
@@ -107,7 +113,7 @@ SLSL = function(X,
     if(verbose){print('dimension reduction..')}
 
     if(is.na(numClust)){
-      print('determining cluster number..')
+      if(verbose){print('determining cluster number..')}
       numClust= getClustNum(S)
     }
 
@@ -115,16 +121,17 @@ SLSL = function(X,
     t6 = Sys.time()
     if(measuretime){cat(paste('gene filter & numClust',
                               as.difftime(round(t2-t1,2), units="secs"),
-                              '\nconstructing kernel',
+                              'seconds \nconstructing kernel',
                               as.difftime(round(t3-t2,2), units="secs"),
-                              '\nget S',
+                              'seconds \nget S',
                               as.difftime(round(t4-t3,2), units="secs"),
-                              '\nnetwork diffusion',
+                              'seconds \nnetwork diffusion',
                               as.difftime(round(t5-t4,2), units="secs"),
-                              '\ntsne',
-                              as.difftime(round(t6-t5,2), units="secs")))}
+                              'seconds\ntsne',
+                              as.difftime(round(t6-t5,2), units="secs"),
+                              'seconds'))}
 
-    return(list(S=S, result = tmp$cluster, tsne=tmp$tsne))
+    return(list(S=S, result = tmp$cluster, tsne=tmp$tsne, sigma = sigma))
   }else{
     stop("ref should be one of 'none', 'tissue', or 'cell'.")
   }
