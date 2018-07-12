@@ -1,7 +1,6 @@
 SLSL = function(X,
-                dir = ".",
                 numClust = NA,
-                ref = "none",
+                ref = NA,
                 k=NA,
                 log = T,
                 filter = T,
@@ -30,18 +29,13 @@ SLSL = function(X,
          If you'd like to use SLSL anyway, set warning=FALSE")
   }
 
-  if(ref %in% c("tissue", "cell")){
-    if(ref=="tissue"){
-      load(paste0(dir,'/data/sysdata.rda'))
-      ref = sysdata$GlobalPanel[[2]]
-    }else if(ref=="cell"){
-      load(paste0(dir,'/data/sysdata.rda'))
-      ref = sysdata$GlobalPanel[[1]]
-    }
+  if(length(ref) > 1){
     X = log(X+1)
-    out = SLSL_ref(X=X, ref=ref, numClust=numClust)
+    out = SLSL_ref(X=X,
+                   ref=ref,
+                   numClust=numClust)
     return(out)
-  }else if(ref=="none"){
+  }else{
     if(is.na(k)){
       k = max(10,ncol(X)/20)
     }
@@ -78,6 +72,7 @@ SLSL = function(X,
     # Construct kernel..
     if(verbose){print('constructing kernel..')}
     if(kernel_type=="pearson"){
+      diff = 1-cor(as.matrix(X), method = "pearson")
       P = corr_kernel_c(t(X),klist,sigmalist,k)
     }else if(kernel_type=="euclidean"){
       P = dist_kernel_c(t(X2), klist, sigmalist, k)
@@ -85,10 +80,11 @@ SLSL = function(X,
       diff = 1-cor(as.matrix(X), method = "spearman")
       P    = rank_kernel_c(t(X), diff, klist, sigmalist, k)
     }else if(kernel_type=="combined"){
-      diff = 1-cor(as.matrix(X), method = "spearman")
-      P1 = corr_kernel_c(t(X), klist, sigmalist, k)
+      diff1 = 1-cor(as.matrix(X), method = "pearson")
+      diff3 = 1-cor(as.matrix(X), method = "spearman")
+      P1 = corr_kernel_c(t(X), diff1, klist, sigmalist, k)
       P2 = dist_kernel_c(t(X2), klist, sigmalist, k)
-      P3 = rank_kernel_c(t(X), diff, klist, sigmalist, k)
+      P3 = rank_kernel_c(t(X), diff3, klist, sigmalist, k)
       P  = abind(P1, P2, P3)
       rm(P1, P2, P3)
     }else{
@@ -97,9 +93,11 @@ SLSL = function(X,
 
     t3 = Sys.time()
 
-    if(verbose){print('optimizing..')}
+    if(verbose){
+      print('optimizing..')
+    }
 
-    res = sparse_scaledlasso_c(P, tau, gamma, verbose=F)
+    res = sparse_scaledlasso_c(P, tau, gamma, verbose=T)
     sigmas = res$sigma
 
     t4 = Sys.time()
@@ -131,9 +129,7 @@ SLSL = function(X,
                               as.difftime(round(t6-t5,2), units="secs"),
                               'seconds'))}
 
-    return(list(S=S, result = tmp$cluster, tsne=tmp$tsne, sigma = sigma))
-  }else{
-    stop("ref should be one of 'none', 'tissue', or 'cell'.")
+    return(list(S=S, result = tmp$cluster, tsne=tmp$tsne, sigma = sigmas))
   }
 
 }

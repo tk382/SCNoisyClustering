@@ -4,12 +4,6 @@
 using namespace Rcpp;
 using namespace std;
 
-Environment quadprog("package:quadprog");
-Function solve_QP = quadprog["solve.QP"];
-Environment armastats("package:stats");
-Function corr = armastats["cor"];
-
-
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 arma::mat armapmax(arma::mat A, double bound){
@@ -105,6 +99,7 @@ arma::mat spearman_c(const arma::mat X){
 
 // [[Rcpp::export]]
 arma::cube corr_kernel_c(arma::mat X,
+                         arma::mat Diff,
                          arma::vec allk_input,
                          arma::vec sigma_input,
                          int k = 0){
@@ -117,7 +112,6 @@ arma::cube corr_kernel_c(arma::mat X,
   int kerlen = slen*klen;
 
   //compute and sort Diff
-  arma::mat Diff = 1-cor(X.t());
   arma::mat Diff_sort(N,N);
   for (int j = 0; j < N; ++j){
     Diff_sort.row(j) = sort(Diff.row(j));
@@ -478,7 +472,7 @@ arma::mat tsne_c(arma::mat X,
     arma::mat stiffness = (P-Q) % num;
     grads = 4 * (diagmat(sum(stiffness, 0)) - stiffness) * ydata;
     gains = (gains + 0.2) % abs(sign(grads) != sign(incs)) +
-              gains*0.8 % abs(sign(grads) == sign(incs));
+      gains*0.8 % abs(sign(grads) == sign(incs));
     gains.elem(find(gains < min_gain)).fill(min_gain);
 
     incs = momentum*incs - epsilon*(gains%grads);

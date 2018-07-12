@@ -26,31 +26,32 @@ knitr::opts_chunk$set(echo = TRUE,
 # Load the SLSL library.
 
 ```{r load_library}
-#library(SLSL)
-library(inline)
-library(matrixStats)
-library(quadprog)
-library(irlba)
-library(ggplot2)
-library(dplyr)
-library(reshape)
-library(caret)
-library(fossil)
-library(pracma)
-library(igraph)
-library(Rtsne)
-library(gplots)
-library(broom)
-library(abind)
-library(stargazer)
-library(scatterplot3d)
-library(diceR)
-library(parallel)
+library(SCNoisyClustering)
+# 
+# library(inline)
+# library(matrixStats)
+# library(quadprog)
+# library(irlba)
+# library(ggplot2)
+# library(dplyr)
+# library(reshape)
+# library(caret)
+# library(fossil)
+# library(pracma)
+# library(igraph)
+# library(Rtsne)
+# library(gplots)
+# library(broom)
+# library(abind)
+# library(stargazer)
+# library(scatterplot3d)
+# library(diceR)
+# library(parallel)
+# 
+# set.seed(1)
+# R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
+# Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')
 
-set.seed(1)
-R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
-Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')
-  
 heat = function(S){
   ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
     scale_fill_gradient2() +
@@ -112,7 +113,7 @@ Hicks explains that log-transforming the datawith pseudo-counts introduces the b
 
 The first singular vector is plotted below against the detection rate. It is shown that after centering each column of the log transformed matrix removes part of the correlation between the detection rate and the first singular vector. This correction influences the Euclidean distance matrix, and therefore f 
 
-```{r pca, fig.width=5, fig.height=5}
+```{r pca, fig.width=4, fig.height=4}
 library(irlba)
 v = irlba(log(X+1), 1)$v[,1]
 det = 1-colSums(X==0)/nrow(X)
@@ -237,32 +238,34 @@ load('../data/Chu_celltype.Rdata')
 
 ## Cell Type Panel
 
-```{r ref_run, eval=F}
+```{r ref_run}
+sysdata = SCNoisyClustering::reference_panel
+ref = reference_panel$cell
+
 X = Chu_celltype$X
 out_cell_ref = SLSL(X        = X, 
-                    ref      = "cell",
-                    dir      = "..", 
+                    ref      = ref,
                     numClust = 7)
 ```
 
 
-```{r ref_analyze, eval=F}
+```{r ref_analyze}
 heat(out_cell_ref$projection)
 ```
 
 One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.
 
-```{r ref_analyze2, eval=F}
+```{r ref_analyze2}
 truelabel = as.factor(Chu_celltype$label)
 heat(out_cell_ref$SLSL_output$S)
 table(out_cell_ref$SLSL_output$result, truelabel)
-adj.rand.index(out_cell_ref$SLSL_output$result, 
+adj.rand.index(out_cell_ref$SLSL_output$result,
                as.numeric(truelabel))
 ```
 
 Now look at the visualization from the dimension reduction result.
 
-```{r ref_analyze3, eval=F}
+```{r ref_analyze3}
 out = out_cell_ref$SLSL_output
 tsne = out$tsne
 df = as.data.frame(tsne)
@@ -277,7 +280,10 @@ ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
 Similarly, we can use the tissue reference panel.
 
 ```{r tissueref}
-out_tissue_ref = SLSL(X, ref="tissue", dir = "..", numClust=7)
+ref = reference_panel$tissue
+out_tissue_ref = SLSL(X, 
+                      ref = ref, 
+                      numClust=7)
 ```
 
 We can analyze the result like below. 
