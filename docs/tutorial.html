@@ -245,12 +245,11 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-11</p>
+<p><strong>Last updated:</strong> 2018-07-12</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -259,8 +258,8 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
-<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(12345)</code> </summary></p>
+<p>The command <code>set.seed(12345)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
 </details>
 </li>
 <li>
@@ -269,15 +268,87 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SLSL_workflow/tree/822cb7240c53b06d7f973e6576619ecc89316e78" target="_blank">822cb72</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/2244c7a85fa6cf1bd077b9130229f0e5a2fa6573" target="_blank">2244c7a</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/tutorial_cache/
-    Ignored:    data/.DS_Store
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  R/.DS_Store
+    Untracked:  SCNoisyClustering.Rproj
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/bibliography.bib
+    Untracked:  analysis/clean_data/
+    Untracked:  analysis/correcting_detection_rate/
+    Untracked:  analysis/downsampling/
+    Untracked:  analysis/dropouts/
+    Untracked:  analysis/figure/
+    Untracked:  analysis/filteringtest.R
+    Untracked:  analysis/old/
+    Untracked:  analysis/pipeline/large_sets.pdf
+    Untracked:  analysis/pipeline/temp_ari.txt
+    Untracked:  analysis/pipeline/temp_time.txt
+    Untracked:  analysis/sysdata_reference_test/
+    Untracked:  analysis/tutorial_cache/
+    Untracked:  analysis/writeup/cite.bib
+    Untracked:  analysis/writeup/cite.log
+    Untracked:  analysis/writeup/paper.aux
+    Untracked:  analysis/writeup/paper.bbl
+    Untracked:  analysis/writeup/paper.blg
+    Untracked:  analysis/writeup/paper.log
+    Untracked:  analysis/writeup/paper.out
+    Untracked:  analysis/writeup/paper.synctex.gz
+    Untracked:  analysis/writeup/paper.tex
+    Untracked:  analysis/writeup/writeup.aux
+    Untracked:  analysis/writeup/writeup.bbl
+    Untracked:  analysis/writeup/writeup.blg
+    Untracked:  analysis/writeup/writeup.dvi
+    Untracked:  analysis/writeup/writeup.log
+    Untracked:  analysis/writeup/writeup.out
+    Untracked:  analysis/writeup/writeup.synctex.gz
+    Untracked:  analysis/writeup/writeup.tex
+    Untracked:  analysis/writeup/writeup2.aux
+    Untracked:  analysis/writeup/writeup2.bbl
+    Untracked:  analysis/writeup/writeup2.blg
+    Untracked:  analysis/writeup/writeup2.log
+    Untracked:  analysis/writeup/writeup2.out
+    Untracked:  analysis/writeup/writeup2.pdf
+    Untracked:  analysis/writeup/writeup2.synctex.gz
+    Untracked:  analysis/writeup/writeup2.tex
+    Untracked:  analysis/writeup/writeup3.aux
+    Untracked:  analysis/writeup/writeup3.log
+    Untracked:  analysis/writeup/writeup3.out
+    Untracked:  analysis/writeup/writeup3.synctex.gz
+    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  data/
+    Untracked:  docs/.nojekyll
+    Untracked:  man/
+    Untracked:  src/.DS_Store
+    Untracked:  src/SCNoisyClustering.o
+
+Unstaged changes:
+    Modified:   NAMESPACE
+    Modified:   R/RcppExports.R
+    Modified:   R/SLSL.R
+    Modified:   analysis/pipeline/small_good_sets.Rmd
+    Modified:   analysis/pipeline/small_good_sets_result.txt
+    Modified:   analysis/pipeline/small_good_sets_time.txt
+    Modified:   analysis/tutorial.Rmd
+    Modified:   analysis/writeup/.DS_Store
+    Modified:   analysis/writeup/paper.pdf
+    Deleted:    docs/bibliography.bib
+    Modified:   src/RcppExports.cpp
+    Modified:   src/RcppExports.o
+    Modified:   src/SCNoisyClustering.cpp
+    Modified:   src/SCNoisyClustering.so
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -311,7 +382,7 @@ Message
 Rmd
 </td>
 <td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/822cb7240c53b06d7f973e6576619ecc89316e78/analysis/tutorial.Rmd" target="_blank">822cb72</a>
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c5b074e2aa03ff4cf9e37c2cea4a3b9fd6ec19/analysis/tutorial.Rmd" target="_blank">f6c5b07</a>
 </td>
 <td style="text-align:left;">
 tk382
@@ -320,7 +391,7 @@ tk382
 2018-07-11
 </td>
 <td style="text-align:left;">
-wflow_publish(c(“analysis/tutorial.Rmd”, “analysis/index.Rmd”))
+add website
 </td>
 </tr>
 <tr>
@@ -328,7 +399,7 @@ wflow_publish(c(“analysis/tutorial.Rmd”, “analysis/index.Rmd”))
 html
 </td>
 <td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/681825abf492c82f1be32f45d06386ae2589f053/docs/tutorial.html" target="_blank">681825a</a>
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/f6c5b074e2aa03ff4cf9e37c2cea4a3b9fd6ec19/docs/tutorial.html" target="_blank">f6c5b07</a>
 </td>
 <td style="text-align:left;">
 tk382
@@ -337,41 +408,7 @@ tk382
 2018-07-11
 </td>
 <td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/analysis/tutorial.Rmd" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-<td style="text-align:left;">
-add tutorial section
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/tutorial.html" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-<td style="text-align:left;">
-add tutorial section
+add website
 </td>
 </tr>
 </tbody>
@@ -382,31 +419,32 @@ add tutorial section
 <hr />
 <div id="load-the-slsl-library." class="section level1">
 <h1>Load the SLSL library.</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#library(SLSL)</span>
-<span class="kw">library</span>(inline)
-<span class="kw">library</span>(matrixStats)
-<span class="kw">library</span>(quadprog)
-<span class="kw">library</span>(irlba)
-<span class="kw">library</span>(ggplot2)
-<span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(reshape)
-<span class="kw">library</span>(caret)
-<span class="kw">library</span>(fossil)
-<span class="kw">library</span>(pracma)
-<span class="kw">library</span>(igraph)
-<span class="kw">library</span>(Rtsne)
-<span class="kw">library</span>(gplots)
-<span class="kw">library</span>(broom)
-<span class="kw">library</span>(abind)
-<span class="kw">library</span>(stargazer)
-<span class="kw">library</span>(scatterplot3d)
-<span class="kw">library</span>(diceR)
-<span class="kw">library</span>(parallel)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SCNoisyClustering)
+<span class="co"># </span>
+<span class="co"># library(inline)</span>
+<span class="co"># library(matrixStats)</span>
+<span class="co"># library(quadprog)</span>
+<span class="co"># library(irlba)</span>
+<span class="co"># library(ggplot2)</span>
+<span class="co"># library(dplyr)</span>
+<span class="co"># library(reshape)</span>
+<span class="co"># library(caret)</span>
+<span class="co"># library(fossil)</span>
+<span class="co"># library(pracma)</span>
+<span class="co"># library(igraph)</span>
+<span class="co"># library(Rtsne)</span>
+<span class="co"># library(gplots)</span>
+<span class="co"># library(broom)</span>
+<span class="co"># library(abind)</span>
+<span class="co"># library(stargazer)</span>
+<span class="co"># library(scatterplot3d)</span>
+<span class="co"># library(diceR)</span>
+<span class="co"># library(parallel)</span>
+<span class="co"># </span>
+<span class="co"># set.seed(1)</span>
+<span class="co"># R.utils::sourceDirectory(&quot;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/&quot;, modifiedOnly=FALSE)</span>
+<span class="co"># Rcpp::sourceCpp(&#39;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp&#39;)</span>
 
-<span class="kw">set.seed</span>(<span class="dv">1</span>)
-R.utils<span class="op">::</span><span class="kw">sourceDirectory</span>(<span class="st">&quot;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/&quot;</span>, <span class="dt">modifiedOnly=</span><span class="ot">FALSE</span>)
-Rcpp<span class="op">::</span><span class="kw">sourceCpp</span>(<span class="st">&#39;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp&#39;</span>)
-  
 heat =<span class="st"> </span><span class="cf">function</span>(S){
   <span class="kw">ggplot</span>(<span class="kw">melt</span>(S), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2, <span class="dt">fill=</span>value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>() <span class="op">+</span>
 <span class="st">    </span><span class="kw">scale_fill_gradient2</span>() <span class="op">+</span>
@@ -451,74 +489,14 @@ filter_p2 =<span class="st"> </span><span class="dv">0</span> <span class="co">#
 v =<span class="st"> </span><span class="kw">irlba</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
 det =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
 <span class="kw">plot</span>(v <span class="op">~</span><span class="st"> </span>det)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of pca-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
+<p><img src="figure/tutorial.Rmd/pca-1.png" width="384" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">newX =<span class="st"> </span><span class="kw">scale</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dt">scale=</span>F)
 newv =<span class="st"> </span><span class="kw">irlba</span>(newX, <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
 <span class="kw">plot</span>(newv<span class="op">~</span>det)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/pca-2.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of pca-2.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
+<p><img src="figure/tutorial.Rmd/pca-2.png" width="384" style="display: block; margin: auto;" /></p>
 <p>One way to correct this is to regress out the zero counts of each cell. However, as shown above, some data sets have non-linear relationship with the zero counts, and sometimes it’s better to transform the data accordingly.</p>
-<p>When correct_detection_rate parameter is set to TRUE, the residuals after regressing out the zero counts are used instead of the log of counts.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correct_detection_rate =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#TRUE or FALSE</span></code></pre></div>
+<p>When correct_detection_rate parameter is set to TRUE, the residuals after regressing out the zero counts are used instead of the log of counts. The default is FALSE, and we expect the users to inspect the data like above before setting this to TRUE.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correct_detection_rate =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#default : FALSE</span></code></pre></div>
 <p>Next argument is kernel_type. This determines the method to meaure the cell to cell distance. SLSL algorithm combines information from many distance matrices computed from different kernel parameters, where the default setting uses 18 different combinations of the kernel parameters. When kernel_type is specified as one of “spearman”, “pearson”, or “euclidean”, SLSL will learn similarity matrix based on those 18 kernel matrices using the specified distance masure. When kernel_type is specified as “combined” (default setting), SLSL will compute three distance matrices using all three distance measures and <span class="math inline">\(18 \times 3\)</span> kernel matrices to learn the similarity matrix. In other words, kernel_type = “combined” requires more memory and computational power, but it will reach higher accuracy by accounting for complex cell to cell variability.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kernel_type =<span class="st"> &quot;combined&quot;</span> <span class="co">#or spearman or pearson or euclidean</span></code></pre></div>
 <p>The user can also specify the kernel parameters. Denoting the distance from cell <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> as <span class="math inline">\(D_{ij}\)</span>, <span class="math inline">\(K_{ij}\)</span> given kernel parameters <span class="math inline">\(k\)</span> and <span class="math inline">\(\sigma\)</span> is <span class="math display">\[K_{ij} = \frac{1}{\sqrt{2\pi}\epsilon_{ij}} exp \left(-\frac{D_{ij}}{2\epsilon^2_{ij}}\right)\]</span> where <span class="math display">\[\epsilon_{ij} = \frac{(\mu_i + \mu_j)\sigma}{2}\]</span></p>
@@ -616,7 +594,7 @@ df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">
 df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
 
 <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-1.png" width="480" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -648,7 +626,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-2.png" width="480" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -680,7 +658,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-3.png" width="480" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-3.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -712,7 +690,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> df<span class="op">$</span>result)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-4.png" width="480" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-4.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -751,91 +729,36 @@ tk382
 <div id="read-data-1" class="section level2">
 <h2>Read Data</h2>
 <p>To demonstrate the use of the reference panel, we use the cell types of human embryonic cells published in <span class="citation">(Chu et al. 2016)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Chu_celltype.Rdata&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Chu_celltype.Rdata&#39;</span>)</code></pre></div>
+</div>
+<div id="cell-type-panel" class="section level2">
+<h2>Cell Type Panel</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sysdata =<span class="st"> </span>SCNoisyClustering<span class="op">::</span>reference_panel
+ref =<span class="st"> </span>reference_panel<span class="op">$</span>cell
+
 X =<span class="st"> </span>Chu_celltype<span class="op">$</span>X
-out_cell_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, 
-                    <span class="dt">ref=</span><span class="st">&quot;cell&quot;</span>,
-                    <span class="dt">dir =</span> <span class="st">&quot;..&quot;</span>, 
+out_cell_ref =<span class="st"> </span><span class="kw">SLSL</span>(<span class="dt">X        =</span> X, 
+                    <span class="dt">ref      =</span> ref,
                     <span class="dt">numClust =</span> <span class="dv">7</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_cell_ref<span class="op">$</span>projection)</code></pre></div>
 <p><img src="figure/tutorial.Rmd/ref_analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
 <p>One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">truelabel =<span class="st"> </span><span class="kw">as.factor</span>(Chu_celltype<span class="op">$</span>label)
 <span class="kw">heat</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
 <p><img src="figure/tutorial.Rmd/ref_analyze2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze2-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
 <pre><code>   truelabel
-    DEC  EC  H1  H9 HFF NPC  TB
-  1   0   0   0   0   0 173   0
-  2   0   0   0   0 159   0   0
-  3   1 104   0   0   0   0   0
-  4 137   1   0   0   0   0   0
-  5   0   0  97  77   0   0   0
-  6   0   0 115  85   0   0   0
-  7   0   0   0   0   0   0  69</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, 
+    DEC EC H1 H9 HFF NPC TB
+  1  18 15 34 18  20  27  9
+  2  21 17 40 20  19  23  8
+  3  17  9 34 26  25  20 12
+  4  22 11 31 23  18  19 11
+  5  16 10 23 24  30  29  9
+  6  19 17 34 33  17  22  6
+  7  25 26 16 18  30  33 14</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
                <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
-<pre><code>[1] 0.7377856</code></pre>
+<pre><code>[1] 0.003125723</code></pre>
 <p>Now look at the visualization from the dimension reduction result.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_cell_ref<span class="op">$</span>SLSL_output
 tsne =<span class="st"> </span>out<span class="op">$</span>tsne
@@ -844,70 +767,16 @@ df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">
 df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
 <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="figure/tutorial.Rmd/ref_analyze3-1.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze3-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="figure/tutorial.Rmd/ref_analyze3-2.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze3-2.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/8c55246af754e9350ddbe6d8b5030cd8d9dc6c0a/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">8c55246</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
+</div>
+<div id="tissue-type-panel" class="section level2">
+<h2>Tissue Type Panel</h2>
 <p>Similarly, we can use the tissue reference panel.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out_tissue_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">ref=</span><span class="st">&quot;tissue&quot;</span>, <span class="dt">dir =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">numClust=</span><span class="dv">7</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ref =<span class="st"> </span>reference_panel<span class="op">$</span>tissue
+out_tissue_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, 
+                      <span class="dt">ref =</span> ref, 
+                      <span class="dt">numClust=</span><span class="dv">7</span>)</code></pre></div>
 <p>We can analyze the result like below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>projection)</code></pre></div>
 <p><img src="figure/tutorial.Rmd/tissueref_analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1061,7 +930,7 @@ tk382
 <div id="large-sets-cells-1000" class="section level1">
 <h1>Large Sets (cells &gt; 1000)</h1>
 <p>There is a separate function for data sets that have more than 1,000 cells : LSLSL(Large Similarity Learning with Scaled Lasso).</p>
-<p>The input data matrix is the same as regular SLSL: a count matrix with cells in columns and genes in rows. LSLSL assumes that the number of columns exceed 1000.</p>
+<p>The input data matrix is the same as regular SLSL: a count matrix with cells in columns and genes in rows. LSLSL assumes that the number of columns exceed 1000. We use Zeisel data <span class="citation">(Zeisel et al. 2015)</span></p>
 <div id="read-data-2" class="section level2">
 <h2>Read Data</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Zeisel.Rdata&#39;</span>)
@@ -1113,7 +982,7 @@ tk382
 <p>The shuffle argument decides if LSLSL should shuffle the order of the cells. LSLSL divides the cells into groups of approximately the same size, and it works the best if each group contains all subtypes of the cells. Unless the user carefully designed the ordering of the cells so that they are well mixed, we recommend to set shuffle as TRUE.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">shuffle =<span class="st"> </span><span class="ot">TRUE</span> <span class="co">#default is TRUE</span></code></pre></div>
 <p>Now run the algorithm with different methods.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">LSLSL</span>(X,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">LSLSL</span>(<span class="dt">X             =</span> X,
             <span class="dt">numClust      =</span> numClust,
             <span class="dt">kernel_type   =</span> kernel_type,
             <span class="dt">core          =</span> core,
@@ -1124,21 +993,19 @@ tk382
 <h2>Analyze the Result</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(truelabel, res<span class="op">$</span>result)</code></pre></div>
 <pre><code>[1] 0.6628879</code></pre>
-<p>Let’s try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again.</p>
+<p>Let’s try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again. The following chunk arranges the data set into a 4 dimensional array for the specification of package “diceR.” <span class="citation">(Chiu and Talhouk 2018)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># construct an array called &quot;out&quot; for specification in diceR package.</span>
 final =<span class="st"> </span>res<span class="op">$</span>array
 out =<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim=</span><span class="kw">c</span>(<span class="kw">nrow</span>(final), <span class="kw">ncol</span>(final), <span class="dv">1</span>, <span class="dv">1</span>))
 out[,,<span class="dv">1</span>,<span class="dv">1</span>] =<span class="st"> </span>final
 k =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truelabel))
 
-<span class="co">#dimension names</span>
 <span class="kw">dimnames</span>(out)[[<span class="dv">1</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;R&#39;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(final)) <span class="co">#random row names</span>
 <span class="kw">dimnames</span>(out)[[<span class="dv">2</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;C&#39;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(final)) <span class="co">#random column names</span>
 <span class="kw">dimnames</span>(out)[[<span class="dv">3</span>]] =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;k&quot;</span>)
-<span class="kw">dimnames</span>(out)[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw">as.character</span>(k)
-  
-<span class="co">#imputation</span>
-newX =<span class="st"> </span><span class="kw">log</span>(<span class="kw">genefilter</span>(X)<span class="op">+</span><span class="dv">1</span>)
+<span class="kw">dimnames</span>(out)[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw">as.character</span>(k) <span class="co">#This must be the number of clusters</span></code></pre></div>
+<p>You must impute the array in order to use other consensus clustering methods. The “impute_missing” requires the raw data matrix (make sure it is transposed), and here we use the filtered X. This is appropriate especially because this is a Drop-seq data where most genes hold little information. The three methods are “k_modes”, “majority_voting”, and “LCE”. For the guidance of which method to use, refer to <span class="citation">(Chiu and Talhouk 2018)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">newX =<span class="st"> </span><span class="kw">log</span>(<span class="kw">genefilter</span>(X)<span class="op">+</span><span class="dv">1</span>)
 E =<span class="st"> </span><span class="kw">impute_missing</span>(out, <span class="kw">t</span>(newX), <span class="dv">9</span>)
 kmodes =<span class="st"> </span><span class="kw">k_modes</span>(E, <span class="dv">9</span>)
 majvote =<span class="st"> </span><span class="kw">majority_voting</span>(E, <span class="dv">9</span>)
@@ -1149,6 +1016,23 @@ lce =<span class="st"> </span><span class="kw">LCE</span>(E, <span class="dv">9<
 <pre><code>[1] 0.2931143</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(lce, truelabel) </code></pre></div>
 <pre><code>[1] 0.2931143</code></pre>
+<div id="refs">
+<div id="ref-diceR">
+<p>Chiu, Derek, and Aline Talhouk. 2018. <em>DiceR: Diverse Cluster Ensemble in R</em>. <a href="https://CRAN.R-project.org/package=diceR" class="uri">https://CRAN.R-project.org/package=diceR</a>.</p>
+</div>
+<div id="ref-chu2016single">
+<p>Chu, Li-Fang, Ning Leng, Jue Zhang, Zhonggang Hou, Daniel Mamott, David T Vereide, Jeea Choi, Christina Kendziorski, Ron Stewart, and James A Thomson. 2016. “Single-Cell Rna-Seq Reveals Novel Regulators of Human Embryonic Stem Cell Differentiation to Definitive Endoderm.” <em>Genome Biology</em> 17 (1). BioMed Central: 173.</p>
+</div>
+<div id="ref-li2017reference">
+<p>Li, Huipeng, Elise T Courtois, Debarka Sengupta, Yuliana Tan, Kok Hao Chen, Jolene Jie Lin Goh, Say Li Kong, et al. 2017. “Reference Component Analysis of Single-Cell Transcriptomes Elucidates Cellular Heterogeneity in Human Colorectal Tumors.” <em>Nature Genetics</em> 49 (5). Nature Publishing Group: 708.</p>
+</div>
+<div id="ref-yan2013single">
+<p>Yan, Liying, Mingyu Yang, Hongshan Guo, Lu Yang, Jun Wu, Rong Li, Ping Liu, et al. 2013. “Single-Cell Rna-Seq Profiling of Human Preimplantation Embryos and Embryonic Stem Cells.” <em>Nature Structural and Molecular Biology</em> 20 (9). Nature Publishing Group: 1131.</p>
+</div>
+<div id="ref-zeisel2015cell">
+<p>Zeisel, Amit, Ana B Muñoz-Manchado, Simone Codeluppi, Peter Lönnerberg, Gioele La Manno, Anna Juréus, Sueli Marques, et al. 2015. “Cell Types in the Mouse Cortex and Hippocampus Revealed by Single-Cell Rna-Seq.” <em>Science</em> 347 (6226). American Association for the Advancement of Science: 1138–42.</p>
+</div>
+</div>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
@@ -1227,17 +1111,6 @@ loaded via a namespace (and not attached):
 [91] httpuv_1.4.1              R.utils_2.6.0            
 [93] stats4_3.5.0              munsell_0.4.3            
 [95] magic_1.5-8              </code></pre>
-<div id="refs" class="references">
-<div id="ref-chu2016single">
-<p>Chu, Li-Fang, Ning Leng, Jue Zhang, Zhonggang Hou, Daniel Mamott, David T Vereide, Jeea Choi, Christina Kendziorski, Ron Stewart, and James A Thomson. 2016. “Single-Cell Rna-Seq Reveals Novel Regulators of Human Embryonic Stem Cell Differentiation to Definitive Endoderm.” <em>Genome Biology</em> 17 (1). BioMed Central: 173.</p>
-</div>
-<div id="ref-li2017reference">
-<p>Li, Huipeng, Elise T Courtois, Debarka Sengupta, Yuliana Tan, Kok Hao Chen, Jolene Jie Lin Goh, Say Li Kong, et al. 2017. “Reference Component Analysis of Single-Cell Transcriptomes Elucidates Cellular Heterogeneity in Human Colorectal Tumors.” <em>Nature Genetics</em> 49 (5). Nature Publishing Group: 708.</p>
-</div>
-<div id="ref-yan2013single">
-<p>Yan, Liying, Mingyu Yang, Hongshan Guo, Lu Yang, Jun Wu, Rong Li, Ping Liu, et al. 2013. “Single-Cell Rna-Seq Profiling of Human Preimplantation Embryos and Embryonic Stem Cells.” <em>Nature Structural and Molecular Biology</em> 20 (9). Nature Publishing Group: 1131.</p>
-</div>
-</div>
 </div>
 </div>
 
@@ -1257,7 +1130,7 @@ footer is added to webpages before the MathJax javascript. -->
 <p>
   This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
   analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.0.1
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
 </p>
 <hr>
 

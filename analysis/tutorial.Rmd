@@ -113,7 +113,7 @@ Hicks explains that log-transforming the datawith pseudo-counts introduces the b
 
 The first singular vector is plotted below against the detection rate. It is shown that after centering each column of the log transformed matrix removes part of the correlation between the detection rate and the first singular vector. This correction influences the Euclidean distance matrix, and therefore f 
 
-```{r pca, fig.width=4, fig.height=4}
+```{r pca, fig.width=3, fig.height=3}
 library(irlba)
 v = irlba(log(X+1), 1)$v[,1]
 det = 1-colSums(X==0)/nrow(X)
@@ -211,7 +211,7 @@ heat(out$S)
 
 Now let's visualize the result through the dimension reduction result. The true label information allows us to analyze the errors from the algorithm. For example, the zygotes and 2-cells were clustered into one group, while there are two outliers in the 16 cells that are close to 8 cells. 
 
-```{r dimred, fig.width=5, fig.height=5}
+```{r dimred, fig.width=3, fig.height=3}
 tsne = out$tsne
 df = as.data.frame(tsne)
 df$truelabel = as.factor(truelabel)
