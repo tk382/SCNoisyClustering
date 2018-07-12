@@ -205,7 +205,7 @@ adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
 
 Let's take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified. 
 
-```{r similarity_matrix}
+```{r similarity_matrix, fig.width=3, fig.height=3}
 heat(out$S)
 ```
 
@@ -249,13 +249,13 @@ out_cell_ref = SLSL(X        = X,
 ```
 
 
-```{r ref_analyze}
+```{r ref_analyze, fig.width=3, fig.height=3}
 heat(out_cell_ref$projection)
 ```
 
 One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.
 
-```{r ref_analyze2}
+```{r ref_analyze2, fig.width=3, fig.height=3}
 truelabel = as.factor(Chu_celltype$label)
 heat(out_cell_ref$SLSL_output$S)
 table(out_cell_ref$SLSL_output$result, truelabel)
@@ -265,7 +265,7 @@ adj.rand.index(out_cell_ref$SLSL_output$result,
 
 Now look at the visualization from the dimension reduction result.
 
-```{r ref_analyze3}
+```{r ref_analyze3, fig.width=3, fig.height=3}
 out = out_cell_ref$SLSL_output
 tsne = out$tsne
 df = as.data.frame(tsne)
@@ -288,7 +288,7 @@ out_tissue_ref = SLSL(X,
 
 We can analyze the result like below. 
 
-```{r tissueref_analyze}
+```{r tissueref_analyze, fig.width=3, fig.height=3}
 heat(out_tissue_ref$projection)
 heat(out_tissue_ref$SLSL_output$S)
 table(out_tissue_ref$SLSL_output$result, truelabel)
