@@ -113,7 +113,7 @@ Hicks explains that log-transforming the datawith pseudo-counts introduces the b
 
 The first singular vector is plotted below against the detection rate. It is shown that after centering each column of the log transformed matrix removes part of the correlation between the detection rate and the first singular vector. This correction influences the Euclidean distance matrix, and therefore f 
 
-```{r pca, fig.width=3, fig.height=3}
+```{r pca, fig.width=4, fig.height=4}
 library(irlba)
 v = irlba(log(X+1), 1)$v[,1]
 det = 1-colSums(X==0)/nrow(X)
@@ -205,13 +205,13 @@ adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
 
 Let's take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified. 
 
-```{r similarity_matrix, fig.width=3, fig.height=3}
+```{r similarity_matrix, fig.width=4, fig.height=4}
 heat(out$S)
 ```
 
 Now let's visualize the result through the dimension reduction result. The true label information allows us to analyze the errors from the algorithm. For example, the zygotes and 2-cells were clustered into one group, while there are two outliers in the 16 cells that are close to 8 cells. 
 
-```{r dimred, fig.width=3, fig.height=3}
+```{r dimred, fig.width=4, fig.height=4}
 tsne = out$tsne
 df = as.data.frame(tsne)
 df$truelabel = as.factor(truelabel)
@@ -249,13 +249,13 @@ out_cell_ref = SLSL(X        = X,
 ```
 
 
-```{r ref_analyze, fig.width=3, fig.height=3}
+```{r ref_analyze, fig.width=4, fig.height=4}
 heat(out_cell_ref$projection)
 ```
 
 One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.
 
-```{r ref_analyze2, fig.width=3, fig.height=3}
+```{r ref_analyze2, fig.width=4, fig.height=4}
 truelabel = as.factor(Chu_celltype$label)
 heat(out_cell_ref$SLSL_output$S)
 table(out_cell_ref$SLSL_output$result, truelabel)
@@ -265,7 +265,7 @@ adj.rand.index(out_cell_ref$SLSL_output$result,
 
 Now look at the visualization from the dimension reduction result.
 
-```{r ref_analyze3, fig.width=3, fig.height=3}
+```{r ref_analyze3, fig.width=4, fig.height=4}
 out = out_cell_ref$SLSL_output
 tsne = out$tsne
 df = as.data.frame(tsne)
@@ -288,7 +288,7 @@ out_tissue_ref = SLSL(X,
 
 We can analyze the result like below. 
 
-```{r tissueref_analyze, fig.width=3, fig.height=3}
+```{r tissueref_analyze, fig.width=4, fig.height=4}
 heat(out_tissue_ref$projection)
 heat(out_tissue_ref$SLSL_output$S)
 table(out_tissue_ref$SLSL_output$result, truelabel)
@@ -322,7 +322,7 @@ truelabel = Zeisel$label
 Note that Zeisel is a Drop-seq data, and coverage is very low. The histogram of the detection rate is below.
 
 ## Parameter Set-Up
-```{r zeisel_coverage}
+```{r zeisel_coverage, fig.width=4, fig.height=4}
 detection_rate = 1-colSums(X==0)/nrow(X)
 hist(detection_rate, breaks = 20)
 ```
