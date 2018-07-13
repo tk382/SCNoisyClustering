@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE, 
                       message = FALSE, 
                       comment = NA,
-                      cache   = TRUE)
+                      cache   = FALSE)
 ```
 
 
@@ -27,27 +27,27 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ```{r load_library}
 library(SCNoisyClustering)
-# 
-# library(inline)
-# library(matrixStats)
-# library(quadprog)
-# library(irlba)
-# library(ggplot2)
-# library(dplyr)
-# library(reshape)
-# library(caret)
-# library(fossil)
-# library(pracma)
-# library(igraph)
-# library(Rtsne)
-# library(gplots)
-# library(broom)
-# library(abind)
-# library(stargazer)
-# library(scatterplot3d)
-# library(diceR)
-# library(parallel)
-# 
+
+library(inline)
+library(matrixStats)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(igraph)
+library(Rtsne)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(scatterplot3d)
+library(diceR)
+library(parallel)
+
 # set.seed(1)
 # R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
 # Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')

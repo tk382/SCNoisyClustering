@@ -103,7 +103,8 @@ arma::cube corr_kernel_c(arma::mat X,
                          arma::vec allk_input,
                          arma::vec sigma_input,
                          int k = 0){
-  int N = X.n_rows;   int KK = 0;
+  int N = X.n_rows;
+  int KK = 0;
   if(k==0){
     k = round(N/20);
   }
@@ -116,6 +117,7 @@ arma::cube corr_kernel_c(arma::mat X,
   for (int j = 0; j < N; ++j){
     Diff_sort.row(j) = sort(Diff.row(j));
   }
+
   //compute combined kernels
   arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
   for (int l = 0; l < klen; ++l){

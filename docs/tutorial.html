@@ -249,8 +249,7 @@ div.section {
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -269,7 +268,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/c42b5737f8b21bad9d94ef10d408b4b6c348741a" target="_blank">c42b573</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/aa768aaa40c3995fffd5dead71b9d87149a6b038" target="_blank">aa768aa</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -277,6 +276,7 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    R/.Rhistory
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/figure/
     Ignored:    analysis/pipeline/.Rhistory
 
 Untracked files:
@@ -338,6 +338,7 @@ Unstaged changes:
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
+    Modified:   analysis/tutorial.Rmd
     Modified:   analysis/writeup/.DS_Store
     Modified:   analysis/writeup/paper.pdf
     Modified:   src/RcppExports.cpp
@@ -372,6 +373,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/aa768aaa40c3995fffd5dead71b9d87149a6b038/docs/tutorial.html" target="_blank">aa768aa</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -551,27 +569,27 @@ add website
 <div id="load-the-slsl-library." class="section level1">
 <h1>Load the SLSL library.</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SCNoisyClustering)
-<span class="co"># </span>
-<span class="co"># library(inline)</span>
-<span class="co"># library(matrixStats)</span>
-<span class="co"># library(quadprog)</span>
-<span class="co"># library(irlba)</span>
-<span class="co"># library(ggplot2)</span>
-<span class="co"># library(dplyr)</span>
-<span class="co"># library(reshape)</span>
-<span class="co"># library(caret)</span>
-<span class="co"># library(fossil)</span>
-<span class="co"># library(pracma)</span>
-<span class="co"># library(igraph)</span>
-<span class="co"># library(Rtsne)</span>
-<span class="co"># library(gplots)</span>
-<span class="co"># library(broom)</span>
-<span class="co"># library(abind)</span>
-<span class="co"># library(stargazer)</span>
-<span class="co"># library(scatterplot3d)</span>
-<span class="co"># library(diceR)</span>
-<span class="co"># library(parallel)</span>
-<span class="co"># </span>
+
+<span class="kw">library</span>(inline)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(quadprog)
+<span class="kw">library</span>(irlba)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(reshape)
+<span class="kw">library</span>(caret)
+<span class="kw">library</span>(fossil)
+<span class="kw">library</span>(pracma)
+<span class="kw">library</span>(igraph)
+<span class="kw">library</span>(Rtsne)
+<span class="kw">library</span>(gplots)
+<span class="kw">library</span>(broom)
+<span class="kw">library</span>(abind)
+<span class="kw">library</span>(stargazer)
+<span class="kw">library</span>(scatterplot3d)
+<span class="kw">library</span>(diceR)
+<span class="kw">library</span>(parallel)
+
 <span class="co"># set.seed(1)</span>
 <span class="co"># R.utils::sourceDirectory(&quot;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/&quot;, modifiedOnly=FALSE)</span>
 <span class="co"># Rcpp::sourceCpp(&#39;~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp&#39;)</span>
@@ -639,6 +657,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">1b226e6</a>
 </td>
 <td style="text-align:left;">
@@ -671,6 +700,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">1b226e6</a>
@@ -723,11 +763,11 @@ measuretime =<span class="st"> </span><span class="ot">TRUE</span></code></pre><
 [1] &quot;optimizing..&quot;
 [1] &quot;network diffusion..&quot;
 [1] &quot;dimension reduction..&quot;
-gene filter &amp; numClust 0.34 
-constructing kernel 2.39 
-get S 0.03 
-network diffusion 0.1 
-tsne 0.17</code></pre>
+gene filter &amp; numClust 0.36 seconds 
+constructing kernel 1.89 seconds 
+get S 0.02 seconds 
+network diffusion 0.01 seconds
+tsne 0.09 seconds</code></pre>
 <p>Or, you can also use default parameters, and this will work as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(X)</code></pre></div>
 </div>
@@ -737,10 +777,10 @@ tsne 0.17</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out<span class="op">$</span>result, <span class="kw">as.factor</span>(truelabel))</code></pre></div>
 <pre><code>   
     16cell 2cell 4cell 8cell blast zygote
-  1      2     0     0     4     0      0
-  2      0     0     0     0    30      0
+  1      0     0     0     0    30      0
+  2      0     0     0    16     0      0
   3     14     0     0     0     0      0
-  4      0     0     0    16     0      0
+  4      2     0     0     4     0      0
   5      0     0    12     0     0      0
   6      0     6     0     0     0      6</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out<span class="op">$</span>result, <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
@@ -764,6 +804,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/similarity_matrix-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/similarity_matrix-1.png" target="_blank">27cffd8</a>
@@ -804,6 +855,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/dimred-1.png" target="_blank">1b226e6</a>
 </td>
 <td style="text-align:left;">
@@ -834,6 +896,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-2.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/dimred-2.png" target="_blank">1b226e6</a>
@@ -868,6 +941,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-3.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/dimred-3.png" target="_blank">1b226e6</a>
 </td>
 <td style="text-align:left;">
@@ -898,6 +982,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-4.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/1b226e63ee238b00a51ba0e1fea5e6fa70503d92/docs/figure/tutorial.Rmd/dimred-4.png" target="_blank">1b226e6</a>
@@ -951,6 +1046,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">27cffd8</a>
 </td>
 <td style="text-align:left;">
@@ -985,6 +1091,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">27cffd8</a>
 </td>
 <td style="text-align:left;">
@@ -999,17 +1116,17 @@ tk382
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
 <pre><code>   truelabel
-    DEC EC H1 H9 HFF NPC TB
-  1  18 15 34 18  20  27  9
-  2  21 17 40 20  19  23  8
-  3  17  9 34 26  25  20 12
-  4  22 11 31 23  18  19 11
-  5  16 10 23 24  30  29  9
-  6  19 17 34 33  17  22  6
-  7  25 26 16 18  30  33 14</code></pre>
+    DEC  EC  H1  H9 HFF NPC  TB
+  1   1 104   0   0   0   0   0
+  2   0   0   0   0   0   0  69
+  3   0   0   0   0   0 173   0
+  4   0   0   0   0 159   0   0
+  5   0   0 115  85   0   0   0
+  6 137   1   0   0   0   0   0
+  7   0   0  97  77   0   0   0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
                <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
-<pre><code>[1] 0.003125723</code></pre>
+<pre><code>[1] 0.7377856</code></pre>
 <p>Now look at the visualization from the dimension reduction result.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_cell_ref<span class="op">$</span>SLSL_output
 tsne =<span class="st"> </span>out<span class="op">$</span>tsne
@@ -1034,6 +1151,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">27cffd8</a>
@@ -1066,6 +1194,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">27cffd8</a>
@@ -1109,6 +1248,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-1.png" target="_blank">27cffd8</a>
 </td>
 <td style="text-align:left;">
@@ -1141,6 +1291,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-2.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-2.png" target="_blank">27cffd8</a>
 </td>
 <td style="text-align:left;">
@@ -1156,13 +1317,13 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
 <pre><code>   truelabel
     DEC  EC  H1  H9 HFF NPC  TB
-  1   0   0   0   0   0 172   0
-  2   1  91   0   0   0   0   0
-  3 134  14   1   0   0   1  15
-  4   0   0   0   0 159   0   0
-  5   3   0   0   0   0   0  54
-  6   0   0  96  65   0   0   0
-  7   0   0 115  97   0   0   0</code></pre>
+  1   3   0   0   0   0   0  54
+  2 134  14   1   0   0   1  15
+  3   1  91   0   0   0   0   0
+  4   0   0 115  97   0   0   0
+  5   0   0   0   0 159   0   0
+  6   0   0   0   0   0 172   0
+  7   0   0  96  65   0   0   0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
                <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
 <pre><code>[1] 0.6894567</code></pre>
@@ -1189,6 +1350,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-3.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-3.png" target="_blank">27cffd8</a>
@@ -1223,6 +1395,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-4.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-4.png" target="_blank">27cffd8</a>
 </td>
 <td style="text-align:left;">
@@ -1254,6 +1437,36 @@ truelabel =<span class="st"> </span>Zeisel<span class="op">$</span>label</code><
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">detection_rate =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
 <span class="kw">hist</span>(detection_rate, <span class="dt">breaks =</span> <span class="dv">20</span>)</code></pre></div>
 <p><img src="figure/tutorial.Rmd/zeisel_coverage-1.png" width="384" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of zeisel_coverage-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/zeisel_coverage-1.png" target="_blank">2fb398f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <p>Since we have the true label data, we will use the true number of clusters,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">numClust =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truelabel)) <span class="co">#default is NA</span></code></pre></div>
 <p>For the kernel_type, we will use “combined” as before.</p>
@@ -1318,7 +1531,7 @@ lce =<span class="st"> </span><span class="kw">LCE</span>(E, <span class="dv">9<
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre><code>R version 3.5.0 (2018-04-23)
+<pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 Running under: macOS Sierra 10.12.5
 
@@ -1334,64 +1547,53 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] diceR_0.5.0          scatterplot3d_0.3-41 stargazer_5.2.2     
- [4] abind_1.4-5          broom_0.4.4          gplots_3.0.1        
- [7] Rtsne_0.13           igraph_1.2.1         pracma_2.1.4        
-[10] fossil_0.3.7         shapefiles_0.7       foreign_0.8-70      
-[13] maps_3.3.0           sp_1.2-7             caret_6.0-79        
-[16] lattice_0.20-35      reshape_0.8.7        dplyr_0.7.4         
-[19] ggplot2_2.2.1        irlba_2.3.2          Matrix_1.2-14       
-[22] quadprog_1.5-5       matrixStats_0.53.1   inline_0.3.14       
+ [1] diceR_0.5.1             scatterplot3d_0.3-41   
+ [3] stargazer_5.2.2         abind_1.4-5            
+ [5] broom_0.4.5             gplots_3.0.1           
+ [7] Rtsne_0.13              igraph_1.2.1           
+ [9] pracma_2.1.4            fossil_0.3.7           
+[11] shapefiles_0.7          foreign_0.8-70         
+[13] maps_3.3.0              sp_1.2-7               
+[15] caret_6.0-80            lattice_0.20-35        
+[17] reshape_0.8.7           dplyr_0.7.6            
+[19] ggplot2_3.0.0           irlba_2.3.2            
+[21] Matrix_1.2-14           quadprog_1.5-5         
+[23] matrixStats_0.53.1      inline_0.3.15          
+[25] SCNoisyClustering_0.1.0
 
 loaded via a namespace (and not attached):
- [1] colorspace_1.3-2          class_7.3-14             
- [3] mclust_5.4                rprojroot_1.3-2          
- [5] RcppArmadillo_0.8.400.0.0 rstudioapi_0.7           
- [7] clue_0.3-55               DRR_0.0.3                
- [9] prodlim_2018.04.18        lubridate_1.7.4          
-[11] codetools_0.2-15          splines_3.5.0            
-[13] R.methodsS3_1.7.1         mnormt_1.5-5             
-[15] robustbase_0.93-0         knitr_1.20               
-[17] RcppRoll_0.2.2            workflowr_1.0.1          
-[19] ddalpha_1.3.2             cluster_2.0.7-1          
-[21] kernlab_0.9-25            R.oo_1.22.0              
-[23] sfsmisc_1.1-2             shiny_1.0.5              
-[25] compiler_3.5.0            backports_1.1.2          
-[27] assertthat_0.2.0          lazyeval_0.2.1           
-[29] later_0.7.1               htmltools_0.3.6          
-[31] tools_3.5.0               bindrcpp_0.2.2           
-[33] gtable_0.2.0              glue_1.2.0               
-[35] reshape2_1.4.3            Rcpp_0.12.16             
-[37] gdata_2.18.0              nlme_3.1-137             
-[39] iterators_1.0.9           psych_1.8.3.3            
-[41] timeDate_3043.102         gower_0.1.2              
-[43] stringr_1.3.0             mime_0.5                 
-[45] miniUI_0.1.1.1            gtools_3.5.0             
-[47] DEoptimR_1.0-8            MASS_7.3-49              
-[49] scales_0.5.0              ipred_0.9-6              
-[51] promises_1.0.1            yaml_2.1.19              
-[53] rpart_4.1-13              stringi_1.1.7            
-[55] highr_0.6                 klaR_0.6-14              
-[57] foreach_1.4.4             caTools_1.17.1           
-[59] lava_1.6.1                geometry_0.3-6           
-[61] rlang_0.2.0               pkgconfig_2.0.1          
-[63] bitops_1.0-6              evaluate_0.10.1          
-[65] purrr_0.2.4               bindr_0.1.1              
-[67] recipes_0.1.2             labeling_0.3             
-[69] CVST_0.2-1                tidyselect_0.2.4         
-[71] plyr_1.8.4                magrittr_1.5             
-[73] R6_2.2.2                  combinat_0.0-8           
-[75] dimRed_0.1.0              pillar_1.2.2             
-[77] whisker_0.3-2             withr_2.1.2              
-[79] survival_2.41-3           nnet_7.3-12              
-[81] tibble_1.4.2              questionr_0.6.2          
-[83] KernSmooth_2.23-15        rmarkdown_1.9            
-[85] grid_3.5.0                git2r_0.21.0             
-[87] ModelMetrics_1.1.0        digest_0.6.15            
-[89] xtable_1.8-2              tidyr_0.8.0              
-[91] httpuv_1.4.1              R.utils_2.6.0            
-[93] stats4_3.5.0              munsell_0.4.3            
-[95] magic_1.5-8              </code></pre>
+ [1] colorspace_1.3-2   class_7.3-14       mclust_5.4        
+ [4] rprojroot_1.3-2    rstudioapi_0.7     clue_0.3-55       
+ [7] DRR_0.0.3          prodlim_2018.04.18 lubridate_1.7.4   
+[10] codetools_0.2-15   splines_3.5.1      R.methodsS3_1.7.1 
+[13] mnormt_1.5-5       robustbase_0.93-0  knitr_1.20        
+[16] RcppRoll_0.2.2     workflowr_1.1.1    ddalpha_1.3.2     
+[19] cluster_2.0.7-1    kernlab_0.9-25     R.oo_1.22.0       
+[22] sfsmisc_1.1-2      shiny_1.0.5        compiler_3.5.1    
+[25] backports_1.1.2    assertthat_0.2.0   lazyeval_0.2.1    
+[28] later_0.7.1        htmltools_0.3.6    tools_3.5.1       
+[31] bindrcpp_0.2.2     gtable_0.2.0       glue_1.2.0        
+[34] reshape2_1.4.3     Rcpp_0.12.16       gdata_2.18.0      
+[37] nlme_3.1-137       iterators_1.0.9    psych_1.8.3.3     
+[40] timeDate_3043.102  gower_0.1.2        stringr_1.3.0     
+[43] mime_0.5           miniUI_0.1.1.1     gtools_3.5.0      
+[46] DEoptimR_1.0-8     MASS_7.3-50        scales_0.5.0      
+[49] ipred_0.9-6        promises_1.0.1     yaml_2.1.19       
+[52] rpart_4.1-13       stringi_1.1.7      highr_0.6         
+[55] klaR_0.6-14        foreach_1.4.4      caTools_1.17.1    
+[58] lava_1.6.1         geometry_0.3-6     rlang_0.2.0       
+[61] pkgconfig_2.0.1    bitops_1.0-6       evaluate_0.10.1   
+[64] purrr_0.2.4        bindr_0.1.1        recipes_0.1.2     
+[67] labeling_0.3       CVST_0.2-1         tidyselect_0.2.4  
+[70] plyr_1.8.4         magrittr_1.5       R6_2.2.2          
+[73] combinat_0.0-8     dimRed_0.1.0       pillar_1.2.2      
+[76] whisker_0.3-2      withr_2.1.2        survival_2.42-3   
+[79] nnet_7.3-12        tibble_1.4.2       questionr_0.6.2   
+[82] KernSmooth_2.23-15 rmarkdown_1.9      grid_3.5.1        
+[85] git2r_0.21.0       ModelMetrics_1.1.0 digest_0.6.15     
+[88] xtable_1.8-2       tidyr_0.8.0        httpuv_1.4.1      
+[91] R.utils_2.6.0      stats4_3.5.1       munsell_0.4.3     
+[94] magic_1.5-8       </code></pre>
 </div>
 </div>
 
