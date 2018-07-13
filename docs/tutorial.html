@@ -249,7 +249,8 @@ div.section {
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </details>
 </li>
 <li>
@@ -268,7 +269,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/aa768aaa40c3995fffd5dead71b9d87149a6b038" target="_blank">aa768aa</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/0a9facc880c2cf3ade772eef6e887998df44a395" target="_blank">0a9facc</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -276,7 +277,6 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    R/.Rhistory
     Ignored:    analysis/.Rhistory
-    Ignored:    analysis/figure/
     Ignored:    analysis/pipeline/.Rhistory
 
 Untracked files:
@@ -338,12 +338,10 @@ Unstaged changes:
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
-    Modified:   analysis/tutorial.Rmd
     Modified:   analysis/writeup/.DS_Store
     Modified:   analysis/writeup/paper.pdf
     Modified:   src/RcppExports.cpp
     Modified:   src/RcppExports.o
-    Modified:   src/SCNoisyClustering.cpp
     Modified:   src/SCNoisyClustering.so
 
 </code></pre>
@@ -373,6 +371,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/0a9facc880c2cf3ade772eef6e887998df44a395/analysis/tutorial.Rmd" target="_blank">0a9facc</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+<td style="text-align:left;">
+wflow_publish(“analysis/tutorial.Rmd”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/44d04548b9737baf48fb5b98a84cf6a38d8f4200/analysis/tutorial.Rmd" target="_blank">44d0454</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+<td style="text-align:left;">
+fix Chu data error
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/44d04548b9737baf48fb5b98a84cf6a38d8f4200/docs/tutorial.html" target="_blank">44d0454</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+<td style="text-align:left;">
+fix Chu data error
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -638,7 +687,7 @@ filter_p2 =<span class="st"> </span><span class="dv">0</span> <span class="co">#
 v =<span class="st"> </span><span class="kw">irlba</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
 det =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
 <span class="kw">plot</span>(v <span class="op">~</span><span class="st"> </span>det)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/pca-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/pca-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of pca-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -683,7 +732,7 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">newX =<span class="st"> </span><span class="kw">scale</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>), <span class="dt">scale=</span>F)
 newv =<span class="st"> </span><span class="kw">irlba</span>(newX, <span class="dv">1</span>)<span class="op">$</span>v[,<span class="dv">1</span>]
 <span class="kw">plot</span>(newv<span class="op">~</span>det)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/pca-2.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/pca-2.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of pca-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -763,11 +812,11 @@ measuretime =<span class="st"> </span><span class="ot">TRUE</span></code></pre><
 [1] &quot;optimizing..&quot;
 [1] &quot;network diffusion..&quot;
 [1] &quot;dimension reduction..&quot;
-gene filter &amp; numClust 0.36 seconds 
-constructing kernel 1.89 seconds 
+gene filter &amp; numClust 0.51 seconds 
+constructing kernel 2.06 seconds 
 get S 0.02 seconds 
 network diffusion 0.01 seconds
-tsne 0.09 seconds</code></pre>
+tsne 0.07 seconds</code></pre>
 <p>Or, you can also use default parameters, and this will work as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(X)</code></pre></div>
 </div>
@@ -787,7 +836,7 @@ tsne 0.09 seconds</code></pre>
 <pre><code>[1] 0.8954618</code></pre>
 <p>Let’s take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out<span class="op">$</span>S)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/similarity_matrix-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/similarity_matrix-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of similarity_matrix-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -836,7 +885,7 @@ df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">
 df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
 
 <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -879,7 +928,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-2.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-2.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -922,7 +971,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-3.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-3.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-3.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -965,7 +1014,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatterplot3d</span>(<span class="dt">x=</span>df<span class="op">$</span>V2, <span class="dt">y=</span>df<span class="op">$</span>V3, <span class="dt">z=</span>df<span class="op">$</span>V4, <span class="dt">color =</span> df<span class="op">$</span>result)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/dimred-4.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/dimred-4.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of dimred-4.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1027,7 +1076,7 @@ out_cell_ref =<span class="st"> </span><span class="kw">SLSL</span>(<span class=
                     <span class="dt">ref      =</span> ref,
                     <span class="dt">numClust =</span> <span class="dv">7</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_cell_ref<span class="op">$</span>projection)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/ref_analyze-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of ref_analyze-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1072,7 +1121,7 @@ tk382
 <p>One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">truelabel =<span class="st"> </span><span class="kw">as.factor</span>(Chu_celltype<span class="op">$</span>label)
 <span class="kw">heat</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze2-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/ref_analyze2-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of ref_analyze2-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1134,7 +1183,7 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
 df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
 df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
 <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze3-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/ref_analyze3-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of ref_analyze3-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1177,7 +1226,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze3-2.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/ref_analyze3-2.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of ref_analyze3-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1229,7 +1278,7 @@ out_tissue_ref =<span class="st"> </span><span class="kw">SLSL</span>(X,
                       <span class="dt">numClust=</span><span class="dv">7</span>)</code></pre></div>
 <p>We can analyze the result like below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>projection)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tissueref_analyze-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1272,7 +1321,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-2.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-2.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tissueref_analyze-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1333,7 +1382,7 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
 df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
 df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
 <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-3.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-3.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tissueref_analyze-3.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1376,7 +1425,7 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-4.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/tissueref_analyze-4.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tissueref_analyze-4.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -1436,7 +1485,7 @@ truelabel =<span class="st"> </span>Zeisel<span class="op">$</span>label</code><
 <h2>Parameter Set-Up</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">detection_rate =<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">colSums</span>(X<span class="op">==</span><span class="dv">0</span>)<span class="op">/</span><span class="kw">nrow</span>(X)
 <span class="kw">hist</span>(detection_rate, <span class="dt">breaks =</span> <span class="dv">20</span>)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/zeisel_coverage-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="figure/tutorial.Rmd/zeisel_coverage-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of zeisel_coverage-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
