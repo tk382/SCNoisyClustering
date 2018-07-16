@@ -23,16 +23,17 @@ SLSL = function(X,
   # sigmalist   : kernel parameters
 
 
-  if(ncol(X)>1200 & warning){
+  if(ncol(X)>1200 & warning & is.na(ref)){
     stop("We detected more than 1,200 cells, and system might crash due to memory requirement.
          We recommend LSLSL function for large matrices.
          If you'd like to use SLSL anyway, set warning=FALSE")
   }
 
   if(length(ref) > 1){
-    X = log(X+1)
+
     out = SLSL_ref(X=X,
                    ref=ref,
+                   log = log,
                    numClust=numClust)
     return(out)
   }else{
@@ -48,7 +49,9 @@ SLSL = function(X,
     t1 = Sys.time()
 
     # Filter the genes
-    X = genefilter(X, filter_p1, filter_p2)
+    if(filter){
+      X = genefilter(X, filter_p1, filter_p2)
+    }
 
     t2 = Sys.time()    #t2 - t1 : gene filtering
 
@@ -56,14 +59,9 @@ SLSL = function(X,
 
     X2 = X
     if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
-      zeros = colSums(X==0)
-      pc1 = irlba(X2, 1)$v[,1]
-      mod = lm(pc1~zeros)
-      if(tidy(mod)[2,5] < 0.05){
-        x = cbind(rep(1,ncol(X)), pc1)
-        H = x %*% solve(t(x) %*% x) %*% t(x)
-        X2 = t(t(X2) - H %*% t(X2))
-      }
+      det = colSums(is.na(X)) / nrow(X)
+      det2 = qr(det)
+      X2 = t(qr.resid(det2, t(logX)))
       X2 = scale(X2, scale=F, center=T)
     }else{
       X2 = scale(X2, scale=F, center=T)
@@ -97,7 +95,7 @@ SLSL = function(X,
       print('optimizing..')
     }
 
-    res = sparse_scaledlasso_c(P, tau, gamma, verbose=T)
+    res = sparse_scaledlasso_c(P, tau, gamma, verbose=verbose)
     sigmas = res$sigma
 
     t4 = Sys.time()
