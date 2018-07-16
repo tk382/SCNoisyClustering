@@ -1,0 +1,74 @@
+---
+title: "Using Reference Set"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+bibliography: bibliography.bib
+---
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "../analysis")
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE, 
+                      comment = NA,
+                      cache   = FALSE)
+```
+
+
+```{r load_library}
+library(SCNoisyClustering)
+
+library(inline)
+library(matrixStats)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(igraph)
+library(Rtsne)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(scatterplot3d)
+library(diceR)
+library(parallel)
+
+# set.seed(1)
+# R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
+# Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')
+
+heat = function(S){
+  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
+    scale_fill_gradient2() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("") + ylab("")
+}
+```
+
+## Cell Type Panel
+
+```{r ref_run}
+load('../data/unnecessary_in_building/Chu_celltype.RData')
+sysdata = SCNoisyClustering::reference_panel
+ref = reference_panel$cell
+
+X = Chu_celltype$X
+truth = as.numeric(as.factor(Chu_celltype$label))
+t1 = Sys.time()
+out_cell_ref = SLSL(X        = as.matrix(X), 
+                    ref      = as.matrix(ref))
+t2 = Sys.time()
+
+```
+

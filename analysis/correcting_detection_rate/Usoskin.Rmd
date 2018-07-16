@@ -1,0 +1,203 @@
+---
+title: "Usoskin"
+author: "Tae Kim"
+date: "6/1/2018"
+output: pdf_document
+---
+
+---
+title: "Buettner"
+author: "Tae Kim"
+date: "6/1/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment=NA,
+                      warning=FALSE,
+                      message=FALSE)
+library(MultiAssayExperiment)
+library(ggplot2)
+library(irlba)
+library(matrixStats)
+library(inline)
+library(quadprog)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(scatterplot3d)
+library(igraph) #for nmi
+library(Rtsne)
+library(diceR)
+library(gplots)
+library(data.table)
+set.seed(1)
+R.utils::sourceDirectory("../../R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('../../src/SCNoisyClustering.cpp')
+```
+
+```{r read data}
+
+exp = read.table('../../data/Usoskin_raw_from_excel.txt', header=TRUE)
+info = read.table('../../data/Usoskin_raw_from_excel_info.txt', header=TRUE)
+
+ind = which(info$level1 %in% c('NF','NP','PEP', 'TH'))
+exp = exp[, ind]
+info = info[ind, ]
+info = apply(info, 2, as.character)
+info = as.data.frame(info)
+```
+
+```{r clean}
+tpm_orig = exp
+tpm = tpm_orig[rowSums(tpm_orig>0)>10, ]
+tpm = apply(tpm, 2, as.numeric) #15334 x 622
+labels1 = info$level1
+labels2 = info$level2
+labels3 = info$level3
+```
+
+```{r quantile_plot_log}
+ngenes = colSums(tpm>0) # num of genes expressed for each cell
+det.rate = ngenes/nrow(tpm) #detection rate
+tpm = apply(tpm, 2, as.numeric) #its first pc is not related with det.rate
+log.tpm = log(tpm + 1)  #its first pc is linearly related with log(det.rate)
+
+n = ncol(log.tpm)
+num.gene = nrow(log.tpm)
+
+quants = apply(log.tpm, 2, function(x) quantile(x[x>0], probs=c(.25, .5, .75, 1)))
+type = c(rep('25%',n), rep('50%',n), rep('75%',n), rep('100%',n))
+log.quants.df = data.frame(logTPM = c(t(quants)), quantile=type, log_detection = rep(log(det.rate), 4))
+ggplot(log.quants.df, aes(x=log_detection, y=logTPM, col=quantile))+
+  geom_point()+
+  ggtitle('log TPM ~ log(detection)')
+```
+
+```{r quantile_plot}
+quants = apply(log.tpm, 2, function(x) quantile(x[x>0], probs=c(.25, .5, .75, 1)))
+type = c(rep('25%',n), rep('50%',n), rep('75%',n), rep('100%',n))
+quants.df = data.frame(logTPM = c(t(quants)), quantile=type, detection = rep(det.rate, 4))
+ggplot(quants.df, aes(x=detection, y=logTPM, col=quantile))+
+  geom_point()+
+  ggtitle('log(TPM) ~ detection')
+```
+
+The first principal component is correlated with the detection rate
+
+```{r pca_plot}
+svd.base = irlba(log.tpm, 3)
+par(mfrow=(c(1,2)))
+plot(svd.base$v[,1] ~ log(det.rate), main='log detection rate', ylab = 'pc1')
+plot(svd.base$v[,1] ~ det.rate, main='detection rate', ylab = 'pc1')
+```
+Remove the effects of detection rate
+```{r rg}
+log.tpm.rg = log.tpm
+x = log(det.rate)-mean(log(det.rate))
+log.tpm.rg = t(t(scale(log.tpm)) - 1/sum(x^2) * x %*% (t(x) %*% t(scale(log.tpm))))
+gene.var = apply(log.tpm.rg, 1, var)
+gene.mean = rowMeans(log.tpm.rg)
+```
+
+```{r rg residuals}
+var.genes = which(gene.var>quantile(gene.var,0.3))
+log.tpm.rg.filtered = log.tpm.rg[var.genes,]
+svd.rg = irlba(log.tpm.rg.filtered, 3)
+par(mfrow=c(1,2))
+plot(svd.rg$v[,1] ~ det.rate)
+plot(svd.rg$v[,1] ~ svd.rg$v[,2], col=labels1)
+```
+Try Loess as well.
+
+```{r loess}
+log.tpm.loess = log.tpm
+for (i in 1:num.gene){
+  fit = loess(log.tpm[i,] ~ det.rate)
+  log.tpm.loess[i,] = fit$residuals
+}
+```
+
+```{r loess residuals}
+#select genes
+gene.var = apply(log.tpm.loess, 1, var)
+gene.mean = rowMeans(log.tpm.loess)
+var.genes = which(gene.var>quantile(gene.var, 0.3))
+log.tpm.loess.filtered = log.tpm.loess[var.genes, ]
+svd.loess = irlba(log.tpm.loess.filtered, 3)
+par(mfrow = c(1,2))
+plot(svd.loess$v[,1] ~ det.rate)
+plot(svd.loess$v[,1] ~ svd.loess$v[,2], col=as.numeric(labels1))
+```
+
+```{r log-regression result}
+out.reg = ssl_wrapper(log.tpm.rg.filtered, numClust=length(unique(labels1)), filter=F)
+```
+
+
+
+
+```{r benchmark}
+library(SIMLR)
+library(pcaReduce)
+library(SingleCellExperiment)
+library(SC3)
+library(gdata)
+
+k = kmeans(t(log.tpm.rg.filtered), 4, nstart=5)$cluster
+s = SIMLR(log.tpm.rg.filtered, 4)
+p = PCAreduce(t(log.tpm.rg.filtered), 10, 4, 'M')[[1]][,1]
+colnames(log.tpm.rg.filtered) = paste0('C',1:ncol(log.tpm.rg.filtered))
+rownames(log.tpm.rg.filtered) = paste0('R',1:nrow(log.tpm.rg.filtered))
+sce = SingleCellExperiment(
+  assays = list(
+    counts = exp(as.matrix(log.tpm.rg.filtered))-1,
+    logcounts = as.matrix(log.tpm.rg.filtered)
+  ),
+  colData = colnames(log.tpm.rg.filtered)
+)
+rowData(sce)$feature_symbol = rownames(log.tpm.rg.filtered)
+sc = sc3(sce, ks = 4, biology = FALSE, gene_filter=FALSE)
+sc3_export_results_xls(sc, filename = paste0("sc", ".xls"))
+x = read.xls(paste0("sc", ".xls"))
+scr = x[,2]
+  
+print(paste('kmeans    : ',adj.rand.index(k, as.numeric(labels1))))
+print(paste('SIMLR     : ',adj.rand.index(s$y$cluster, as.numeric(labels1))))
+print(paste('pcaReduce : ',adj.rand.index(p, as.numeric(labels1))))
+print(paste('SC3       : ',adj.rand.index(scr, as.numeric(labels1))))
+print(paste('SSL       : ',adj.rand.index(out.reg$result, as.numeric(labels1))))
+```
+
+Without regressing out the detection effect..
+
+```{r original}
+out = ssl_wrapper(log.tpm, numClust=length(unique(labels1)))
+k = kmeans(t(log.tpm), 4, nstart=5)$cluster
+s = SIMLR(log.tpm, 4)
+p = PCAreduce(t(log.tpm), 10, 4, 'M')[[1]][,1]
+colnames(log.tpm) = paste0('C',1:ncol(log.tpm))
+rownames(log.tpm) = paste0('R',1:nrow(log.tpm))
+sce = SingleCellExperiment(
+  assays = list(
+    counts = exp(as.matrix(log.tpm))-1,
+    logcounts = as.matrix(log.tpm)
+  ),
+  colData = colnames(log.tpm)
+)
+rowData(sce)$feature_symbol = rownames(log.tpm)
+sc = sc3(sce, ks = 4, biology = FALSE, gene_filter=FALSE)
+sc3_export_results_xls(sc, filename = paste0("sc", ".xls"))
+x = read.xls(paste0("sc", ".xls"))
+scr = x[,2]
+  
+print(paste('kmeans    : ',adj.rand.index(k, as.numeric(labels1))))
+print(paste('SIMLR     : ',adj.rand.index(s$y$cluster, as.numeric(labels1))))
+print(paste('pcaReduce : ',adj.rand.index(p, as.numeric(labels1))))
+print(paste('SC3       : ',adj.rand.index(scr, as.numeric(labels1))))
+print(paste('SSL       : ',adj.rand.index(out$result, as.numeric(labels1))))
+```
+
