@@ -33,7 +33,7 @@ LSLSL = function(X,
 
   #split X into multiple data sets
   X2 = list()
-  division = round(nn/400)
+  division = round(nn/300)
   skip = floor(nn/division)
   indvector = 1:skip; indlist = list()
   for (i in 1:(division-1)){
