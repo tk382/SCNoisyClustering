@@ -6,15 +6,27 @@
 
 using namespace Rcpp;
 
+// proj_c
+arma::mat proj_c(arma::mat X, arma::mat ref);
+RcppExport SEXP _SCNoisyClustering_proj_c(SEXP XSEXP, SEXP refSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type ref(refSEXP);
+    rcpp_result_gen = Rcpp::wrap(proj_c(X, ref));
+    return rcpp_result_gen;
+END_RCPP
+}
 // armapmax
-arma::mat armapmax(arma::mat A, double bounds);
-RcppExport SEXP _SCNoisyClustering_armapmax(SEXP ASEXP, SEXP boundsSEXP) {
+arma::mat armapmax(arma::mat A, double bound);
+RcppExport SEXP _SCNoisyClustering_armapmax(SEXP ASEXP, SEXP boundSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< double >::type bounds(boundsSEXP);
-    rcpp_result_gen = Rcpp::wrap(armapmax(A, bounds));
+    Rcpp::traits::input_parameter< double >::type bound(boundSEXP);
+    rcpp_result_gen = Rcpp::wrap(armapmax(A, bound));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -52,43 +64,120 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// constructKernel_c
-arma::mat constructKernel_c(arma::mat X, double sigma);
-RcppExport SEXP _SCNoisyClustering_constructKernel_c(SEXP XSEXP, SEXP sigmaSEXP) {
+// get_rank
+arma::vec get_rank(const arma::vec X);
+RcppExport SEXP _SCNoisyClustering_get_rank(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_rank(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// spearman_c
+arma::mat spearman_c(const arma::mat X);
+RcppExport SEXP _SCNoisyClustering_spearman_c(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(spearman_c(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// corr_kernel_c
+arma::cube corr_kernel_c(arma::mat X, arma::mat Diff, arma::vec allk_input, arma::vec sigma_input, int k);
+RcppExport SEXP _SCNoisyClustering_corr_kernel_c(SEXP XSEXP, SEXP DiffSEXP, SEXP allk_inputSEXP, SEXP sigma_inputSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(constructKernel_c(X, sigma));
+    Rcpp::traits::input_parameter< arma::mat >::type Diff(DiffSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type allk_input(allk_inputSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type sigma_input(sigma_inputSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(corr_kernel_c(X, Diff, allk_input, sigma_input, k));
     return rcpp_result_gen;
 END_RCPP
 }
-// RMSC_c
-Rcpp::List RMSC_c(arma::cube T, double lambda, double mu, double rho, int max_iter, double eps, bool verbose);
-RcppExport SEXP _SCNoisyClustering_RMSC_c(SEXP TSEXP, SEXP lambdaSEXP, SEXP muSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP verboseSEXP) {
+// dist_kernel_c
+arma::cube dist_kernel_c(arma::mat X, arma::vec allk_input, arma::vec sigma_input, int k);
+RcppExport SEXP _SCNoisyClustering_dist_kernel_c(SEXP XSEXP, SEXP allk_inputSEXP, SEXP sigma_inputSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::cube >::type T(TSEXP);
-    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type allk_input(allk_inputSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type sigma_input(sigma_inputSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(dist_kernel_c(X, allk_input, sigma_input, k));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rank_kernel_c
+arma::cube rank_kernel_c(arma::mat X, arma::mat Diff, arma::vec allk_input, arma::vec sigma_input, int k);
+RcppExport SEXP _SCNoisyClustering_rank_kernel_c(SEXP XSEXP, SEXP DiffSEXP, SEXP allk_inputSEXP, SEXP sigma_inputSEXP, SEXP kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Diff(DiffSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type allk_input(allk_inputSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type sigma_input(sigma_inputSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(rank_kernel_c(X, Diff, allk_input, sigma_input, k));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sparse_scaledlasso_c
+Rcpp::List sparse_scaledlasso_c(const arma::cube P, const double tau, const double gamma, double mu, const double rho, const int max_iter, const double eps, const bool verbose);
+RcppExport SEXP _SCNoisyClustering_sparse_scaledlasso_c(SEXP PSEXP, SEXP tauSEXP, SEXP gammaSEXP, SEXP muSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< const double >::type gamma(gammaSEXP);
     Rcpp::traits::input_parameter< double >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< const double >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(sparse_scaledlasso_c(P, tau, gamma, mu, rho, max_iter, eps, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tsne_c
+arma::mat tsne_c(arma::mat X, arma::mat initial_config, int k, int max_iter, double min_cost, int epoch);
+RcppExport SEXP _SCNoisyClustering_tsne_c(SEXP XSEXP, SEXP initial_configSEXP, SEXP kSEXP, SEXP max_iterSEXP, SEXP min_costSEXP, SEXP epochSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type initial_config(initial_configSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(RMSC_c(T, lambda, mu, rho, max_iter, eps, verbose));
+    Rcpp::traits::input_parameter< double >::type min_cost(min_costSEXP);
+    Rcpp::traits::input_parameter< int >::type epoch(epochSEXP);
+    rcpp_result_gen = Rcpp::wrap(tsne_c(X, initial_config, k, max_iter, min_cost, epoch));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_SCNoisyClustering_proj_c", (DL_FUNC) &_SCNoisyClustering_proj_c, 2},
     {"_SCNoisyClustering_armapmax", (DL_FUNC) &_SCNoisyClustering_armapmax, 2},
     {"_SCNoisyClustering_armapmin", (DL_FUNC) &_SCNoisyClustering_armapmin, 2},
     {"_SCNoisyClustering_nonnegASC_c", (DL_FUNC) &_SCNoisyClustering_nonnegASC_c, 1},
     {"_SCNoisyClustering_dist_c", (DL_FUNC) &_SCNoisyClustering_dist_c, 1},
-    {"_SCNoisyClustering_constructKernel_c", (DL_FUNC) &_SCNoisyClustering_constructKernel_c, 2},
-    {"_SCNoisyClustering_RMSC_c", (DL_FUNC) &_SCNoisyClustering_RMSC_c, 7},
+    {"_SCNoisyClustering_get_rank", (DL_FUNC) &_SCNoisyClustering_get_rank, 1},
+    {"_SCNoisyClustering_spearman_c", (DL_FUNC) &_SCNoisyClustering_spearman_c, 1},
+    {"_SCNoisyClustering_corr_kernel_c", (DL_FUNC) &_SCNoisyClustering_corr_kernel_c, 5},
+    {"_SCNoisyClustering_dist_kernel_c", (DL_FUNC) &_SCNoisyClustering_dist_kernel_c, 4},
+    {"_SCNoisyClustering_rank_kernel_c", (DL_FUNC) &_SCNoisyClustering_rank_kernel_c, 5},
+    {"_SCNoisyClustering_sparse_scaledlasso_c", (DL_FUNC) &_SCNoisyClustering_sparse_scaledlasso_c, 8},
+    {"_SCNoisyClustering_tsne_c", (DL_FUNC) &_SCNoisyClustering_tsne_c, 6},
     {NULL, NULL, 0}
 };
 

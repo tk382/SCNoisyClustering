@@ -1,7 +1,7 @@
 SLSL_ref = function(X,
                     ref,
-                    numClust,
-                    k=NA,
+                    numClust = NA,
+                    k = NA,
                     log = T,
                     filter = F,
                     filter_p1 = 0.9,
@@ -9,43 +9,48 @@ SLSL_ref = function(X,
                     correct_detection_rate = F,
                     kernel_type = "combined",
                     klist = seq(15,25,by=5),
-                    sigmalist=seq(1,2,by=0.2),
+                    sigmalist = seq(1,2,by=0.2),
                     tau = 5,
                     gamma = 0,
-                    verbose=FALSE,
+                    verbose = FALSE,
                     measuretime = FALSE,
-                    warning=TRUE){
+                    warning = TRUE){
+
   # take subset of the data and
   # the reference set with overlapping genes
   int = base::intersect(rownames(ref), rownames(X))
   if(length(int)<100){
-    stop("Not enough genes overlap with the reference data set")
+    stop("Not enough genes overlap with the reference data set.
+         Check that row names of the reference set and rownames of your data set have gene names.")
   }
+
   ind1 = match(int, rownames(X))
   X = X[ind1, ]
   ind2 = match(int, rownames(ref))
   ref = ref[ind2, ]
 
 
-  if(log){X = log(X+1)}
+  if(log){
+    X = log(X+1)
+  }
 
   X2 = X
   if(correct_detection_rate){
-    det = colSums(is.na(X)) / nrow(X)
+    det = colSums(X!=0) / nrow(X)
     det2 = qr(det)
-    X2 = t(qr.resid(det2, t(logX)))
-    X2 = scale(X2, scale=F, center=T)
+    X2 = t(qr.resid(det2, t(X)))
+    X2 = scale(X2, center=T, scale=T)
   }else{
-    X2 = scale(X2, scale=F, center=T)
+    X2 = X
   }
 
-  projection = proj_c(as.matrix(X), as.matrix(ref))
+  projection = proj_c(as.matrix(X2), as.matrix(ref))
   #t(t(X) %*% as.matrix(ref))/nrow(X)
 
   projection = scale(projection^4)
 
-  res = SLSL(projection,
-             numClust,
+  res = SLSL(as.matrix(projection),
+             numClust = NA,
              ref = NA,
              k = NA,
              log = F,

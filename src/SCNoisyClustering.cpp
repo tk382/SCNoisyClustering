@@ -6,6 +6,12 @@ using namespace std;
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
+arma::mat proj_c(arma::mat X, arma::mat ref){
+  return((X.t() * ref / X.n_rows).t());
+}
+
+
+// [[Rcpp::export]]
 arma::mat armapmax(arma::mat A, double bound){
   int n = A.n_rows;
   int p = A.n_cols;
