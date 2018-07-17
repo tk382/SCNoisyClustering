@@ -11,6 +11,8 @@ navbar:
       href: about.html
     - text: "Tutorial"
       href: tutorial.html
+    - text: "Detection Rate Correction"
+      href: detection_rate_correction.html
     - text: "License"
       href: license.html
   right:

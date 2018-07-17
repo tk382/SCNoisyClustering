@@ -3,7 +3,7 @@ SLSL = function(X,
                 ref = NA,
                 k=NA,
                 log = T,
-                filter = T,
+                filter = F,
                 filter_p1 = 0.9,
                 filter_p2 = 0,
                 correct_detection_rate = F,
@@ -56,16 +56,12 @@ SLSL = function(X,
     t2 = Sys.time()    #t2 - t1 : gene filtering
 
     if(log){X = log(X+1)}
-
-    X2 = X
     if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
-      det = colSums(is.na(X)) / nrow(X)
-      det2 = qr(det)
-      X2 = t(qr.resid(det2, t(logX)))
-      X2 = scale(X2, scale=F, center=T)
-    }else{
-      X2 = scale(X2, scale=F, center=T)
+      det = colSums(X!=0) / nrow(X)
+      det2 = qr(cbind(rep(1,length(det)),det))
+      X = t(qr.resid(det2, t(logX)))
     }
+    X = scale(X)
 
     # Construct kernel..
     if(verbose){print('constructing kernel..')}
@@ -73,7 +69,7 @@ SLSL = function(X,
       diff = 1-cor(as.matrix(X), method = "pearson")
       P = corr_kernel_c(t(X),klist,sigmalist,k)
     }else if(kernel_type=="euclidean"){
-      P = dist_kernel_c(t(X2), klist, sigmalist, k)
+      P = dist_kernel_c(t(X), klist, sigmalist, k)
     }else if(kernel_type=="spearman"){
       diff = 1-cor(as.matrix(X), method = "spearman")
       P    = rank_kernel_c(t(X), diff, klist, sigmalist, k)
@@ -81,7 +77,7 @@ SLSL = function(X,
       diff1 = 1-cor(as.matrix(X), method = "pearson")
       diff3 = 1-cor(as.matrix(X), method = "spearman")
       P1 = corr_kernel_c(t(X), diff1, klist, sigmalist, k)
-      P2 = dist_kernel_c(t(X2), klist, sigmalist, k)
+      P2 = dist_kernel_c(t(X), klist, sigmalist, k)
       P3 = rank_kernel_c(t(X), diff3, klist, sigmalist, k)
       P  = abind(P1, P2, P3)
       rm(P1, P2, P3)

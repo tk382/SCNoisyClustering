@@ -375,12 +375,12 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
       L1_norm(step-1) + F_norm(step-1);
     double relChg = norm(S-S_old, "fro")/max(1.0, norm(S_old, "fro"));
     S_old = S;
-    if(verbose){
-      cout << "iter" << step <<
-        ": \n max_inf_norm = " << max_inf_norm <<
-          "\n relChg = " << relChg <<
-            "\n mu = " << mu <<
-              "\n funV = " << funV(step-1) << "\n";
+    if(verbose & (step % 5==0)){
+      cout << "iter" << step << ":"
+       // ": \n max_inf_norm = " << max_inf_norm <<
+          "\n relative change = " << relChg << "\n";
+       //     "\n mu = " << mu <<
+      //        "\n funV = " << funV(step-1) << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
       break;
