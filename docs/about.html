@@ -171,12 +171,15 @@ $(document).ready(function () {
   <a href="tutorial.html">Tutorial</a>
 </li>
 <li>
+  <a href="detection_rate_correction.html">Detection Rate Correction</a>
+</li>
+<li>
   <a href="license.html">License</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tk382/SLSL_workflow">
+  <a href="https://github.com/tk382/SCNoisyClustering">
     <span class="fa fa-github"></span>
      
   </a>
@@ -202,7 +205,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-11</p>
+<p><strong>Last updated:</strong> 2018-07-17</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -211,15 +214,76 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SLSL_workflow/tree/df197b0518c45da0b11c83e3be8f2a4183b53608" target="_blank">df197b0</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/0e83fce3d3d4188c4adec16be40b67240577cb4c" target="_blank">0e83fce</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/tutorial_cache/
-    Ignored:    data/.DS_Store
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/correcting_detection_rate/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  R/.DS_Store
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/bibliography.bib
+    Untracked:  analysis/clean_data/
+    Untracked:  analysis/detection_rate_correction_cache/
+    Untracked:  analysis/downsampling/
+    Untracked:  analysis/dropouts/
+    Untracked:  analysis/figure/
+    Untracked:  analysis/filteringtest.R
+    Untracked:  analysis/old/
+    Untracked:  analysis/pipeline/large_sets.pdf
+    Untracked:  analysis/pipeline/temp_ari.txt
+    Untracked:  analysis/pipeline/temp_time.txt
+    Untracked:  analysis/sysdata_reference_test/
+    Untracked:  analysis/tutorial_cache/
+    Untracked:  analysis/writeup/cite.bib
+    Untracked:  analysis/writeup/cite.log
+    Untracked:  analysis/writeup/paper.aux
+    Untracked:  analysis/writeup/paper.bbl
+    Untracked:  analysis/writeup/paper.blg
+    Untracked:  analysis/writeup/paper.log
+    Untracked:  analysis/writeup/paper.out
+    Untracked:  analysis/writeup/paper.synctex.gz
+    Untracked:  analysis/writeup/paper.tex
+    Untracked:  analysis/writeup/writeup.aux
+    Untracked:  analysis/writeup/writeup.bbl
+    Untracked:  analysis/writeup/writeup.blg
+    Untracked:  analysis/writeup/writeup.dvi
+    Untracked:  analysis/writeup/writeup.log
+    Untracked:  analysis/writeup/writeup.out
+    Untracked:  analysis/writeup/writeup.synctex.gz
+    Untracked:  analysis/writeup/writeup.tex
+    Untracked:  analysis/writeup/writeup2.aux
+    Untracked:  analysis/writeup/writeup2.bbl
+    Untracked:  analysis/writeup/writeup2.blg
+    Untracked:  analysis/writeup/writeup2.log
+    Untracked:  analysis/writeup/writeup2.out
+    Untracked:  analysis/writeup/writeup2.pdf
+    Untracked:  analysis/writeup/writeup2.synctex.gz
+    Untracked:  analysis/writeup/writeup2.tex
+    Untracked:  analysis/writeup/writeup3.aux
+    Untracked:  analysis/writeup/writeup3.log
+    Untracked:  analysis/writeup/writeup3.out
+    Untracked:  analysis/writeup/writeup3.synctex.gz
+    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  data/unnecessary_in_building/
+
+Unstaged changes:
+    Modified:   R/SLSL.R
+    Deleted:    SCNoisyClustering_0.1.0.tar.gz
+    Modified:   analysis/pipeline/large_sets.Rmd
+    Modified:   analysis/pipeline/small_good_sets.Rmd
+    Modified:   analysis/pipeline/small_good_sets_result.txt
+    Modified:   analysis/pipeline/small_good_sets_time.txt
+    Modified:   analysis/tutorial.Rmd
+    Modified:   analysis/writeup/.DS_Store
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -253,7 +317,7 @@ Message
 Rmd
 </td>
 <td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/df197b0518c45da0b11c83e3be8f2a4183b53608/analysis/about.Rmd" target="_blank">df197b0</a>
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c5b074e2aa03ff4cf9e37c2cea4a3b9fd6ec19/analysis/about.Rmd" target="_blank">f6c5b07</a>
 </td>
 <td style="text-align:left;">
 tk382
@@ -262,7 +326,7 @@ tk382
 2018-07-11
 </td>
 <td style="text-align:left;">
-switch description
+add website
 </td>
 </tr>
 <tr>
@@ -270,7 +334,7 @@ switch description
 html
 </td>
 <td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/c619fd53d61ad2757ec76e2632bd6c67f92571fc/docs/about.html" target="_blank">c619fd5</a>
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/f6c5b074e2aa03ff4cf9e37c2cea4a3b9fd6ec19/docs/about.html" target="_blank">f6c5b07</a>
 </td>
 <td style="text-align:left;">
 tk382
@@ -279,228 +343,7 @@ tk382
 2018-07-11
 </td>
 <td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/ad6e8739ce35f26d42499afd8edc0d3a024e679a/analysis/about.Rmd" target="_blank">ad6e873</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-<td style="text-align:left;">
-wflow_publish(“analysis/about.Rmd”)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/86427104dd6e9bf1618f20dc18a986c9cf990920/docs/about.html" target="_blank">8642710</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-<td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/b46e425e2fc4daeca95e2589a056ab2a022d2112/analysis/about.Rmd" target="_blank">b46e425</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-11
-</td>
-<td style="text-align:left;">
-update introduction
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/cff03bbb326a588feda5f73e0cb8256a4b884028/docs/about.html" target="_blank">cff03bb</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/05f125dc648c5db6c018a46fb67dfbd792251e2d/analysis/about.Rmd" target="_blank">05f125d</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-change theme
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/eec8493ffb511aa61dbd776a0bb8d3547d80d772/docs/about.html" target="_blank">eec8493</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/ec5b689f0a76eef8ba01c3db2910e2142be5aa81/analysis/about.Rmd" target="_blank">ec5b689</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-git2r is updated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/f4c3391ca0fd146dc1f432857266166303e7d37a/docs/about.html" target="_blank">f4c3391</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/f8bf9d3aab575eb8f0a0f38cd6d0efac4e1607c2/analysis/about.Rmd" target="_blank">f8bf9d3</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-commit message
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/30b6489e13ffee37cb7983daa5994e6f0a558d1e/docs/about.html" target="_blank">30b6489</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-second change?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/1f2fb0e356734d0e54f79364f0d24ba1415e2b10/analysis/about.Rmd" target="_blank">1f2fb0e</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-first change
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-html
-</td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/tk382/SLSL_workflow/9702c911b1be95b3672d6b49e1121eea021aafca/docs/about.html" target="_blank">9702c91</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-Build site.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rmd
-</td>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SLSL_workflow/blob/05fc61eefe198466761d69ac3d18eff9adf79ec8/analysis/about.Rmd" target="_blank">05fc61e</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-06-18
-</td>
-<td style="text-align:left;">
-Start workflowr project.
+add website
 </td>
 </tr>
 </tbody>
@@ -526,7 +369,7 @@ footer is added to webpages before the MathJax javascript. -->
 <p>
   This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
   analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.0.1
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
 </p>
 <hr>
 
