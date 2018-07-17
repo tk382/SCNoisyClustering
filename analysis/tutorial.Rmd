@@ -165,6 +165,7 @@ verbose = TRUE
 measuretime = TRUE
 ```
 
+
 ## Run the Function
 
 Using the prespecified parameters above, run the SLSL function.
@@ -228,81 +229,97 @@ scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = df$result)
 
 The SLSL function also has a hidden argument "ref". This allows the users to utilize the reference panel data sets [@li2017reference]. Two panels are available: cell types and tissue types. One can simply add this parameter in SLSL function. 
 
-## Read Data
+## Demonstration1 : 10X data of PBMC cells
 
-To demonstrate the use of the reference panel, we use the cell types of human embryonic cells published in [@chu2016single]. 
+To demonstrate the use of the reference panel, we use the 10X data of PBMC cells from [Zheng2017massively]. They provide the reference set of 11 type of pure cell type populations, and we use the file for demonstration. Due to the size, these data sets are not included in the package, and they can be found here: https://support.10xgenomics.com/single-cell-gene-expression/datasets and https://github.com/10XGenomics/single-cell-3prime-paper. 
 
-```{r ref_read_data}
-load('../data/Chu_celltype.Rdata')
+```{r pbmc_read_data}
+X = readMM('../data/unnecessary_in_building/pbmc3k/matrix.mtx')
+X = as.matrix(X)
+genes = read.table('../data/unnecessary_in_building/pbmc3k/genes.tsv')
+rownames(X) = genes$V2
+
+ref_file = readRDS('../data/unnecessary_in_building/pbmc3k/all_pure_select_11types.rds')
+ref = t(ref_file$pure_avg)
+rownames(ref) = genes$V2[ref_file$pure_use_genes]
+colnames(ref) = ref_file$pure_id
+ref = scale(ref)
 ```
 
-## Cell Type Panel
+The two most important arguments are the data matrix "X" and reference panel "ref". We assume X is count matrix, while reference panel is already log transformed and normalized. Another parameter the user can choose is "knn". Empirical results showed that, after taking the projection of the data matrix onto the reference panel, removing low correlations improve the signal strength. When "knn" is set to TRUE, for each cell, SLSL_ref will only keep a few strongest correlations and push everything else to 0. The number of neighbors is determined by "knn_keep" argument. The number of clusters does not have to be identified. 
+
+Note that 10X data has very low detection rate. (number of genes detected as greater than 0 for each cell). The histogram below shows that only around 2\% of the genes are detected for most cells.
+
+```{r 10Xdet}
+hist(colSums(X!=0) / nrow(X), breaks=50,
+     xlab = 'detection rate per cell', ylab = '')
+```
+
+This data is from 11 different PBMC cell types, and yet the dimension reduction doesn't show any particular patterns.
+
+```{r 10Xtsne}
+tsne = Rtsne(t(log(X+1)), perplexity=10)
+```
+
+When we use the reference panel, the clustering becomes much easier.
+
+```{r ref_pbmc_run}
+pbmc_ref = SLSL_ref(X = as.matrix(X),
+                        ref = ref, 
+                        knn = F,
+                        knn_keep = 11,
+                        numClust = 11,
+                        verbose=T)
+```
+
+Sort the cells and visualize the projection matrix.
+```{r pbmc_analyze}
+heat(pbmc_ref$projection[,sort(pbmc_ref$result, index.return=T)$ix])
+
+plot(tsne$Y, col = pbmc_ref$result)
+```
+
+When knn_keep is set to 1, the projection matrix will look like below. Only the celltype with the maximum correlation is left with signal while all others are pushed to 0. 
+
+```{r ref_run_pbmc_run2}
+pbmc_ref = SLSL_ref(X = as.matrix(X),
+                        ref = ref, 
+                        knn = T,
+                        knn_keep = 1,
+                        numClust = 11,
+                        verbose=T
+                    )
+
+heat(pbmc_ref$projection[,sort(pbmc_ref$result, index.return=T)$ix])
+
+plot(tsne$Y, col = pbmc_ref$result)
+```
+
+
+
+We also provide two reference sets of human cell types and tissue types. Below is a demonstration of cell type panel. 
 
 ```{r ref_run}
 sysdata = SCNoisyClustering::reference_panel
 ref = reference_panel$cell
 
+load('../data/unnecessary_in_building/7_Chu_celltype.RData')
 X = Chu_celltype$X
-out_cell_ref = SLSL(X        = X, 
-                    ref      = ref,
-                    numClust = 7)
+chu_ref = SLSL_ref(X = as.matrix(X),  
+                        ref = ref, numClust = 7,
+                        knn = 20,
+                        verbose = T)
+```
+```{r}
+heat(chu_ref$projection[,sort(chu_ref$result, index.return=T)$ix])
 ```
 
 
 ```{r ref_analyze, fig.width=3.5, fig.height=3.5}
-heat(out_cell_ref$projection)
+heat(chu_ref$projection)
 ```
 
 One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.
-
-```{r ref_analyze2, fig.width=3.5, fig.height=3.5}
-truelabel = as.factor(Chu_celltype$label)
-heat(out_cell_ref$SLSL_output$S)
-table(out_cell_ref$SLSL_output$result, truelabel)
-adj.rand.index(out_cell_ref$SLSL_output$result,
-               as.numeric(truelabel))
-```
-
-Now look at the visualization from the dimension reduction result.
-
-```{r ref_analyze3, fig.width=3.5, fig.height=3.5}
-out = out_cell_ref$SLSL_output
-tsne = out$tsne
-df = as.data.frame(tsne)
-df$truelabel = as.factor(truelabel)
-df$result = as.factor(out$result)
-ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
-ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
-```
-
-## Tissue Type Panel
-
-Similarly, we can use the tissue reference panel.
-
-```{r tissueref}
-ref = reference_panel$tissue
-out_tissue_ref = SLSL(X, 
-                      ref = ref, 
-                      numClust=7)
-```
-
-We can analyze the result like below. 
-
-```{r tissueref_analyze, fig.width=3.5, fig.height=3.5}
-heat(out_tissue_ref$projection)
-heat(out_tissue_ref$SLSL_output$S)
-table(out_tissue_ref$SLSL_output$result, truelabel)
-adj.rand.index(out_tissue_ref$SLSL_output$result,
-               as.numeric(truelabel))
-
-out = out_tissue_ref$SLSL_output
-tsne = out$tsne
-df = as.data.frame(tsne)
-df$truelabel = as.factor(truelabel)
-df$result = as.factor(out$result)
-ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
-ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
-```
 
 Since using reference panels often throws away a lot of information, users should be careful when to use panels and which panel to use. The data sets should be from human cells, and they should have enough cellular heterogeneity. For example, Yan data are from different stages of human embryonic cells, and once projected on to the reference panels, all the cells belonged to one type : oocytes. The Chu data above also shows a much better performance when clustered without the reference panel. 
 
@@ -314,7 +331,7 @@ The input data matrix is the same as regular SLSL: a count matrix with cells in 
 
 ## Read Data
 ```{r zeisel_read}
-load('../data/Zeisel.Rdata')
+load('../data/unnecessary_in_building/Zeisel.Rdata')
 X = Zeisel$X
 truelabel = Zeisel$label
 ```
