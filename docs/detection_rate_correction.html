@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Effects of Correction of Detection Rate</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+#TOC {
+  display: none !important;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">SLSL_workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="tutorial.html">Tutorial</a>
+</li>
+<li>
+  <a href="detection_rate_correction.html">Detection Rate Correction</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tk382/SLSL_workflow">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Effects of Correction of Detection Rate</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-07-16</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
+<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/884f74e12b35e993c934a83414cb5c6aa01a74c7" target="_blank">884f74e</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/correcting_detection_rate/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  R/.DS_Store
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/bibliography.bib
+    Untracked:  analysis/clean_data/
+    Untracked:  analysis/downsampling/
+    Untracked:  analysis/dropouts/
+    Untracked:  analysis/filteringtest.R
+    Untracked:  analysis/old/
+    Untracked:  analysis/pipeline/large_sets.pdf
+    Untracked:  analysis/pipeline/temp_ari.txt
+    Untracked:  analysis/pipeline/temp_time.txt
+    Untracked:  analysis/sysdata_reference_test/
+    Untracked:  analysis/tutorial_cache/
+    Untracked:  analysis/writeup/cite.bib
+    Untracked:  analysis/writeup/cite.log
+    Untracked:  analysis/writeup/paper.aux
+    Untracked:  analysis/writeup/paper.bbl
+    Untracked:  analysis/writeup/paper.blg
+    Untracked:  analysis/writeup/paper.log
+    Untracked:  analysis/writeup/paper.out
+    Untracked:  analysis/writeup/paper.synctex.gz
+    Untracked:  analysis/writeup/paper.tex
+    Untracked:  analysis/writeup/writeup.aux
+    Untracked:  analysis/writeup/writeup.bbl
+    Untracked:  analysis/writeup/writeup.blg
+    Untracked:  analysis/writeup/writeup.dvi
+    Untracked:  analysis/writeup/writeup.log
+    Untracked:  analysis/writeup/writeup.out
+    Untracked:  analysis/writeup/writeup.synctex.gz
+    Untracked:  analysis/writeup/writeup.tex
+    Untracked:  analysis/writeup/writeup2.aux
+    Untracked:  analysis/writeup/writeup2.bbl
+    Untracked:  analysis/writeup/writeup2.blg
+    Untracked:  analysis/writeup/writeup2.log
+    Untracked:  analysis/writeup/writeup2.out
+    Untracked:  analysis/writeup/writeup2.pdf
+    Untracked:  analysis/writeup/writeup2.synctex.gz
+    Untracked:  analysis/writeup/writeup2.tex
+    Untracked:  analysis/writeup/writeup3.aux
+    Untracked:  analysis/writeup/writeup3.log
+    Untracked:  analysis/writeup/writeup3.out
+    Untracked:  analysis/writeup/writeup3.synctex.gz
+    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  data/unnecessary_in_building/
+
+Unstaged changes:
+    Modified:   R/SLSL.R
+    Modified:   analysis/_site.yml
+    Modified:   analysis/pipeline/large_sets.Rmd
+    Modified:   analysis/pipeline/small_good_sets.Rmd
+    Modified:   analysis/pipeline/small_good_sets_result.txt
+    Modified:   analysis/pipeline/small_good_sets_time.txt
+    Modified:   analysis/writeup/.DS_Store
+    Modified:   src/SCNoisyClustering.cpp
+    Modified:   src/SCNoisyClustering.o
+    Modified:   src/SCNoisyClustering.so
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/884f74e12b35e993c934a83414cb5c6aa01a74c7/analysis/detection_rate_correction.Rmd" target="_blank">884f74e</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-16
+</td>
+<td style="text-align:left;">
+wflow_publish(“analysis/detection_rate_correction.Rmd”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/66600ac6832a8277eb7c27530636bd6c92526944/analysis/detection_rate_correction.Rmd" target="_blank">66600ac</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-16
+</td>
+<td style="text-align:left;">
+add analysis files
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<div id="pollen" class="section level2">
+<h2>Pollen</h2>
+<pre class="r"><code>i = 2
+
+load(&#39;../data/unnecessary_in_building/2_Pollen.RData&#39;)
+X        = as.matrix(Pollen$x)
+truth    = as.numeric(as.factor(Pollen$label))
+numClust = length(unique(truth))
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(det)
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Pollen-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R))
+tsne2 = Rtsne(t(logX))
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Pollen-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.7755788</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.8659285</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.7665684</code></pre>
+</div>
+<div id="usoskin" class="section level2">
+<h2>Usoskin</h2>
+<pre class="r"><code>i = 3
+
+load(&#39;../data/unnecessary_in_building/3_Usoskin.RData&#39;)
+X        = as.matrix(Usoskin$X)
+truth    = as.numeric(as.factor(as.character(Usoskin$lab1)))
+numClust = 4
+rm(Usoskin)
+
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+plot(irlba(logX,1)$v[,1]~log(det))</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Usoskin-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>det2 = qr(cbind(rep(1, length(det)), log(det)))
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Usoskin-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R), perplexity=20)
+tsne2 = Rtsne(t(logX))
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Usoskin-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.6188269</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.7345628</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.6348444</code></pre>
+</div>
+<div id="buettner" class="section level2">
+<h2>Buettner</h2>
+<pre class="r"><code>i = 4
+
+#read data
+load(&#39;../data/unnecessary_in_building/4_Buettner.RData&#39;)
+X        = as.matrix(Buettner$X)
+truth    = as.numeric(as.factor(Buettner$label))
+numClust = 3
+rm(Buettner)
+
+logX = log(X+1)
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(det)
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Buettner-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R), perplexity=20)
+tsne2 = Rtsne(t(logX), perplexity=20)
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Buettner-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.4329975</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.428236</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.465002</code></pre>
+</div>
+<div id="yan" class="section level2">
+<h2>Yan</h2>
+<pre class="r"><code>i = 5
+
+load(&#39;../data/unnecessary_in_building/5_Yan.rda&#39;)
+X        = as.matrix(yan)
+truth    = as.character(ann$cell_type1)
+truth    = as.numeric(as.factor(truth))
+numClust = 6
+rm(ann, yan)
+
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(det)
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Yan-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R), perplexity=20)
+tsne2 = Rtsne(t(logX), perplexity=20)
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Yan-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.9484199</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.9484199</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.7952752</code></pre>
+</div>
+<div id="treutlein" class="section level2">
+<h2>Treutlein</h2>
+<pre class="r"><code>i = 6
+
+load(&#39;../data/unnecessary_in_building/6_Treutlein.rda&#39;)
+X        = as.matrix(treutlein)
+truth    = as.numeric(colnames(treutlein))
+ind      = sort(truth, index.return=TRUE)$ix
+X        = X[,ind]
+truth    = truth[ind]
+numClust = length(unique(truth))
+rm(treutlein)
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(cbind(log(det), rep(1, length(det))))
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Treutlein-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R), perplexity=10)
+tsne2 = Rtsne(t(logX), perplexity=10)
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Treutlein-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.794193</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.9603128</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.6517367</code></pre>
+</div>
+<div id="chu-cell-type" class="section level2">
+<h2>Chu (cell type)</h2>
+<pre class="r"><code>i = 7
+
+load(&#39;../data/unnecessary_in_building/7_Chu_celltype.Rdata&#39;)
+X        = as.matrix(Chu_celltype$X)
+truth    = as.numeric(as.factor(Chu_celltype$label))
+numClust = 7
+rm(Chu_celltype)
+
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(det)
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Chu_celltype-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R))
+tsne2 = Rtsne(t(logX))
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Chu_celltype-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.7785884</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.7770962</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.775129</code></pre>
+</div>
+<div id="chu-timecourse" class="section level2">
+<h2>Chu (timecourse)</h2>
+<pre class="r"><code>i = 8
+load(&#39;../data/unnecessary_in_building/8_Chu_timecourse.Rdata&#39;)
+X        = as.matrix(Chu_timecourse$X)
+truth    = as.numeric(as.factor(Chu_timecourse$label))
+numClust = length(unique(truth))
+
+logX = log(X+1)
+
+det = colSums(X!=0) / nrow(X)
+
+det2 = qr(det)
+R = t(qr.resid(det2, t(logX)))
+
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Chu_timecourse-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tsne1 = Rtsne(t(R))
+tsne2 = Rtsne(t(logX))
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</code></pre>
+<p><img src="figure/detection_rate_correction.Rmd/Chu_timecourse-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(1); res1 = SLSL(R, log=F, filter=F)
+adj.rand.index(res1$result, truth)</code></pre>
+<pre><code>[1] 0.7321747</code></pre>
+<pre class="r"><code>set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+adj.rand.index(res2$result, truth)</code></pre>
+<pre><code>[1] 0.7276994</code></pre>
+<pre class="r"><code>set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+adj.rand.index(res3$result, truth)</code></pre>
+<pre><code>[1] 0.9692303</code></pre>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] stargazer_5.2.2         abind_1.4-5            
+ [3] broom_0.4.5             diceR_0.5.1            
+ [5] Rtsne_0.13              fossil_0.3.7           
+ [7] shapefiles_0.7          foreign_0.8-70         
+ [9] maps_3.3.0              sp_1.2-7               
+[11] reshape_0.8.7           dplyr_0.7.6            
+[13] ggplot2_3.0.0           irlba_2.3.2            
+[15] Matrix_1.2-14           quadprog_1.5-5         
+[17] inline_0.3.15           matrixStats_0.53.1     
+[19] SCNoisyClustering_0.1.0
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_0.2.4  reshape2_1.4.3    purrr_0.2.4      
+ [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
+ [7] yaml_2.1.19       rlang_0.2.0       R.oo_1.22.0      
+[10] pillar_1.2.2      glue_1.2.0        withr_2.1.2      
+[13] R.utils_2.6.0     bindrcpp_0.2.2    plyr_1.8.4       
+[16] bindr_0.1.1       stringr_1.3.0     munsell_0.4.3    
+[19] gtable_0.2.0      workflowr_1.1.1   R.methodsS3_1.7.1
+[22] codetools_0.2-15  psych_1.8.3.3     evaluate_0.10.1  
+[25] labeling_0.3      knitr_1.20        parallel_3.5.1   
+[28] Rcpp_0.12.16      scales_0.5.0      backports_1.1.2  
+[31] mnormt_1.5-5      digest_0.6.15     stringi_1.1.7    
+[34] grid_3.5.1        rprojroot_1.3-2   tools_3.5.1      
+[37] magrittr_1.5      lazyeval_0.2.1    tibble_1.4.2     
+[40] tidyr_0.8.0       whisker_0.3-2     pkgconfig_2.0.1  
+[43] assertthat_0.2.0  rmarkdown_1.9     R6_2.2.2         
+[46] mclust_5.4        nlme_3.1-137      git2r_0.21.0     
+[49] compiler_3.5.1   </code></pre>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
