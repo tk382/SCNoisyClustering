@@ -3,12 +3,12 @@ title: "Effects of Correction of Detection Rate"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
-  theme: yeti
-highlight: tango
-toc: false
-toc_float:
-  collapsed: true
-smooth_scroll: true
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
 ---
 
 ```{r setup, include=FALSE}
@@ -119,13 +119,13 @@ tsne2 = Rtsne(t(logX))
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
 ```
 
@@ -158,15 +158,16 @@ tsne2 = Rtsne(t(logX))
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
 
+rm(R,X,logX,res1,res2,res3); gc()
 
 ```
 
@@ -200,14 +201,16 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
+
+rm(R,X,logX,res1,res2,res3); gc()
 ```
 
 
@@ -239,15 +242,16 @@ tsne2 = Rtsne(t(logX), perplexity=20)
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
 
+rm(R,X,logX,res1,res2,res3); gc()
 
 ```
 
@@ -282,14 +286,16 @@ tsne2 = Rtsne(t(logX), perplexity=10)
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
+
+rm(R,X,logX,res1,res2,res3); gc()
 ```
 
 ## Chu (cell type)
@@ -320,14 +326,16 @@ tsne2 = Rtsne(t(logX))
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
+
+rm(R,X,logX,res1,res2,res3); gc()
 ```
 
 ## Chu (timecourse)
@@ -356,13 +364,15 @@ tsne2 = Rtsne(t(logX))
 dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
-set.seed(1); res1 = SLSL(R, log=F, filter=F)
+set.seed(1); res1 = SLSL(R, log=F, filter=F, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
-set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F)
+set.seed(1); res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
-set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T)
+set.seed(1); res3 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res3$result, truth)
+
+rm(R,X,logX,res1,res2,res3); gc()
 ```
 
