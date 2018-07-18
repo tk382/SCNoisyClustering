@@ -272,7 +272,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/0e83fce3d3d4188c4adec16be40b67240577cb4c" target="_blank">0e83fce</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/e84909db67550789c058170bfad6aa9a87580706" target="_blank">e84909d</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -280,7 +280,6 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    R/.Rhistory
     Ignored:    analysis/.Rhistory
-    Ignored:    analysis/correcting_detection_rate/.Rhistory
     Ignored:    analysis/pipeline/.Rhistory
 
 Untracked files:
@@ -289,16 +288,9 @@ Untracked files:
     Untracked:  R/.DS_Store
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/bibliography.bib
-    Untracked:  analysis/clean_data/
-    Untracked:  analysis/detection_rate_correction_cache/
-    Untracked:  analysis/downsampling/
-    Untracked:  analysis/dropouts/
-    Untracked:  analysis/filteringtest.R
-    Untracked:  analysis/old/
     Untracked:  analysis/pipeline/large_sets.pdf
     Untracked:  analysis/pipeline/temp_ari.txt
     Untracked:  analysis/pipeline/temp_time.txt
-    Untracked:  analysis/sysdata_reference_test/
     Untracked:  analysis/tutorial_cache/
     Untracked:  analysis/writeup/cite.bib
     Untracked:  analysis/writeup/cite.log
@@ -333,14 +325,36 @@ Untracked files:
     Untracked:  data/unnecessary_in_building/
 
 Unstaged changes:
+    Modified:   R/LSLSL.R
     Modified:   R/SLSL.R
+    Modified:   R/SLSL_ref.R
+    Modified:   R/tsne_spectral.R
     Deleted:    SCNoisyClustering_0.1.0.tar.gz
+    Deleted:    analysis/correcting_detection_rate/Buettner.Rmd
+    Deleted:    analysis/correcting_detection_rate/Buettner.pdf
+    Deleted:    analysis/correcting_detection_rate/Pollen.R
+    Deleted:    analysis/correcting_detection_rate/Pollen.Rmd
+    Deleted:    analysis/correcting_detection_rate/Pollen.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin.Rmd
+    Deleted:    analysis/correcting_detection_rate/Usoskin.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/loess residuals-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/pca_plot-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot_log-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/rg residuals-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Zeisel.R
+    Deleted:    analysis/correcting_detection_rate/detectionrate_alldata.R
+    Deleted:    analysis/correcting_detection_rate/detectionrate_pbmc.R
+    Deleted:    analysis/correcting_detection_rate/sc.xls
     Modified:   analysis/pipeline/large_sets.Rmd
+    Modified:   analysis/pipeline/pbmc_pipeline.R
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
-    Modified:   analysis/tutorial.Rmd
     Modified:   analysis/writeup/.DS_Store
+    Modified:   src/SCNoisyClustering.cpp
+    Modified:   src/SCNoisyClustering.o
+    Modified:   src/SCNoisyClustering.so
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -369,6 +383,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/410c0512c49ab93ca56a00b4d31379173f21855c/docs/detection_rate_correction.html" target="_blank">410c051</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -467,11 +498,13 @@ add analysis files
 X        =<span class="st"> </span><span class="kw">as.matrix</span>(Pollen<span class="op">$</span>x)
 truth    =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(Pollen<span class="op">$</span>label))
 numClust =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(truth))
+<span class="kw">rm</span>(Pollen)
+
 logX =<span class="st"> </span><span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>)
 
 det =<span class="st"> </span><span class="kw">colSums</span>(X<span class="op">!=</span><span class="dv">0</span>) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(X)
 
-det2 =<span class="st"> </span><span class="kw">qr</span>(det)
+det2 =<span class="st"> </span><span class="kw">qr</span>(<span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="kw">length</span>(det)), det))
 R =<span class="st"> </span><span class="kw">t</span>(<span class="kw">qr.resid</span>(det2, <span class="kw">t</span>(logX)))
 
 pca1 =<span class="st"> </span><span class="kw">irlba</span>(R,<span class="dv">2</span>); pca2 =<span class="st"> </span><span class="kw">irlba</span>(logX,<span class="dv">2</span>)
@@ -544,15 +577,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7755788</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.7931186</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.8325414</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7665684</code></pre>
+<pre><code>[1] 0.8177593</code></pre>
 </div>
 <div id="usoskin" class="section level2">
 <h2>Usoskin</h2>
@@ -673,19 +705,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.6188269</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.7947954</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.8746858</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.6348444</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
-Ncells 2221109 118.7    3972565  212.2         NA   3972565  212.2
-Vcells 5410323  41.3  166030754 1266.8      16384 207538345 1583.4</code></pre>
+<pre><code>[1] 0.6218291</code></pre>
 </div>
 <div id="buettner" class="section level2">
 <h2>Buettner</h2>
@@ -774,19 +801,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.4329975</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.3806902</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.428236</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.4145447</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
-Ncells 2203793 117.7    3972484  212.2         NA   3972484  212.2
-Vcells 5419519  41.4  138305840 1055.2      16384 172882188 1319.0</code></pre>
+<pre><code>[1] 0.3859772</code></pre>
 </div>
 <div id="yan" class="section level2">
 <h2>Yan</h2>
@@ -887,19 +909,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
 <pre><code>[1] 0.8954618</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.8954618</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.675345</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
-Ncells 2236314 119.5    3972484 212.2         NA   3972484  212.2
-Vcells 5358557  40.9  110644672 844.2      16384 172882188 1319.0</code></pre>
+<pre><code>[1] 0.5991576</code></pre>
 </div>
 <div id="treutlein" class="section level2">
 <h2>Treutlein</h2>
@@ -1012,19 +1029,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.3672819</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.3490127</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.4136064</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.3488583</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
-Ncells 2225549 118.9    3972484 212.2         NA   3972484  212.2
-Vcells 5350667  40.9   88515737 675.4      16384 172882188 1319.0</code></pre>
+<pre><code>[1] 0.4146639</code></pre>
 </div>
 <div id="chu-cell-type" class="section level2">
 <h2>Chu (cell type)</h2>
@@ -1101,6 +1113,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/36ebfc22180cfa5fe94d018f30be3872b66a15d2/docs/figure/detection_rate_correction.Rmd/Chu_celltype-2.png" target="_blank">36ebfc2</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Chu_celltype-2.png" target="_blank">b7e4475</a>
 </td>
 <td style="text-align:left;">
@@ -1113,19 +1136,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.9900038</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.798453</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.9956408</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7612027</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
-Ncells 2259138 120.7    3972565  212.2         NA   3972565  212.2
-Vcells 5473999  41.8  207597943 1583.9      16384 259497187 1979.9</code></pre>
+<pre><code>[1] 0.9964407</code></pre>
 </div>
 <div id="chu-timecourse" class="section level2">
 <h2>Chu (timecourse)</h2>
@@ -1164,6 +1182,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/36ebfc22180cfa5fe94d018f30be3872b66a15d2/docs/figure/detection_rate_correction.Rmd/Chu_timecourse-1.png" target="_blank">36ebfc2</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Chu_timecourse-1.png" target="_blank">b7e4475</a>
 </td>
 <td style="text-align:left;">
@@ -1200,6 +1229,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/36ebfc22180cfa5fe94d018f30be3872b66a15d2/docs/figure/detection_rate_correction.Rmd/Chu_timecourse-2.png" target="_blank">36ebfc2</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Chu_timecourse-2.png" target="_blank">b7e4475</a>
 </td>
 <td style="text-align:left;">
@@ -1212,19 +1252,14 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res1 =<span class="st"> </span><span class="kw">SLSL</span>(R, <span class="dt">log=</span>F, <span class="dt">filter=</span>F, <span class="dt">numClust =</span> numClust)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7321747</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<pre><code>[1] 0.7241204</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7276994</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>); res3 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res3<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7145637</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(R,X,logX,res1,res2,res3); <span class="kw">gc</span>()</code></pre></div>
-<pre><code>           used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
-Ncells  2260642 120.8    3972565  212.2         NA   3972565  212.2
-Vcells 20014295 152.7  199358024 1521.0      16384 259497187 1979.9</code></pre>
+<pre><code>[1] 0.6174572</code></pre>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
@@ -1263,15 +1298,16 @@ loaded via a namespace (and not attached):
 [13] R.utils_2.6.0     bindrcpp_0.2.2    plyr_1.8.4       
 [16] bindr_0.1.1       stringr_1.3.0     munsell_0.4.3    
 [19] gtable_0.2.0      workflowr_1.1.1   R.methodsS3_1.7.1
-[22] psych_1.8.3.3     evaluate_0.10.1   labeling_0.3     
-[25] knitr_1.20        parallel_3.5.1    Rcpp_0.12.16     
-[28] scales_0.5.0      backports_1.1.2   mnormt_1.5-5     
-[31] digest_0.6.15     stringi_1.1.7     grid_3.5.1       
-[34] rprojroot_1.3-2   tools_3.5.1       magrittr_1.5     
-[37] lazyeval_0.2.1    tibble_1.4.2      tidyr_0.8.0      
-[40] whisker_0.3-2     pkgconfig_2.0.1   assertthat_0.2.0 
-[43] rmarkdown_1.9     R6_2.2.2          mclust_5.4       
-[46] nlme_3.1-137      git2r_0.21.0      compiler_3.5.1   </code></pre>
+[22] codetools_0.2-15  psych_1.8.3.3     evaluate_0.10.1  
+[25] labeling_0.3      knitr_1.20        parallel_3.5.1   
+[28] Rcpp_0.12.16      scales_0.5.0      backports_1.1.2  
+[31] mnormt_1.5-5      digest_0.6.15     stringi_1.1.7    
+[34] grid_3.5.1        rprojroot_1.3-2   tools_3.5.1      
+[37] magrittr_1.5      lazyeval_0.2.1    tibble_1.4.2     
+[40] tidyr_0.8.0       whisker_0.3-2     pkgconfig_2.0.1  
+[43] assertthat_0.2.0  rmarkdown_1.9     R6_2.2.2         
+[46] mclust_5.4        nlme_3.1-137      git2r_0.21.0     
+[49] compiler_3.5.1   </code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using

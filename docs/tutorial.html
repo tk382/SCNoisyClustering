@@ -214,12 +214,15 @@ $(document).ready(function () {
   <a href="tutorial.html">Tutorial</a>
 </li>
 <li>
+  <a href="detection_rate_correction.html">Detection Rate Correction</a>
+</li>
+<li>
   <a href="license.html">License</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tk382/SLSL_workflow">
+  <a href="https://github.com/tk382/SCNoisyClustering">
     <span class="fa fa-github"></span>
      
   </a>
@@ -245,7 +248,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-12</p>
+<p><strong>Last updated:</strong> 2018-07-17</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -269,7 +272,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/0a9facc880c2cf3ade772eef6e887998df44a395" target="_blank">0a9facc</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/e84909db67550789c058170bfad6aa9a87580706" target="_blank">e84909d</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -282,23 +285,12 @@ Ignored files:
 Untracked files:
     Untracked:  ..gif
     Untracked:  .DS_Store
-    Untracked:  .gitignore
     Untracked:  R/.DS_Store
-    Untracked:  SCNoisyClustering.Rproj
-    Untracked:  _workflowr.yml
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/bibliography.bib
-    Untracked:  analysis/clean_data/
-    Untracked:  analysis/correcting_detection_rate/
-    Untracked:  analysis/downsampling/
-    Untracked:  analysis/dropouts/
-    Untracked:  analysis/filteringtest.R
-    Untracked:  analysis/old/
     Untracked:  analysis/pipeline/large_sets.pdf
     Untracked:  analysis/pipeline/temp_ari.txt
     Untracked:  analysis/pipeline/temp_time.txt
-    Untracked:  analysis/sysdata_reference_test/
-    Untracked:  analysis/tutorial_cache/
     Untracked:  analysis/writeup/cite.bib
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
@@ -330,18 +322,37 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
-    Untracked:  man/
-    Untracked:  src/.DS_Store
-    Untracked:  src/SCNoisyClustering.o
 
 Unstaged changes:
+    Modified:   R/LSLSL.R
+    Modified:   R/SLSL.R
+    Modified:   R/SLSL_ref.R
+    Modified:   R/tsne_spectral.R
+    Deleted:    SCNoisyClustering_0.1.0.tar.gz
+    Deleted:    analysis/correcting_detection_rate/Buettner.Rmd
+    Deleted:    analysis/correcting_detection_rate/Buettner.pdf
+    Deleted:    analysis/correcting_detection_rate/Pollen.R
+    Deleted:    analysis/correcting_detection_rate/Pollen.Rmd
+    Deleted:    analysis/correcting_detection_rate/Pollen.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin.Rmd
+    Deleted:    analysis/correcting_detection_rate/Usoskin.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/loess residuals-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/pca_plot-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot_log-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/rg residuals-1.pdf
+    Deleted:    analysis/correcting_detection_rate/Zeisel.R
+    Deleted:    analysis/correcting_detection_rate/detectionrate_alldata.R
+    Deleted:    analysis/correcting_detection_rate/detectionrate_pbmc.R
+    Deleted:    analysis/correcting_detection_rate/sc.xls
+    Modified:   analysis/pipeline/large_sets.Rmd
+    Modified:   analysis/pipeline/pbmc_pipeline.R
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
     Modified:   analysis/writeup/.DS_Store
-    Modified:   analysis/writeup/paper.pdf
-    Modified:   src/RcppExports.cpp
-    Modified:   src/RcppExports.o
+    Modified:   src/SCNoisyClustering.cpp
+    Modified:   src/SCNoisyClustering.o
     Modified:   src/SCNoisyClustering.so
 
 </code></pre>
@@ -371,6 +382,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/e84909db67550789c058170bfad6aa9a87580706/analysis/tutorial.Rmd" target="_blank">e84909d</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+<td style="text-align:left;">
+wflow_publish(c(“analysis/tutorial.Rmd”, “analysis/detection_rate_correction.Rmd”,
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/tutorial.html" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -706,6 +751,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/pca-1.png" target="_blank">2fb398f</a>
 </td>
 <td style="text-align:left;">
@@ -749,6 +805,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/pca-2.png" target="_blank">2fb398f</a>
@@ -812,11 +879,11 @@ measuretime =<span class="st"> </span><span class="ot">TRUE</span></code></pre><
 [1] &quot;optimizing..&quot;
 [1] &quot;network diffusion..&quot;
 [1] &quot;dimension reduction..&quot;
-gene filter &amp; numClust 0.51 seconds 
+gene filter &amp; numClust 0.37 seconds 
 constructing kernel 2.06 seconds 
-get S 0.02 seconds 
-network diffusion 0.01 seconds
-tsne 0.07 seconds</code></pre>
+get S 0.03 seconds 
+network diffusion 0.02 seconds
+tsne 0.09 seconds</code></pre>
 <p>Or, you can also use default parameters, and this will work as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(X)</code></pre></div>
 </div>
@@ -828,10 +895,10 @@ tsne 0.07 seconds</code></pre>
     16cell 2cell 4cell 8cell blast zygote
   1      0     0     0     0    30      0
   2      0     0     0    16     0      0
-  3     14     0     0     0     0      0
-  4      2     0     0     4     0      0
-  5      0     0    12     0     0      0
-  6      0     6     0     0     0      6</code></pre>
+  3      0     0    12     0     0      0
+  4      0     6     0     0     0      6
+  5     14     0     0     0     0      0
+  6      2     0     0     4     0      0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out<span class="op">$</span>result, <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
 <pre><code>[1] 0.8954618</code></pre>
 <p>Let’s take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified.</p>
@@ -853,6 +920,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/similarity_matrix-1.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/similarity_matrix-1.png" target="_blank">2fb398f</a>
@@ -904,6 +982,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/dimred-1.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-1.png" target="_blank">2fb398f</a>
 </td>
 <td style="text-align:left;">
@@ -945,6 +1034,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/dimred-2.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-2.png" target="_blank">2fb398f</a>
@@ -990,6 +1090,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/dimred-3.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-3.png" target="_blank">2fb398f</a>
 </td>
 <td style="text-align:left;">
@@ -1033,6 +1144,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/dimred-4.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/dimred-4.png" target="_blank">2fb398f</a>
 </td>
 <td style="text-align:left;">
@@ -1061,21 +1183,72 @@ tk382
 <div id="using-reference-panel" class="section level1">
 <h1>Using Reference Panel</h1>
 <p>The SLSL function also has a hidden argument “ref”. This allows the users to utilize the reference panel data sets <span class="citation">(H. Li et al. 2017)</span>. Two panels are available: cell types and tissue types. One can simply add this parameter in SLSL function.</p>
-<div id="read-data-1" class="section level2">
-<h2>Read Data</h2>
-<p>To demonstrate the use of the reference panel, we use the cell types of human embryonic cells published in <span class="citation">(Chu et al. 2016)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Chu_celltype.Rdata&#39;</span>)</code></pre></div>
-</div>
-<div id="cell-type-panel" class="section level2">
-<h2>Cell Type Panel</h2>
+<div id="demonstration1-10x-data-of-pbmc-cells" class="section level2">
+<h2>Demonstration1 : 10X data of PBMC cells</h2>
+<p>To demonstrate the use of the reference panel, we use the 10X data of PBMC cells from [Zheng2017massively]. They provide the reference set of 11 type of pure cell type populations, and we use the file for demonstration. Due to the size, these data sets are not included in the package, and they can be found here: <a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets" class="uri">https://support.10xgenomics.com/single-cell-gene-expression/datasets</a> and <a href="https://github.com/10XGenomics/single-cell-3prime-paper" class="uri">https://github.com/10XGenomics/single-cell-3prime-paper</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;../data/unnecessary_in_building/pbmc3k/matrix.mtx&#39;</span>)
+X =<span class="st"> </span><span class="kw">as.matrix</span>(X)
+genes =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;../data/unnecessary_in_building/pbmc3k/genes.tsv&#39;</span>)
+<span class="kw">rownames</span>(X) =<span class="st"> </span>genes<span class="op">$</span>V2
+
+ref_file =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;../data/unnecessary_in_building/pbmc3k/all_pure_select_11types.rds&#39;</span>)
+ref =<span class="st"> </span><span class="kw">t</span>(ref_file<span class="op">$</span>pure_avg)
+<span class="kw">rownames</span>(ref) =<span class="st"> </span>genes<span class="op">$</span>V2[ref_file<span class="op">$</span>pure_use_genes]
+<span class="kw">colnames</span>(ref) =<span class="st"> </span>ref_file<span class="op">$</span>pure_id
+ref =<span class="st"> </span><span class="kw">scale</span>(ref)</code></pre></div>
+<p>The two most important arguments are the data matrix “X” and reference panel “ref”. We assume X is count matrix, while reference panel is already log transformed and normalized. Another parameter the user can choose is “knn”. Empirical results showed that, after taking the projection of the data matrix onto the reference panel, removing low correlations improve the signal strength. When “knn” is set to TRUE, for each cell, SLSL_ref will only keep a few strongest correlations and push everything else to 0. The number of neighbors is determined by “knn_keep” argument. The number of clusters does not have to be identified.</p>
+<p>Note that 10X data has very low detection rate. (number of genes detected as greater than 0 for each cell). The histogram below shows that only around 2% of the genes are detected for most cells.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(<span class="kw">colSums</span>(X<span class="op">!=</span><span class="dv">0</span>) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(X), <span class="dt">breaks=</span><span class="dv">50</span>,
+     <span class="dt">xlab =</span> <span class="st">&#39;detection rate per cell&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;&#39;</span>)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/10Xdet-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This data is from 11 different PBMC cell types, and yet the dimension reduction doesn’t show any particular patterns.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">t</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>)), <span class="dt">perplexity=</span><span class="dv">10</span>)</code></pre></div>
+<p>When we use the reference panel, the clustering becomes much easier.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbmc_ref =<span class="st"> </span><span class="kw">SLSL_ref</span>(<span class="dt">X =</span> <span class="kw">as.matrix</span>(X),
+                        <span class="dt">ref =</span> ref, 
+                        <span class="dt">knn =</span> F,
+                        <span class="dt">knn_keep =</span> <span class="dv">11</span>,
+                        <span class="dt">numClust =</span> <span class="dv">11</span>,
+                        <span class="dt">verbose=</span>T)</code></pre></div>
+<pre><code>[1] &quot;data cleaning..&quot;
+[1] &quot;computing projection..&quot;
+[1] &quot;hierarchical clustering..&quot;</code></pre>
+<p>Sort the cells and visualize the projection matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(pbmc_ref<span class="op">$</span>projection[,<span class="kw">sort</span>(pbmc_ref<span class="op">$</span>result, <span class="dt">index.return=</span>T)<span class="op">$</span>ix])</code></pre></div>
+<p><img src="figure/tutorial.Rmd/pbmc_analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col =</span> pbmc_ref<span class="op">$</span>result)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/pbmc_analyze-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>When knn_keep is set to 1, the projection matrix will look like below. Only the celltype with the maximum correlation is left with signal while all others are pushed to 0.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbmc_ref =<span class="st"> </span><span class="kw">SLSL_ref</span>(<span class="dt">X =</span> <span class="kw">as.matrix</span>(X),
+                        <span class="dt">ref =</span> ref, 
+                        <span class="dt">knn =</span> T,
+                        <span class="dt">knn_keep =</span> <span class="dv">1</span>,
+                        <span class="dt">numClust =</span> <span class="dv">11</span>,
+                        <span class="dt">verbose=</span>T
+                    )</code></pre></div>
+<pre><code>[1] &quot;data cleaning..&quot;
+[1] &quot;computing projection..&quot;
+[1] &quot;hierarchical clustering..&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(pbmc_ref<span class="op">$</span>projection[,<span class="kw">sort</span>(pbmc_ref<span class="op">$</span>result, <span class="dt">index.return=</span>T)<span class="op">$</span>ix])</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_run_pbmc_run2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col =</span> pbmc_ref<span class="op">$</span>result)</code></pre></div>
+<p><img src="figure/tutorial.Rmd/ref_run_pbmc_run2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We also provide two reference sets of human cell types and tissue types. Below is a demonstration of cell type panel.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sysdata =<span class="st"> </span>SCNoisyClustering<span class="op">::</span>reference_panel
 ref =<span class="st"> </span>reference_panel<span class="op">$</span>cell
 
+<span class="kw">load</span>(<span class="st">&#39;../data/unnecessary_in_building/7_Chu_celltype.RData&#39;</span>)
 X =<span class="st"> </span>Chu_celltype<span class="op">$</span>X
-out_cell_ref =<span class="st"> </span><span class="kw">SLSL</span>(<span class="dt">X        =</span> X, 
-                    <span class="dt">ref      =</span> ref,
-                    <span class="dt">numClust =</span> <span class="dv">7</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_cell_ref<span class="op">$</span>projection)</code></pre></div>
+chu_ref =<span class="st"> </span><span class="kw">SLSL_ref</span>(<span class="dt">X =</span> <span class="kw">as.matrix</span>(X),  
+                        <span class="dt">ref =</span> ref, <span class="dt">numClust =</span> <span class="dv">7</span>,
+                        <span class="dt">knn =</span> <span class="dv">20</span>,
+                        <span class="dt">verbose =</span> T)</code></pre></div>
+<pre><code>[1] &quot;data cleaning..&quot;
+[1] &quot;computing projection..&quot;
+[1] &quot;hierarchical clustering..&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(chu_ref<span class="op">$</span>projection[,<span class="kw">sort</span>(chu_ref<span class="op">$</span>result, <span class="dt">index.return=</span>T)<span class="op">$</span>ix])</code></pre></div>
+<p><img src="figure/tutorial.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(chu_ref<span class="op">$</span>projection)</code></pre></div>
 <p><img src="figure/tutorial.Rmd/ref_analyze-1.png" width="336" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of ref_analyze-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -1093,6 +1266,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze-1.png" target="_blank">2fb398f</a>
@@ -1119,354 +1303,6 @@ tk382
 </table>
 <p></details></p>
 <p>One can observe that in the cell atlas panel, ESC (embryonic stem cells) tend to show high correlation, which is as expected. Now, take a look at the heatmap of the similarity matrix of the projection matrix, and evaluate the clustering result.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">truelabel =<span class="st"> </span><span class="kw">as.factor</span>(Chu_celltype<span class="op">$</span>label)
-<span class="kw">heat</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze2-1.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze2-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze2-1.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
-<pre><code>   truelabel
-    DEC  EC  H1  H9 HFF NPC  TB
-  1   1 104   0   0   0   0   0
-  2   0   0   0   0   0   0  69
-  3   0   0   0   0   0 173   0
-  4   0   0   0   0 159   0   0
-  5   0   0 115  85   0   0   0
-  6 137   1   0   0   0   0   0
-  7   0   0  97  77   0   0   0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_cell_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
-               <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
-<pre><code>[1] 0.7377856</code></pre>
-<p>Now look at the visualization from the dimension reduction result.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_cell_ref<span class="op">$</span>SLSL_output
-tsne =<span class="st"> </span>out<span class="op">$</span>tsne
-df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
-df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
-df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
-<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze3-1.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze3-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze3-1.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/ref_analyze3-2.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of ref_analyze3-2.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/ref_analyze3-2.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-</div>
-<div id="tissue-type-panel" class="section level2">
-<h2>Tissue Type Panel</h2>
-<p>Similarly, we can use the tissue reference panel.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ref =<span class="st"> </span>reference_panel<span class="op">$</span>tissue
-out_tissue_ref =<span class="st"> </span><span class="kw">SLSL</span>(X, 
-                      <span class="dt">ref =</span> ref, 
-                      <span class="dt">numClust=</span><span class="dv">7</span>)</code></pre></div>
-<p>We can analyze the result like below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>projection)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-1.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of tissueref_analyze-1.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-1.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-1.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>S)</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-2.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of tissueref_analyze-2.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-2.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-2.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result, truelabel)</code></pre></div>
-<pre><code>   truelabel
-    DEC  EC  H1  H9 HFF NPC  TB
-  1   3   0   0   0   0   0  54
-  2 134  14   1   0   0   1  15
-  3   1  91   0   0   0   0   0
-  4   0   0 115  97   0   0   0
-  5   0   0   0   0 159   0   0
-  6   0   0   0   0   0 172   0
-  7   0   0  96  65   0   0   0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out_tissue_ref<span class="op">$</span>SLSL_output<span class="op">$</span>result,
-               <span class="kw">as.numeric</span>(truelabel))</code></pre></div>
-<pre><code>[1] 0.6894567</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span>out_tissue_ref<span class="op">$</span>SLSL_output
-tsne =<span class="st"> </span>out<span class="op">$</span>tsne
-df =<span class="st"> </span><span class="kw">as.data.frame</span>(tsne)
-df<span class="op">$</span>truelabel =<span class="st"> </span><span class="kw">as.factor</span>(truelabel)
-df<span class="op">$</span>result =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
-<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-3.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of tissueref_analyze-3.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-3.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-3.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>V3, <span class="dt">y=</span>V2, <span class="dt">col=</span>result)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="figure/tutorial.Rmd/tissueref_analyze-4.png" width="336" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of tissueref_analyze-4.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/tissueref_analyze-4.png" target="_blank">2fb398f</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/27cffd8d8348801fc744a988d139b7ad0e7540b3/docs/figure/tutorial.Rmd/tissueref_analyze-4.png" target="_blank">27cffd8</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-12
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
 <p>Since using reference panels often throws away a lot of information, users should be careful when to use panels and which panel to use. The data sets should be from human cells, and they should have enough cellular heterogeneity. For example, Yan data are from different stages of human embryonic cells, and once projected on to the reference panels, all the cells belonged to one type : oocytes. The Chu data above also shows a much better performance when clustered without the reference panel.</p>
 </div>
 </div>
@@ -1474,9 +1310,9 @@ tk382
 <h1>Large Sets (cells &gt; 1000)</h1>
 <p>There is a separate function for data sets that have more than 1,000 cells : LSLSL(Large Similarity Learning with Scaled Lasso).</p>
 <p>The input data matrix is the same as regular SLSL: a count matrix with cells in columns and genes in rows. LSLSL assumes that the number of columns exceed 1000. We use Zeisel data <span class="citation">(Zeisel et al. 2015)</span></p>
-<div id="read-data-2" class="section level2">
+<div id="read-data-1" class="section level2">
 <h2>Read Data</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/Zeisel.Rdata&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;../data/unnecessary_in_building/Zeisel.Rdata&#39;</span>)
 X =<span class="st"> </span>Zeisel<span class="op">$</span>X
 truelabel =<span class="st"> </span>Zeisel<span class="op">$</span>label</code></pre></div>
 <p>Note that Zeisel is a Drop-seq data, and coverage is very low. The histogram of the detection rate is below.</p>
@@ -1502,6 +1338,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a08d3beefc8907a60fb5c8a3def03153552faf71/docs/figure/tutorial.Rmd/zeisel_coverage-1.png" target="_blank">a08d3be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-12
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/2fb398fccf9c7b598fab0de707f8f12e36ab8471/docs/figure/tutorial.Rmd/zeisel_coverage-1.png" target="_blank">2fb398f</a>
@@ -1531,11 +1378,12 @@ tk382
             <span class="dt">core          =</span> core,
             <span class="dt">shuffle       =</span> shuffle,
             <span class="dt">cluster_method =</span> <span class="st">&quot;CSPA&quot;</span>)</code></pre></div>
+<pre><code>[1] TRUE</code></pre>
 </div>
 <div id="analyze-the-result-1" class="section level2">
 <h2>Analyze the Result</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(truelabel, res<span class="op">$</span>result)</code></pre></div>
-<pre><code>[1] 0.6628879</code></pre>
+<pre><code>[1] 0.6536266</code></pre>
 <p>Let’s try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again. The following chunk arranges the data set into a 4 dimensional array for the specification of package “diceR.” <span class="citation">(Chiu and Talhouk 2018)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># construct an array called &quot;out&quot; for specification in diceR package.</span>
 final =<span class="st"> </span>res<span class="op">$</span>array
@@ -1554,17 +1402,14 @@ kmodes =<span class="st"> </span><span class="kw">k_modes</span>(E, <span class=
 majvote =<span class="st"> </span><span class="kw">majority_voting</span>(E, <span class="dv">9</span>)
 lce =<span class="st"> </span><span class="kw">LCE</span>(E, <span class="dv">9</span>)
 <span class="kw">adj.rand.index</span>(kmodes, truelabel)</code></pre></div>
-<pre><code>[1] 0.2859902</code></pre>
+<pre><code>[1] 0.2877169</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(majvote, truelabel)</code></pre></div>
-<pre><code>[1] 0.2931143</code></pre>
+<pre><code>[1] 0.2765723</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(lce, truelabel) </code></pre></div>
-<pre><code>[1] 0.2931143</code></pre>
+<pre><code>[1] 0.2765723</code></pre>
 <div id="refs">
 <div id="ref-diceR">
 <p>Chiu, Derek, and Aline Talhouk. 2018. <em>DiceR: Diverse Cluster Ensemble in R</em>. <a href="https://CRAN.R-project.org/package=diceR" class="uri">https://CRAN.R-project.org/package=diceR</a>.</p>
-</div>
-<div id="ref-chu2016single">
-<p>Chu, Li-Fang, Ning Leng, Jue Zhang, Zhonggang Hou, Daniel Mamott, David T Vereide, Jeea Choi, Christina Kendziorski, Ron Stewart, and James A Thomson. 2016. “Single-Cell Rna-Seq Reveals Novel Regulators of Human Embryonic Stem Cell Differentiation to Definitive Endoderm.” <em>Genome Biology</em> 17 (1). BioMed Central: 173.</p>
 </div>
 <div id="ref-li2017reference">
 <p>Li, Huipeng, Elise T Courtois, Debarka Sengupta, Yuliana Tan, Kok Hao Chen, Jolene Jie Lin Goh, Say Li Kong, et al. 2017. “Reference Component Analysis of Single-Cell Transcriptomes Elucidates Cellular Heterogeneity in Human Colorectal Tumors.” <em>Nature Genetics</em> 49 (5). Nature Publishing Group: 708.</p>
