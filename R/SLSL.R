@@ -1,7 +1,8 @@
 SLSL = function(X,
                 numClust = NA,
                 ref = NA,
-                k=NA,
+                core = NA,
+                k = NA,
                 log = T,
                 filter = F,
                 filter_p1 = 0.9,
@@ -31,10 +32,11 @@ SLSL = function(X,
 
   if(length(ref) > 1){
 
-    out = SLSL_ref(X=X,
-                   ref=ref,
+    out = SLSL_ref(X = X,
+                   ref = ref,
+                   core = core,
                    log = log,
-                   numClust=numClust)
+                   numClust = numClust)
     return(out)
   }else{
     if(is.na(k)){
@@ -56,11 +58,13 @@ SLSL = function(X,
     t2 = Sys.time()    #t2 - t1 : gene filtering
 
     if(log){X = log(X+1)}
+
     if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
       det = colSums(X!=0) / nrow(X)
-      det2 = qr(cbind(rep(1,length(det)),det))
-      X = t(qr.resid(det2, t(logX)))
+      det2 = qr(det)
+      X = t(qr.resid(det2, t(X)))
     }
+
     X = scale(X)
 
     # Construct kernel..

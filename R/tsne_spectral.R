@@ -2,8 +2,9 @@
 tsne_spectral = function(A, numClust, numEigen = NA){
   # compute the eigenvalues and eigenvectors of P
   if(is.na(numEigen)){numEigen = numClust}
-  rs = rowSums(A)
+  rs = rowSums(A) + 1
   L = diag(1/sqrt(rs)) %*% (diag(rs) - A) %*% diag(1/sqrt(rs))
+  L = (L + t(L))/2
   eigen_L = eigen(L)
   U = eigen_L$vectors
   #D = eigen_L$values

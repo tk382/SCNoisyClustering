@@ -3,7 +3,7 @@ output_dir: "../docs"
 include: [".nojekyll"]
 exclude: ["include"]
 navbar:
-  title: "SLSL_workflow"
+  title: "Single Cell Clustering"
   left:
     - text: "Home"
       href: index.html

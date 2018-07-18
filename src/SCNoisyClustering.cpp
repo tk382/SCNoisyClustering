@@ -138,6 +138,7 @@ arma::cube corr_kernel_c(arma::mat X,
       KK = KK + 1;
     }
   }
+  return D_Kernels;
   for (int i=0; i < kerlen; ++i){
     arma::mat K = D_Kernels.slice(i);
     arma::vec dinv = 1/sqrt(K.diag()+1);

@@ -19,6 +19,8 @@ LSLSL = function(X,
   #LCE:   Linkage Clustering Ensemble
   #majority_voting :  majority voting
 
+
+  print(log)
   orig = X
   library(parallel)
 
@@ -60,7 +62,7 @@ LSLSL = function(X,
       groups = gl[,l]
       if(verbose){print(groups)}
       tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
-      tmpX = log(tmpX+1)
+      if(log){tmpX = log(tmpX+1)}
       estimates = SLSL(X           = tmpX,
                        numClust    = numClust,
                        kernel_type = kernel_type,
@@ -73,7 +75,7 @@ LSLSL = function(X,
                        sigmalist   = sigmalist,
                        tau         = tau,
                        gamma       = gamma,
-                       verbose=verbose)
+                       verbose     = verbose)
       return(list(result = estimates$result, groups = groups))
     }
     res = parLapply(cl, 1:N, myfun)
@@ -92,11 +94,28 @@ LSLSL = function(X,
       groups = gl[,l]
       if(verbose){print(groups)}
       tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
-      tmpX = log(tmpX+1)
-      estimates = SLSL(X = tmpX, numClust = numClust, kernel_type = kernel_type, verbose=T)
+      if(log){tmpX = log(tmpX+1)}
+      estimates = SLSL(X           = tmpX,
+                       numClust    = numClust,
+                       log         = log,
+                       kernel_type = kernel_type,
+                       k           = k,
+                       filter      = filter,
+                       filter_p1   = filter_p1,
+                       filter_p2   = filter_p2,
+                       correct_detection_rate = correct_detection_rate,
+                       klist       = klist,
+                       sigmalist   = sigmalist,
+                       tau         = tau,
+                       gamma       = gamma,
+                       verbose     = verbose)
       return(list(result = estimates$result, groups = groups))
     }
-    res = lapply(cl, 1:N, myfun)
+    res = list()
+    for (l in 1:N){
+      print(l)
+      res[[i]] = myfun(l)
+    }
     final = matrix(NA, nn, N)
     for (i in 1:N){
       item = res[[i]]
