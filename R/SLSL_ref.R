@@ -1,7 +1,7 @@
 SLSL_ref = function(X,
                     ref,
-                    knn = T,
-                    knn_keep = 10,
+                    #knn = T,
+                    #knn_keep = 10,
                     numClust = NA,
                     k = NA,
                     log = T,
@@ -52,23 +52,23 @@ SLSL_ref = function(X,
 
   projection = proj_c(as.matrix(X), as.matrix(ref))
 
-  if(knn){
-    ranks = apply(projection, 2, function(x) match((1:nrow(projection)),order(x, decreasing = TRUE)))
-    projection[which(ranks>knn_keep, arr.ind=TRUE)] = 0
-
-    #remove cell typess that were not selected in knn
-    zeros = rowSums(projection==0)
-    ind = which(zeros==ncol(projection))
-    if(length(ind)>0){projection = projection[-ind, ]}
-    projection = scale(projection^4)
-    colnames(projection) = colnames(X)
-    rownames(projection) = colnames(ref)[-ind]
-  }else{
-    #normalize
-    projection = scale(projection^4)
-    colnames(projection) = colnames(X)
-    rownames(projection) = colnames(ref)
-  }
+  # if(knn){
+  #   ranks = apply(projection, 2, function(x) match((1:nrow(projection)),order(x, decreasing = TRUE)))
+  #   projection[which(ranks>knn_keep, arr.ind=TRUE)] = 0
+  #
+  #   #remove cell typess that were not selected in knn
+  #   zeros = rowSums(projection==0)
+  #   ind = which(zeros==ncol(projection))
+  #   if(length(ind)>0){projection = projection[-ind, ]}
+  #   projection = scale(projection^4)
+  #   colnames(projection) = colnames(X)
+  #   rownames(projection) = colnames(ref)[-ind]
+  # }else{
+  #   #normalize
+  #   projection = scale(projection^4)
+  #   colnames(projection) = colnames(X)
+  #   rownames(projection) = colnames(ref)
+  # }
 
 
 
@@ -76,51 +76,50 @@ SLSL_ref = function(X,
     numClust = getClustNum(projection)
   }
 
-  if(verbose){print('hierarchical clustering..')}
-  result = cutree(hclust(dist(t(projection))), numClust)
+  # if(verbose){print('hierarchical clustering..')}
+  # result = cutree(hclust(dist(t(projection))), numClust)
 
-  # if(ncol(projection) < 1000){
-  #   print('ref with smaller version..')
-  #   res = SLSL(as.matrix(projection),
-  #              numClust = numClust,
-  #              ref = NA,
-  #              k = NA,
-  #              log = F,
-  #              filter = F,
-  #              filter_p1 = 1,
-  #              filter_p2 = 0,
-  #              correct_detection_rate = F,
-  #              kernel_type = kernel_type,
-  #              klist = klist,
-  #              sigmalist = sigmalist,
-  #              tau = tau,
-  #              gamma = gamma,
-  #              verbose = verbose,
-  #              measuretime = measuretime,
-  #              warning = warning
-  #   )
-  # }else{
-  #   print('ref with large version..')
-  #   res = LSLSL(as.matrix(projection),
-  #               numClust = numClust,
-  #               core = core,
-  #               shuffle=TRUE,
-  #               cluster_method = "CSPA",
-  #               k = NA,
-  #               log = F,
-  #               filter = T,
-  #               filter_p1 = 0.9,
-  #               filter_p2 = 0,
-  #               correct_detection_rate = F,
-  #               kernel_type = "combined",
-  #               klist = seq(15,25,by=5),
-  #               sigmalist=seq(1,2,by=0.2),
-  #               tau = 5,
-  #               gamma = 0,
-  #               verbose = verbose
-  #               )
-  # }
-  out = list(result = result, projection = projection)
+  if(ncol(projection) < 5000){
+    print('ref with smaller version..')
+    res = SLSL2(as.matrix(projection),
+               numClust = numClust,
+               k = NA,
+               log = F,
+               filter = F,
+               filter_p1 = 1,
+               filter_p2 = 0,
+               correct_detection_rate = F,
+               kernel_type = kernel_type,
+               klist = klist,
+               sigmalist = sigmalist,
+               tau = tau,
+               gamma = gamma,
+               verbose = verbose,
+               measuretime = measuretime,
+               warning = warning
+    )
+  }else{
+    print('ref with large version..')
+    res = LSLSL(as.matrix(projection),
+                numClust = numClust,
+                core = core,
+                shuffle=TRUE,
+                cluster_method = "CSPA",
+                k = NA,
+                log = F,
+                filter = T,
+                filter_p1 = 0.9,
+                filter_p2 = 0,
+                correct_detection_rate = F,
+                kernel_type = "combined",
+                klist = seq(15,25,by=5),
+                sigmalist=seq(1,2,by=0.2),
+                tau = 5,
+                gamma = 0,
+                verbose = verbose
+                )
+  }
+  out = list(result = res, projection = projection)
   #out = list(SLSL_output = res, projection = projection, numGenes=length(int))
   return(out)
 }

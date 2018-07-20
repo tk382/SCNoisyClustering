@@ -35,7 +35,7 @@ LSLSL = function(X,
 
   #split X into multiple data sets
   X2 = list()
-  division = round(nn/300)
+  division = round(nn/600)
   skip = floor(nn/division)
   indvector = 1:skip; indlist = list()
   for (i in 1:(division-1)){
@@ -63,7 +63,7 @@ LSLSL = function(X,
       if(verbose){print(groups)}
       tmpX = cbind(X2[[groups[1]]], X2[[groups[2]]])
       if(log){tmpX = log(tmpX+1)}
-      estimates = SLSL(X           = tmpX,
+      estimates = SLSL2(X           = tmpX,
                        numClust    = numClust,
                        kernel_type = kernel_type,
                        k           = k,

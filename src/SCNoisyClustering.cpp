@@ -6,6 +6,26 @@ using namespace std;
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
+arma::sp_mat sparse_sum(Rcpp::List P, int length){
+  arma::sp_mat out = as<arma::sp_mat>(P[0]);
+  for(int i=1; i < length; ++i){
+    out = out + as<arma::sp_mat>(P[i]);
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+arma::vec QminusPslice(arma::sp_mat Q,
+                       Rcpp::List P,
+                       int length){
+  arma::vec out = arma::zeros<arma::vec>(length);
+  for (int i = 1; i < length; ++i){
+    arma::sp_mat Pmat = as<arma::sp_mat>(P[i]);
+    out(i) = accu((Q-Pmat)%(Q-Pmat));
+  }
+  return out;
+}
+// [[Rcpp::export]]
 arma::mat proj_c(arma::mat X, arma::mat ref){
   return((X.t() * ref / X.n_rows).t());
 }
@@ -60,6 +80,9 @@ arma::mat nonnegASC_c(arma::mat B){
   return out;
 }
 
+
+
+
 // [[Rcpp::export]]
 arma::mat dist_c(arma::mat X){
   int n = X.n_rows;
@@ -86,279 +109,455 @@ arma::vec get_rank(const arma::vec X){
   return out;
 }
 
-// [[Rcpp::export]]
-arma::mat spearman_c(const arma::mat X){
-  int n = X.n_rows;
-  arma::mat out = arma::ones<arma::mat>(n,n);
-  for (int i=0; i<(n-1); ++i){
-    for (int j=(i+1); j<n; ++j){
-      arma::rowvec x1 = X.row(i);
-      arma::rowvec x2 = X.row(j);
-      arma::vec rx1 = get_rank(x1.t())+1;
-      arma::vec rx2 = get_rank(x2.t())+1;
-      out(i,j) = arma::conv_to<double>::from(cov(rx1, rx2))/(stddev(rx1) * stddev(rx2));
-      out(j,i) = out(i,j);
-    }
-  }
-  return out;
-}
+// // [[Rcpp::export]]
+// arma::mat spearman_c(const arma::mat X){
+//   int n = X.n_rows;
+//   arma::mat out = arma::ones<arma::mat>(n,n);
+//   for (int i=0; i<(n-1); ++i){
+//     for (int j=(i+1); j<n; ++j){
+//       arma::rowvec x1 = X.row(i);
+//       arma::rowvec x2 = X.row(j);
+//       arma::vec rx1 = get_rank(x1.t())+1;
+//       arma::vec rx2 = get_rank(x2.t())+1;
+//       out(i,j) = arma::conv_to<double>::from(cov(rx1, rx2))/(stddev(rx1) * stddev(rx2));
+//       out(j,i) = out(i,j);
+//     }
+//   }
+//   return out;
+// }
+
 
 // [[Rcpp::export]]
-arma::cube corr_kernel_c(arma::mat X,
-                         arma::mat Diff,
-                         arma::vec allk_input,
-                         arma::vec sigma_input,
-                         int k = 0){
-  int N = X.n_rows;
-  int KK = 0;
-  if(k==0){
-    k = round(N/20);
-  }
-  arma::vec sigma = sigma_input; int slen = sigma.size();
-  arma::vec allk = allk_input;   int klen = allk.size();
-  int kerlen = slen*klen;
+arma::sp_mat get_kernel_matrix(arma::mat X,
+                               arma::mat Diff,
+                               int k,
+                               double sigma){
+  int N = X.n_cols;
 
   //compute and sort Diff
   arma::mat Diff_sort(N,N);
   for (int j = 0; j < N; ++j){
     Diff_sort.row(j) = sort(Diff.row(j));
   }
-
+  //cout << "check 2" << "\n";
   //compute combined kernels
-  arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int l = 0; l < klen; ++l){
-    arma::mat TT(N, 1);
-    TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
-    arma::mat Sig = arma::zeros<arma::mat>(N,N);
-    Sig.each_col() = TT.col(0);
-    Sig = (Sig + Sig.t())/2;
-    for (int j = 0; j < slen; ++j){
-      arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
-      D_Kernels.slice(KK) = (W + W.t())/2;
-      KK = KK + 1;
-    }
-  }
-  return D_Kernels;
-  for (int i=0; i < kerlen; ++i){
-    arma::mat K = D_Kernels.slice(i);
-    arma::vec dinv = 1/sqrt(K.diag()+1);
-    arma::mat G = K % (dinv * dinv.t());
-    arma::mat G1 = arma::mat(N,N);
-    G1.each_col() = G.diag();
-    arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
-    D_Kernels.slice(i) = D_Kernels_tmp;
-  }
-  arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int i=0; i < kerlen; ++i){
-    arma::mat distX = D_Kernels.slice(i);
-    arma::mat distX1(N,N);
-    arma::umat idx(N,N);
-    for (int j=0; j < N; ++j){
-      distX1.row(j) = sort(distX.row(j));
-      idx.row(j)    = sort_index(distX.row(j)).t();
-    }
+  arma::mat TT(N, 1);
+  TT.col(0) = mean(Diff_sort.cols(1, k), 1);
+  arma::mat Sig = arma::zeros<arma::mat>(N,N);
+  Sig.each_col() = TT.col(0);
+  Sig = (Sig + Sig.t())/2;
+  arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma*Sig));
+  arma::mat K = (W + W.t())/2;
+  //cout << "check 3" << "\n";
+  arma::vec dinv = 1/sqrt(K.diag()+1);
+  arma::mat G = K % (dinv * dinv.t());
+  arma::mat G1 = arma::mat(N,N);
+  G1.each_col() = G.diag();
+  arma::mat D_Kernels = (G1 + G1.t() - 2*G)/2;
+  //cout << "check 4" << "\n";
+  arma::sp_mat out = arma::zeros<arma::sp_mat>(N,N);
 
-    //knn
-    arma::mat A = arma::zeros<arma::mat>(N,N);
-    arma::mat di = distX1.cols(1,k+1);
-    arma::umat id = idx.cols(1,k+1);
-    arma::mat numerator(N, k+1);
-    numerator.each_col() = di.col(k);
-    numerator = numerator - di;
-    arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
-    arma::mat denominator(N, k+1);
-    denominator.each_col() = temp;
-    arma::mat div = numerator / denominator;
-    arma::mat a(N, k+1);
-    a.each_col() = arma::linspace(0, N-1, N);
-    for (int row = 0; row < N; ++row){
-      for (int col = 0; col < k+1; ++col){
+  arma::mat distX = D_Kernels;
+  arma::mat distX1(N,N);
+  arma::umat idx(N,N);
+  for (int j=0; j < N; ++j){
+    distX1.row(j) = sort(distX.row(j));
+    idx.row(j)    = sort_index(distX.row(j)).t();
+  }
+  //cout << "check 5" << "\n";
+  //knn
+  arma::sp_mat A = arma::zeros<arma::sp_mat>(N,N);
+  arma::mat di = distX1.cols(1,k+1);
+  arma::umat id = idx.cols(1,k+1);
+  arma::mat numerator(N, k+1);
+  numerator.each_col() = di.col(k);
+  numerator = numerator - di;
+  arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
+  //cout << "check 6" << "\n";
+  arma::mat denominator(N, k+1);
+  denominator.each_col() = temp;
+  arma::mat div = numerator / denominator;
+  arma::mat a(N, k+1);
+  a.each_col() = arma::linspace(0, N-1, N);
+  //cout << "check 7" << "\n";
+  for (int row = 0; row < N; ++row){
+    for (int col = 0; col < k+1; ++col){
+      if(div(row,col) != arma::datum::inf){
         A(a(row,col), id(row,col)) = div(row,col);
       }
     }
-    A.elem(find_nonfinite(A)).zeros();
-    out.slice(i) = (A + A.t())/2;
   }
+  //cout << "check 8" << "\n";
+  out = (A + A.t())/2;
   return out;
 }
 
+// // [[Rcpp::export]]
+// arma::cube corr_kernel_c(arma::mat X,
+//                          arma::mat Diff,
+//                          arma::vec allk_input,
+//                          arma::vec sigma_input,
+//                          int k = 0){
+//   int N = X.n_rows;
+//   int KK = 0;
+//   if(k==0){
+//     k = round(N/20);
+//   }
+//   arma::vec sigma = sigma_input; int slen = sigma.size();
+//   arma::vec allk = allk_input;   int klen = allk.size();
+//   int kerlen = slen*klen;
+//
+//   //compute and sort Diff
+//   arma::mat Diff_sort(N,N);
+//   for (int j = 0; j < N; ++j){
+//     Diff_sort.row(j) = sort(Diff.row(j));
+//   }
+//
+//   //compute combined kernels
+//   arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int l = 0; l < klen; ++l){
+//     arma::mat TT(N, 1);
+//     TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
+//     arma::mat Sig = arma::zeros<arma::mat>(N,N);
+//     Sig.each_col() = TT.col(0);
+//     Sig = (Sig + Sig.t())/2;
+//     for (int j = 0; j < slen; ++j){
+//       arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
+//       D_Kernels.slice(KK) = (W + W.t())/2;
+//       KK = KK + 1;
+//     }
+//   }
+//   return D_Kernels;
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat K = D_Kernels.slice(i);
+//     arma::vec dinv = 1/sqrt(K.diag()+1);
+//     arma::mat G = K % (dinv * dinv.t());
+//     arma::mat G1 = arma::mat(N,N);
+//     G1.each_col() = G.diag();
+//     arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
+//     D_Kernels.slice(i) = D_Kernels_tmp;
+//   }
+//   arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat distX = D_Kernels.slice(i);
+//     arma::mat distX1(N,N);
+//     arma::umat idx(N,N);
+//     for (int j=0; j < N; ++j){
+//       distX1.row(j) = sort(distX.row(j));
+//       idx.row(j)    = sort_index(distX.row(j)).t();
+//     }
+//
+//     //knn
+//     arma::mat A = arma::zeros<arma::mat>(N,N);
+//     arma::mat di = distX1.cols(1,k+1);
+//     arma::umat id = idx.cols(1,k+1);
+//     arma::mat numerator(N, k+1);
+//     numerator.each_col() = di.col(k);
+//     numerator = numerator - di;
+//     arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
+//     arma::mat denominator(N, k+1);
+//     denominator.each_col() = temp;
+//     arma::mat div = numerator / denominator;
+//     arma::mat a(N, k+1);
+//     a.each_col() = arma::linspace(0, N-1, N);
+//     for (int row = 0; row < N; ++row){
+//       for (int col = 0; col < k+1; ++col){
+//         A(a(row,col), id(row,col)) = div(row,col);
+//       }
+//     }
+//     A.elem(find_nonfinite(A)).zeros();
+//     out.slice(i) = (A + A.t())/2;
+//   }
+//   return out;
+// }
+//
+// // [[Rcpp::export]]
+// arma::cube dist_kernel_c(arma::mat X,
+//                          arma::vec allk_input,
+//                          arma::vec sigma_input,
+//                          int k = 0){
+//   int N = X.n_rows;
+//   int KK = 0;
+//   if(k==0){
+//     k = round(N/20);
+//   }
+//
+//   arma::vec sigma = sigma_input; int slen = sigma.size();
+//   arma::vec allk = allk_input;   int klen = allk.size();
+//   int kerlen = slen*klen;
+//
+//   //compute and sort Diff
+//   arma::mat Diff = dist_c(X);
+//   arma::mat Diff_sort(N,N);
+//   for (int j = 0; j < N; ++j){
+//     Diff_sort.row(j) = sort(Diff.row(j));
+//   }
+//   //compute combined kernels
+//   arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int l = 0; l < klen; ++l){
+//     arma::mat TT(N, 1);
+//     TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
+//     arma::mat Sig = arma::zeros<arma::mat>(N,N);
+//     Sig.each_col() = TT.col(0);
+//     Sig = (Sig + Sig.t())/2;
+//     for (int j = 0; j < slen; ++j){
+//       arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
+//       D_Kernels.slice(KK) = (W + W.t())/2;
+//       KK = KK + 1;
+//     }
+//   }
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat K = D_Kernels.slice(i);
+//     arma::vec dinv = 1/sqrt(K.diag()+1);
+//     arma::mat G = K % (dinv * dinv.t());
+//     arma::mat G1 = arma::mat(N,N);
+//     G1.each_col() = G.diag();
+//     arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
+//     D_Kernels.slice(i) = D_Kernels_tmp;
+//   }
+//   arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat distX = D_Kernels.slice(i);
+//     arma::mat distX1(N,N);
+//     arma::umat idx(N,N);
+//     for (int j=0; j < N; ++j){
+//       distX1.row(j) = sort(distX.row(j));
+//       idx.row(j)    = sort_index(distX.row(j)).t();
+//     }
+//
+//     //knn
+//     arma::mat A = arma::zeros<arma::mat>(N,N);
+//     arma::mat di = distX1.cols(1,k+1);
+//     arma::umat id = idx.cols(1,k+1);
+//     arma::mat numerator(N, k+1);
+//     numerator.each_col() = di.col(k);
+//     numerator = numerator - di;
+//     arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
+//     arma::mat denominator(N, k+1);
+//     denominator.each_col() = temp;
+//     arma::mat div = numerator / denominator;
+//     arma::mat a(N, k+1);
+//     a.each_col() = arma::linspace(0, N-1, N);
+//     for (int row = 0; row < N; ++row){
+//       for (int col = 0; col < k+1; ++col){
+//         A(a(row,col), id(row,col)) = div(row,col);
+//       }
+//     }
+//     A.elem(find_nonfinite(A)).zeros();
+//     out.slice(i) = (A + A.t())/2;
+//   }
+//   return out;
+// }
+//
+// // [[Rcpp::export]]
+// arma::cube rank_kernel_c(arma::mat X,
+//                          arma::mat Diff,
+//                          arma::vec allk_input,
+//                          arma::vec sigma_input,
+//                          int k = 0){
+//   int N = X.n_rows;   int KK = 0;
+//   if(k==0){
+//     k = round(N/20);
+//   }
+//
+//   arma::vec sigma = sigma_input; int slen = sigma.size();
+//   arma::vec allk = allk_input;   int klen = allk.size();
+//   int kerlen = slen*klen;
+//
+//   //compute and sort Diff
+//   arma::mat Diff_sort(N,N);
+//   for (int j = 0; j < N; ++j){
+//     Diff_sort.row(j) = sort(Diff.row(j));
+//   }
+//
+//   //compute combined kernels
+//   arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int l = 0; l < klen; ++l){
+//     arma::mat TT(N, 1);
+//     TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
+//     arma::mat Sig = arma::zeros<arma::mat>(N,N);
+//     Sig.each_col() = TT.col(0);
+//     Sig = (Sig + Sig.t())/2;
+//     for (int j = 0; j < slen; ++j){
+//       arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
+//       D_Kernels.slice(KK) = (W + W.t())/2;
+//       KK = KK + 1;
+//     }
+//   }
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat K = D_Kernels.slice(i);
+//     arma::vec dinv = 1/sqrt(K.diag()+1);
+//     arma::mat G = K % (dinv * dinv.t());
+//     arma::mat G1 = arma::mat(N,N);
+//     G1.each_col() = G.diag();
+//     arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
+//     D_Kernels.slice(i) = D_Kernels_tmp;
+//   }
+//   arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
+//   for (int i=0; i < kerlen; ++i){
+//     arma::mat distX = D_Kernels.slice(i);
+//     arma::mat distX1(N,N);
+//     arma::umat idx(N,N);
+//     for (int j=0; j < N; ++j){
+//       distX1.row(j) = sort(distX.row(j));
+//       idx.row(j)    = sort_index(distX.row(j)).t();
+//     }
+//
+//     //knn
+//     arma::mat A = arma::zeros<arma::mat>(N,N);
+//     arma::mat di = distX1.cols(1,k+1);
+//     arma::umat id = idx.cols(1,k+1);
+//     arma::mat numerator(N, k+1);
+//     numerator.each_col() = di.col(k);
+//     numerator = numerator - di;
+//     arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
+//     arma::mat denominator(N, k+1);
+//     denominator.each_col() = temp;
+//     arma::mat div = numerator / denominator;
+//     arma::mat a(N, k+1);
+//     a.each_col() = arma::linspace(0, N-1, N);
+//     for (int row = 0; row < N; ++row){
+//       for (int col = 0; col < k+1; ++col){
+//         A(a(row,col), id(row,col)) = div(row,col);
+//       }
+//     }
+//     A.elem(find_nonfinite(A)).zeros();
+//     out.slice(i) = (A + A.t())/2;
+//   }
+//   return out;
+// }
+
+// // [[Rcpp::export]]
+// Rcpp::List sparse_scaledlasso_c(const arma::cube P,
+//                                 const double tau,
+//                                 const double gamma,
+//                                 double mu=1e-3,
+//                                 const double rho = 1.9,
+//                                 const int max_iter=100,
+//                                 const double eps = 1e-7,
+//                                 const bool verbose = false){
+//   int m = P.n_rows; int p = P.n_cols; int n = P.n_slices;
+//   arma::vec funV     = arma::zeros<arma::vec>(max_iter);
+//   arma::vec sigma    = arma::ones<arma::vec>(n);
+//   arma::mat Y        = arma::zeros<arma::mat>(m,p);
+//   arma::mat Q        = arma::zeros<arma::mat>(m,p);
+//   arma::mat S        = sum(P, 2)/n;
+//   arma::mat S_old    = arma::zeros<arma::mat>(m,p);
+//   arma::vec L1_norm = arma::zeros<arma::vec>(max_iter);
+//   arma::vec F_norm = arma::zeros<arma::vec>(max_iter);
+//   arma::vec fro_norm = arma::zeros<arma::vec>(max_iter);
+//   arma::vec noise    = arma::zeros<arma::vec>(max_iter);
+//   int step = 0;
+//   while(1){
+//     if(step > max_iter-1){
+//       cout << "reached max iteration \n";
+//       break;
+//     }
+//     step += 1;
+//     double max_inf_norm = norm(S-Q, "inf");
+//     L1_norm(step-1) = norm(S, 1);
+//     F_norm(step-1) = norm(S, "fro");
+//     noise(step-1) = sum(sigma)/2;
+//     for (int i=0; i < n; ++i){
+//       fro_norm(step-1) += norm(Q-P.slice(i), "fro")/(sigma(i) * m * m);
+//     }
+//     funV(step-1) = fro_norm(step-1) + noise(step-1) +
+//       L1_norm(step-1) + F_norm(step-1);
+//     double relChg = norm(S-S_old, "fro")/max(1.0, norm(S_old, "fro"));
+//     S_old = S;
+//     if(verbose & (step % 5==0)){
+//       cout << "iter" << step << ":"
+//        // ": \n max_inf_norm = " << max_inf_norm <<
+//           "\n relative change = " << relChg << "\n";
+//        //     "\n mu = " << mu <<
+//       //        "\n funV = " << funV(step-1) << "\n";
+//     }
+//     if(step > 1 & max_inf_norm < eps & relChg < eps){
+//       break;
+//     }
+//
+//     //Update Qi;
+//     arma::mat M = mu*S + Y;
+//     double phi = sum(1/(m*m*sigma)) + mu + gamma;
+//     for (int i=0; i<n; ++i){
+//       M += P.slice(i)/(m*m*sigma(i));
+//     }
+//     M = M/phi;
+//     double C = tau/phi;
+//     Q = armapmax(M-C, 0) + armapmin(M-C,0);
+//
+//     //update S;
+//     S = nonnegASC_c(Q-Y/mu);
+//
+//     //update sigma
+//     for (int i=0; i < n; ++i){
+//       sigma(i) = norm(P.slice(i) - Q, "fro");
+//       sigma(i) /= (m*m);
+//       sigma(i) = 1/sigma(i);
+//     }
+//
+//     //update Y
+//     Y = Y + mu * (S - Q);
+//
+//     //update mu
+//     mu = min(rho*mu, 1e+10);
+//   }
+//
+//   arma::mat U; arma::vec s; arma::mat V;
+//   svd(U,s,V,S);
+//   arma::vec pi = V.col(0);
+//   arma::vec Dist = pi / accu(pi) + 1e-10;
+//   arma::vec invDist = 1/Dist;
+//   arma::mat Distmat = diagmat(Dist);
+//   arma::mat invDistmat = diagmat(invDist);
+//   arma::mat sspi = sqrt(invDistmat);
+//   arma::mat spi = sqrt(Distmat);
+//   S = (spi * S * sspi + sspi * S.t() * spi)/2;
+//
+//   return Rcpp::List::create(
+//     Rcpp::Named("S") = S,
+//     Rcpp::Named("f") = funV,
+//     Rcpp::Named("sigma") = sigma,
+//     Rcpp::Named("L1_norm") = L1_norm,
+//     Rcpp::Named("F_norm") = F_norm,
+//     Rcpp::Named("fro_norm") = fro_norm,
+//     Rcpp::Named("noise") = noise
+//   );
+// }
+
 // [[Rcpp::export]]
-arma::cube dist_kernel_c(arma::mat X,
-                         arma::vec allk_input,
-                         arma::vec sigma_input,
-                         int k = 0){
-  int N = X.n_rows;
-  int KK = 0;
-  if(k==0){
-    k = round(N/20);
-  }
+Rcpp::List sparse_scaledlasso_list_c(Rcpp::List P,
+                                     int n,
+                                     const double tau,
+                                     const double gamma,
+                                     double mu=1e-3,
+                                     const double rho = 1.9,
+                                     const int max_iter=100,
+                                     const double eps = 1e-9,
+                                     const bool verbose = false){
 
-  arma::vec sigma = sigma_input; int slen = sigma.size();
-  arma::vec allk = allk_input;   int klen = allk.size();
-  int kerlen = slen*klen;
+  //cout << "check 1" << "\n";
 
-  //compute and sort Diff
-  arma::mat Diff = dist_c(X);
-  arma::mat Diff_sort(N,N);
-  for (int j = 0; j < N; ++j){
-    Diff_sort.row(j) = sort(Diff.row(j));
-  }
-  //compute combined kernels
-  arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int l = 0; l < klen; ++l){
-    arma::mat TT(N, 1);
-    TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
-    arma::mat Sig = arma::zeros<arma::mat>(N,N);
-    Sig.each_col() = TT.col(0);
-    Sig = (Sig + Sig.t())/2;
-    for (int j = 0; j < slen; ++j){
-      arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
-      D_Kernels.slice(KK) = (W + W.t())/2;
-      KK = KK + 1;
-    }
-  }
-  for (int i=0; i < kerlen; ++i){
-    arma::mat K = D_Kernels.slice(i);
-    arma::vec dinv = 1/sqrt(K.diag()+1);
-    arma::mat G = K % (dinv * dinv.t());
-    arma::mat G1 = arma::mat(N,N);
-    G1.each_col() = G.diag();
-    arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
-    D_Kernels.slice(i) = D_Kernels_tmp;
-  }
-  arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int i=0; i < kerlen; ++i){
-    arma::mat distX = D_Kernels.slice(i);
-    arma::mat distX1(N,N);
-    arma::umat idx(N,N);
-    for (int j=0; j < N; ++j){
-      distX1.row(j) = sort(distX.row(j));
-      idx.row(j)    = sort_index(distX.row(j)).t();
-    }
+  arma::sp_mat samplemat = as<arma::sp_mat>(P[0]);
+  int m = samplemat.n_rows;
+  int p = samplemat.n_cols;
 
-    //knn
-    arma::mat A = arma::zeros<arma::mat>(N,N);
-    arma::mat di = distX1.cols(1,k+1);
-    arma::umat id = idx.cols(1,k+1);
-    arma::mat numerator(N, k+1);
-    numerator.each_col() = di.col(k);
-    numerator = numerator - di;
-    arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
-    arma::mat denominator(N, k+1);
-    denominator.each_col() = temp;
-    arma::mat div = numerator / denominator;
-    arma::mat a(N, k+1);
-    a.each_col() = arma::linspace(0, N-1, N);
-    for (int row = 0; row < N; ++row){
-      for (int col = 0; col < k+1; ++col){
-        A(a(row,col), id(row,col)) = div(row,col);
-      }
-    }
-    A.elem(find_nonfinite(A)).zeros();
-    out.slice(i) = (A + A.t())/2;
-  }
-  return out;
-}
+  //cout << "check 2" << "\n";
 
-// [[Rcpp::export]]
-arma::cube rank_kernel_c(arma::mat X,
-                         arma::mat Diff,
-                         arma::vec allk_input,
-                         arma::vec sigma_input,
-                         int k = 0){
-  int N = X.n_rows;   int KK = 0;
-  if(k==0){
-    k = round(N/20);
-  }
-
-  arma::vec sigma = sigma_input; int slen = sigma.size();
-  arma::vec allk = allk_input;   int klen = allk.size();
-  int kerlen = slen*klen;
-
-  //compute and sort Diff
-  arma::mat Diff_sort(N,N);
-  for (int j = 0; j < N; ++j){
-    Diff_sort.row(j) = sort(Diff.row(j));
-  }
-
-  //compute combined kernels
-  arma::cube D_Kernels = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int l = 0; l < klen; ++l){
-    arma::mat TT(N, 1);
-    TT.col(0) = mean(Diff_sort.cols(1, allk(l)), 1);
-    arma::mat Sig = arma::zeros<arma::mat>(N,N);
-    Sig.each_col() = TT.col(0);
-    Sig = (Sig + Sig.t())/2;
-    for (int j = 0; j < slen; ++j){
-      arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma(j)*Sig));
-      D_Kernels.slice(KK) = (W + W.t())/2;
-      KK = KK + 1;
-    }
-  }
-  for (int i=0; i < kerlen; ++i){
-    arma::mat K = D_Kernels.slice(i);
-    arma::vec dinv = 1/sqrt(K.diag()+1);
-    arma::mat G = K % (dinv * dinv.t());
-    arma::mat G1 = arma::mat(N,N);
-    G1.each_col() = G.diag();
-    arma::mat D_Kernels_tmp = (G1 + G1.t() - 2*G)/2;
-    D_Kernels.slice(i) = D_Kernels_tmp;
-  }
-  arma::cube out = arma::zeros<arma::cube>(N,N,kerlen);
-  for (int i=0; i < kerlen; ++i){
-    arma::mat distX = D_Kernels.slice(i);
-    arma::mat distX1(N,N);
-    arma::umat idx(N,N);
-    for (int j=0; j < N; ++j){
-      distX1.row(j) = sort(distX.row(j));
-      idx.row(j)    = sort_index(distX.row(j)).t();
-    }
-
-    //knn
-    arma::mat A = arma::zeros<arma::mat>(N,N);
-    arma::mat di = distX1.cols(1,k+1);
-    arma::umat id = idx.cols(1,k+1);
-    arma::mat numerator(N, k+1);
-    numerator.each_col() = di.col(k);
-    numerator = numerator - di;
-    arma::vec temp = k * di.col(k) - sum(di.cols(0,k-1), 1);
-    arma::mat denominator(N, k+1);
-    denominator.each_col() = temp;
-    arma::mat div = numerator / denominator;
-    arma::mat a(N, k+1);
-    a.each_col() = arma::linspace(0, N-1, N);
-    for (int row = 0; row < N; ++row){
-      for (int col = 0; col < k+1; ++col){
-        A(a(row,col), id(row,col)) = div(row,col);
-      }
-    }
-    A.elem(find_nonfinite(A)).zeros();
-    out.slice(i) = (A + A.t())/2;
-  }
-  return out;
-}
-
-// [[Rcpp::export]]
-Rcpp::List sparse_scaledlasso_c(const arma::cube P,
-                                const double tau,
-                                const double gamma,
-                                double mu=1e-3,
-                                const double rho = 1.9,
-                                const int max_iter=100,
-                                const double eps = 1e-7,
-                                const bool verbose = false){
-  int m = P.n_rows; int p = P.n_cols; int n = P.n_slices;
-  arma::vec funV     = arma::zeros<arma::vec>(max_iter);
-  arma::vec sigma    = arma::ones<arma::vec>(n);
-  arma::mat Y        = arma::zeros<arma::mat>(m,p);
-  arma::mat Q        = arma::zeros<arma::mat>(m,p);
-  arma::mat S        = sum(P, 2)/n;
-  arma::mat S_old    = arma::zeros<arma::mat>(m,p);
-  arma::vec L1_norm = arma::zeros<arma::vec>(max_iter);
-  arma::vec F_norm = arma::zeros<arma::vec>(max_iter);
-  arma::vec fro_norm = arma::zeros<arma::vec>(max_iter);
-  arma::vec noise    = arma::zeros<arma::vec>(max_iter);
+  arma::vec funV        = arma::zeros<arma::vec>(max_iter);
+  arma::vec sigma       = arma::ones<arma::vec>(n);
+  arma::mat Y           = arma::zeros<arma::mat>(m,p);
+  arma::sp_mat Q        = arma::zeros<arma::sp_mat>(m,p);
+  arma::mat S           = arma::conv_to<arma::mat>::from(sparse_sum(P,n));
+  arma::sp_mat S_old    = arma::zeros<arma::sp_mat>(m,p);
+  arma::vec L1_norm     = arma::zeros<arma::vec>(max_iter);
+  arma::vec F_norm      = arma::zeros<arma::vec>(max_iter);
+  arma::vec fro_norm    = arma::zeros<arma::vec>(max_iter);
+  arma::vec noise       = arma::zeros<arma::vec>(max_iter);
   int step = 0;
+
+  //cout << "check3" << "\n";
+
   while(1){
     if(step > max_iter-1){
       cout << "reached max iteration \n";
@@ -369,8 +568,9 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     L1_norm(step-1) = norm(S, 1);
     F_norm(step-1) = norm(S, "fro");
     noise(step-1) = sum(sigma)/2;
+    arma::vec QPnorm = QminusPslice(Q,P,n);
     for (int i=0; i < n; ++i){
-      fro_norm(step-1) += norm(Q-P.slice(i), "fro")/(sigma(i) * m * m);
+      fro_norm(step-1) += QPnorm(i)/(sigma(i) * m * m);
     }
     funV(step-1) = fro_norm(step-1) + noise(step-1) +
       L1_norm(step-1) + F_norm(step-1);
@@ -378,10 +578,7 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     S_old = S;
     if(verbose & (step % 5==0)){
       cout << "iter" << step << ":"
-       // ": \n max_inf_norm = " << max_inf_norm <<
-          "\n relative change = " << relChg << "\n";
-       //     "\n mu = " << mu <<
-      //        "\n funV = " << funV(step-1) << "\n";
+      "\n relative change = " << relChg << "\n";
     }
     if(step > 1 & max_inf_norm < eps & relChg < eps){
       break;
@@ -391,7 +588,7 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     arma::mat M = mu*S + Y;
     double phi = sum(1/(m*m*sigma)) + mu + gamma;
     for (int i=0; i<n; ++i){
-      M += P.slice(i)/(m*m*sigma(i));
+      M += as<arma::sp_mat>(P[i])/(m*m*sigma(i));
     }
     M = M/phi;
     double C = tau/phi;
@@ -402,7 +599,7 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
 
     //update sigma
     for (int i=0; i < n; ++i){
-      sigma(i) = norm(P.slice(i) - Q, "fro");
+      sigma(i) = norm(as<arma::sp_mat>(P[i]) - Q, "fro");
       sigma(i) /= (m*m);
       sigma(i) = 1/sigma(i);
     }
@@ -435,6 +632,7 @@ Rcpp::List sparse_scaledlasso_c(const arma::cube P,
     Rcpp::Named("noise") = noise
   );
 }
+
 
 // [[Rcpp::export]]
 arma::mat tsne_c(arma::mat X,
