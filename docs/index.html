@@ -157,7 +157,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">SLSL_workflow</a>
+      <a class="navbar-brand" href="index.html">Single Cell Clustering</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -205,7 +205,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-17</p>
+<p><strong>Last updated:</strong> 2018-07-21</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -214,7 +214,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/e84909db67550789c058170bfad6aa9a87580706" target="_blank">e84909d</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/56bd21fa8e697249fca99d1b62d0faa25b0265a0" target="_blank">56bd21f</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -228,9 +228,9 @@ Untracked files:
     Untracked:  ..gif
     Untracked:  .DS_Store
     Untracked:  R/.DS_Store
+    Untracked:  R/makesparsekernel.R
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/bibliography.bib
-    Untracked:  analysis/detection_rate_correction_cache/
     Untracked:  analysis/pipeline/large_sets.pdf
     Untracked:  analysis/pipeline/temp_ari.txt
     Untracked:  analysis/pipeline/temp_time.txt
@@ -269,10 +269,10 @@ Untracked files:
 
 Unstaged changes:
     Modified:   R/LSLSL.R
-    Modified:   R/SLSL.R
+    Modified:   R/RcppExports.R
+    Modified:   R/SLSL2.R
     Modified:   R/SLSL_ref.R
-    Modified:   R/tsne_spectral.R
-    Deleted:    SCNoisyClustering_0.1.0.tar.gz
+    Modified:   R/network.diffusion.R
     Deleted:    analysis/correcting_detection_rate/Buettner.Rmd
     Deleted:    analysis/correcting_detection_rate/Buettner.pdf
     Deleted:    analysis/correcting_detection_rate/Pollen.R
@@ -289,12 +289,18 @@ Unstaged changes:
     Deleted:    analysis/correcting_detection_rate/detectionrate_alldata.R
     Deleted:    analysis/correcting_detection_rate/detectionrate_pbmc.R
     Deleted:    analysis/correcting_detection_rate/sc.xls
+    Modified:   analysis/detection_rate_correction.Rmd
     Modified:   analysis/pipeline/large_sets.Rmd
     Modified:   analysis/pipeline/pbmc_pipeline.R
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
     Modified:   analysis/writeup/.DS_Store
+    Modified:   analysis/writeup/paper.pdf
+    Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
+    Modified:   src/RcppExports.cpp
+    Modified:   src/RcppExports.o
     Modified:   src/SCNoisyClustering.cpp
     Modified:   src/SCNoisyClustering.o
     Modified:   src/SCNoisyClustering.so
@@ -326,6 +332,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/5787a2efa1b4575c9591aac564d821a2de9c63b2/docs/index.html" target="_blank">5787a2e</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
