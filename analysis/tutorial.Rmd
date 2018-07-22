@@ -28,6 +28,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```{r load_library}
 library(SCNoisyClustering)
 
+library(data.table)
 library(inline)
 library(matrixStats)
 library(quadprog)
@@ -171,7 +172,6 @@ measuretime = TRUE
 Using the prespecified parameters above, run the SLSL function.
 
 ```{r wrapper}
-P = makesparsekernel(X, "combined", seq(15,25,by=5), seq(1,2,by=0.2))
 out = SLSL2(X                     = as.matrix(X),
            numClust               = numClust,
            k                      = k,
@@ -192,24 +192,27 @@ out = SLSL2(X                     = as.matrix(X),
 Or, you can also use default parameters, and this will work as well.
 
 ```{r wrapper_not_performed, eval=F}
-out = SLSL(X)
+out = SLSL2(X)
 ```
 
 
 ## Analyze the Result
 
-First, let's evaluate the clustering result. This is not applicable when true labels are not available.
+First, let's take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified. 
+
+
+```{r similarity_matrix, fig.width=3.5, fig.height=3.5}
+ind = sort(out$result, index.return=TRUE)$ix
+heat(out$S[ind, ind])
+```
+
+Below is the comparison with the true label. This is not applicable when true labels are not available.
+
 
 ```{r result}
-table(out$result, as.factor(truelabel))
 adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
 ```
 
-Let's take a look at the heatmap of the similarity matrix. Note that the cells have been arranged according to the true groupings. The result seems pretty good, except the two cells around 50 that have clearly been misclassified. 
-
-```{r similarity_matrix, fig.width=3.5, fig.height=3.5}
-heat(out$S)
-```
 
 Now let's visualize the result through the dimension reduction result. The true label information allows us to analyze the errors from the algorithm. For example, the zygotes and 2-cells were clustered into one group, while there are two outliers in the 16 cells that are close to 8 cells. 
 
@@ -219,10 +222,9 @@ df = as.data.frame(tsne)
 df$truelabel = as.factor(truelabel)
 df$result = as.factor(out$result)
 
-ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
+#ggplot(df, aes(x=V3, y=V2, col=truelabel)) + geom_point()
 ggplot(df, aes(x=V3, y=V2, col=result)) + geom_point()
-
-scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = as.numeric(as.factor(truelabel)))
+#scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = as.numeric(as.factor(truelabel)))
 scatterplot3d(x=df$V2, y=df$V3, z=df$V4, color = df$result)
 ```
 
@@ -262,13 +264,18 @@ This data is from 11 different PBMC cell types, and yet the dimension reduction 
 tsne = Rtsne(t(log(X+1)), perplexity=10)
 ```
 
-When we use the reference panel, the clustering becomes much easier.
+When we use the reference panel, the clustering becomes much easier. 
+
+A couple things to note. Note that the projection matrix will be very low rank. With this particular data set, there are 11 reference cells with 2,700 cells to cluster, so the similarity matrix will be a 2,700 \times 2700 matrix with rank 11. That means, even when the projection matrix is filled with completely random numbers, the similarity matrix will have a certain structure with rank less than or equal to 11. Therefore, the result may be over-confident about the data structure. Another thing to note is that, since there are only few features for each cell in projection matrix, when we use Spearman correlation to measure similarity, there will be cells with correlation 1, causing numerical instability. Therefore, we strongly recommend that users use Euclidean distance to build a kernel.
 
 ```{r ref_pbmc_run}
 pbmc_ref = SLSL_ref(X = as.matrix(X),
-                    kernel_type = "combined",
-                    ref = ref, 
+                    filter = TRUE,
+                    filter_p1 = 0.9,
+                    filter_p2 = 0.1,
+                    kernel_type = "euclidean",
                     numClust = 11,
+                    ref = ref, 
                     verbose=T)
 ```
 
@@ -276,7 +283,7 @@ Sort the cells and visualize the projection matrix.
 ```{r pbmc_analyze}
 heat(pbmc_ref$projection[,sort(pbmc_ref$result$result, index.return=T)$ix])
 
-plot(tsne$Y, col = pbmc_ref$res$result)
+plot(tsne$Y, col = pbmc_ref$result$result)
 ```
 
 We also provide two reference sets of human cell types and tissue types. Below is a demonstration of cell type panel. 
@@ -288,8 +295,9 @@ ref = reference_panel$cell
 load('../data/unnecessary_in_building/7_Chu_celltype.RData')
 X = Chu_celltype$X
 chu_ref = SLSL_ref(X = as.matrix(X),
-                        ref = ref, numClust = 7,
-                        verbose = T)
+                   ref = ref, 
+                   numClust = 7,
+                   verbose = T)
 ```
 
 
@@ -348,13 +356,13 @@ shuffle = TRUE #default is TRUE
 Now run the algorithm with different methods.
 
 ```{r zeisel_run, cache = T}
-res = LSLSL(X              = X,
+res = LSLSL2(X              = X,
             numClust       = numClust,
             kernel_type    = kernel_type,
             core           = core,
             shuffle        = shuffle,
             cluster_method = "CSPA",
-            verbose        = T)
+            verbose        = TRUE)
 ```
 
 ## Analyze the Result
@@ -380,9 +388,9 @@ dimnames(out)[[4]] = as.character(k) #This must be the number of clusters
   
 You must impute the array in order to use other consensus clustering methods. The "impute\_missing" requires the raw data matrix (make sure it is transposed), and here we use the filtered X. This is appropriate especially because this is a Drop-seq data where most genes hold little information. The three methods are "k\_modes", "majority\_voting", and "LCE". For the guidance of which method to use, refer to [@diceR]. 
   
-```{r othermethods}
-newX = log(genefilter(X)+1)
-E = impute_missing(out, t(newX), 9)
+```{r othermethods, eval = F}
+X = log(genefilter(X)+1)
+E = impute_missing(out, t(X), 9)
 kmodes = k_modes(E, 9)
 majvote = majority_voting(E, 9)
 lce = LCE(E, 9)
