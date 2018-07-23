@@ -37,7 +37,6 @@ SLSL_ref = function(X,
   ind2 = match(int, rownames(ref))
   ref = ref[ind2, ]
 
-
   if(log){
     X = log(X+1)
   }
@@ -87,7 +86,7 @@ SLSL_ref = function(X,
 
   if(ncol(projection) < 5000){
     print('ref with smaller version..')
-    res = SLSL2(as.matrix(projection),
+    res = SLSL(as.matrix(projection),
                numClust = numClust,
                k = NA,
                log = F,

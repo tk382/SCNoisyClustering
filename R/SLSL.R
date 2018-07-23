@@ -1,4 +1,4 @@
-SLSL2 = function(X,
+SLSL = function(X,
                 numClust = NA,
                 core = NA,
                 k = NA,
