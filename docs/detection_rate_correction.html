@@ -200,7 +200,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">SLSL_workflow</a>
+      <a class="navbar-brand" href="index.html">Single Cell Clustering</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -248,7 +248,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-17</p>
+<p><strong>Last updated:</strong> 2018-07-23</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -272,7 +272,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/e84909db67550789c058170bfad6aa9a87580706" target="_blank">e84909d</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/87fe8d54a4ece7e9e3020cf77352d69144a08f7d" target="_blank">87fe8d5</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -286,12 +286,14 @@ Untracked files:
     Untracked:  ..gif
     Untracked:  .DS_Store
     Untracked:  R/.DS_Store
+    Untracked:  R/LSLSL.R
+    Untracked:  R/makesparsekernel.R
+    Untracked:  R/savesparsekernel.R
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/bibliography.bib
     Untracked:  analysis/pipeline/large_sets.pdf
     Untracked:  analysis/pipeline/temp_ari.txt
     Untracked:  analysis/pipeline/temp_time.txt
-    Untracked:  analysis/tutorial_cache/
     Untracked:  analysis/writeup/cite.bib
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
@@ -325,36 +327,15 @@ Untracked files:
     Untracked:  data/unnecessary_in_building/
 
 Unstaged changes:
-    Modified:   R/LSLSL.R
-    Modified:   R/SLSL.R
-    Modified:   R/SLSL_ref.R
-    Modified:   R/tsne_spectral.R
-    Deleted:    SCNoisyClustering_0.1.0.tar.gz
-    Deleted:    analysis/correcting_detection_rate/Buettner.Rmd
-    Deleted:    analysis/correcting_detection_rate/Buettner.pdf
-    Deleted:    analysis/correcting_detection_rate/Pollen.R
-    Deleted:    analysis/correcting_detection_rate/Pollen.Rmd
-    Deleted:    analysis/correcting_detection_rate/Pollen.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin.Rmd
-    Deleted:    analysis/correcting_detection_rate/Usoskin.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/loess residuals-1.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/pca_plot-1.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot-1.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/quantile_plot_log-1.pdf
-    Deleted:    analysis/correcting_detection_rate/Usoskin_files/figure-latex/rg residuals-1.pdf
-    Deleted:    analysis/correcting_detection_rate/Zeisel.R
-    Deleted:    analysis/correcting_detection_rate/detectionrate_alldata.R
-    Deleted:    analysis/correcting_detection_rate/detectionrate_pbmc.R
-    Deleted:    analysis/correcting_detection_rate/sc.xls
     Modified:   analysis/pipeline/large_sets.Rmd
     Modified:   analysis/pipeline/pbmc_pipeline.R
     Modified:   analysis/pipeline/small_good_sets.Rmd
     Modified:   analysis/pipeline/small_good_sets_result.txt
     Modified:   analysis/pipeline/small_good_sets_time.txt
     Modified:   analysis/writeup/.DS_Store
-    Modified:   src/SCNoisyClustering.cpp
-    Modified:   src/SCNoisyClustering.o
-    Modified:   src/SCNoisyClustering.so
+    Modified:   analysis/writeup/paper.pdf
+    Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -383,6 +364,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/3c6fbdb8137d601875037e744d79c6698316eadc/analysis/detection_rate_correction.Rmd" target="_blank">3c6fbdb</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-22
+</td>
+<td style="text-align:left;">
+update large version to store matrices in hard drive
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/5787a2efa1b4575c9591aac564d821a2de9c63b2/docs/detection_rate_correction.html" target="_blank">5787a2e</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -529,6 +544,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/5787a2efa1b4575c9591aac564d821a2de9c63b2/docs/figure/detection_rate_correction.Rmd/Pollen-1.png" target="_blank">5787a2e</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Pollen-1.png" target="_blank">b7e4475</a>
 </td>
 <td style="text-align:left;">
@@ -541,11 +567,21 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne1 =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">t</span>(R))
-tsne2 =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">t</span>(logX))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># tsne1 = Rtsne(t(R))</span>
+<span class="co"># tsne2 = Rtsne(t(logX))</span>
 
-dat =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v1 =</span> <span class="kw">c</span>(tsne1<span class="op">$</span>Y[,<span class="dv">1</span>], tsne2<span class="op">$</span>Y[,<span class="dv">1</span>]), <span class="dt">v2 =</span> <span class="kw">c</span>(tsne1<span class="op">$</span>Y[,<span class="dv">2</span>], tsne2<span class="op">$</span>Y[,<span class="dv">2</span>]), <span class="dt">label=</span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;After correction&quot;</span>, <span class="st">&quot;Before correction&quot;</span>), <span class="dt">each=</span><span class="kw">nrow</span>(tsne1<span class="op">$</span>Y)), <span class="dt">true.label =</span> <span class="kw">as.factor</span>(<span class="kw">rep</span>(truth, <span class="dv">2</span>)))
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>v1, <span class="dt">y=</span>v2, <span class="dt">col=</span>true.label)) <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(<span class="op">~</span>label) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;tSNE&quot;</span>)</code></pre></div>
+<span class="co"># dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))</span>
+<span class="co"># ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</span>
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
+<span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
+<pre><code>[1] 0.7755788</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
+<span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
+<pre><code>[1] 0.7755788</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res1<span class="op">$</span>tsne, <span class="dt">col=</span><span class="kw">rainbow</span>(numClust)[res1<span class="op">$</span>result])</code></pre></div>
 <p><img src="figure/detection_rate_correction.Rmd/Pollen-2.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of Pollen-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -565,6 +601,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/5787a2efa1b4575c9591aac564d821a2de9c63b2/docs/figure/detection_rate_correction.Rmd/Pollen-2.png" target="_blank">5787a2e</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-07-17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Pollen-2.png" target="_blank">b7e4475</a>
 </td>
 <td style="text-align:left;">
@@ -577,14 +624,8 @@ tk382
 </tbody>
 </table>
 <p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7931186</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
-<span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.8177593</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res2<span class="op">$</span>tsne, <span class="dt">col=</span><span class="kw">rainbow</span>(numClust)[res2<span class="op">$</span>result])</code></pre></div>
+<p><img src="figure/detection_rate_correction.Rmd/Pollen-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="usoskin" class="section level2">
 <h2>Usoskin</h2>
@@ -635,84 +676,24 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">det2 =<span class="st"> </span><span class="kw">qr</span>(<span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(det)), <span class="kw">log</span>(det)))
 R =<span class="st"> </span><span class="kw">t</span>(<span class="kw">qr.resid</span>(det2, <span class="kw">t</span>(logX)))
 
-pca1 =<span class="st"> </span><span class="kw">irlba</span>(R,<span class="dv">2</span>); pca2 =<span class="st"> </span><span class="kw">irlba</span>(logX,<span class="dv">2</span>)
-dat =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">pc1=</span><span class="kw">c</span>(pca1<span class="op">$</span>v[,<span class="dv">1</span>], pca2<span class="op">$</span>v[,<span class="dv">1</span>]), <span class="dt">detection.rate=</span><span class="kw">rep</span>(det, <span class="dv">2</span>), <span class="dt">label=</span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;After correction&quot;</span>, <span class="st">&quot;Before correction&quot;</span>), <span class="dt">each=</span><span class="kw">nrow</span>(pca1<span class="op">$</span>v)), <span class="dt">true.label=</span><span class="kw">as.factor</span>(<span class="kw">rep</span>(truth,<span class="dv">2</span>)))
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>pc1, <span class="dt">y=</span>detection.rate, <span class="dt">col=</span>true.label)) <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(<span class="op">~</span>label) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA&quot;</span>)</code></pre></div>
-<p><img src="figure/detection_rate_correction.Rmd/Usoskin-2.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of Usoskin-2.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Usoskin-2.png" target="_blank">b7e4475</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-16
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne1 =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">t</span>(R), <span class="dt">perplexity=</span><span class="dv">20</span>)
-tsne2 =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">t</span>(logX))
+<span class="co"># pca1 = irlba(R,2); pca2 = irlba(logX,2)</span>
+<span class="co"># dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))</span>
+<span class="co"># ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;PCA&quot;)</span>
+<span class="co"># </span>
+<span class="co"># tsne1 = Rtsne(t(R), perplexity=20)</span>
+<span class="co"># tsne2 = Rtsne(t(logX))</span>
+<span class="co"># </span>
+<span class="co"># dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c(&quot;After correction&quot;, &quot;Before correction&quot;), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))</span>
+<span class="co"># ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle(&quot;tSNE&quot;)</span>
 
-dat =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v1 =</span> <span class="kw">c</span>(tsne1<span class="op">$</span>Y[,<span class="dv">1</span>], tsne2<span class="op">$</span>Y[,<span class="dv">1</span>]), <span class="dt">v2 =</span> <span class="kw">c</span>(tsne1<span class="op">$</span>Y[,<span class="dv">2</span>], tsne2<span class="op">$</span>Y[,<span class="dv">2</span>]), <span class="dt">label=</span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;After correction&quot;</span>, <span class="st">&quot;Before correction&quot;</span>), <span class="dt">each=</span><span class="kw">nrow</span>(tsne1<span class="op">$</span>Y)), <span class="dt">true.label =</span> <span class="kw">as.factor</span>(<span class="kw">rep</span>(truth, <span class="dv">2</span>)))
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>v1, <span class="dt">y=</span>v2, <span class="dt">col=</span>true.label)) <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(<span class="op">~</span>label) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;tSNE&quot;</span>)</code></pre></div>
-<p><img src="figure/detection_rate_correction.Rmd/Usoskin-3.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of Usoskin-3.png:</em></summary>
-<table style="border-collapse:separate; border-spacing:5px;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Version
-</th>
-<th style="text-align:left;">
-Author
-</th>
-<th style="text-align:left;">
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/b7e4475a778b99f389303acbac3e5a9b5d09d752/docs/figure/detection_rate_correction.Rmd/Usoskin-3.png" target="_blank">b7e4475</a>
-</td>
-<td style="text-align:left;">
-tk382
-</td>
-<td style="text-align:left;">
-2018-07-16
-</td>
-</tr>
-</tbody>
-</table>
-<p></details></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7947954</code></pre>
+<pre><code>[1] 0.5574876</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.6218291</code></pre>
+<pre><code>[1] 0.5215175</code></pre>
 </div>
 <div id="buettner" class="section level2">
 <h2>Buettner</h2>
@@ -804,11 +785,11 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.3806902</code></pre>
+<pre><code>[1] 0.4665139</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.3859772</code></pre>
+<pre><code>[1] 0.5680807</code></pre>
 </div>
 <div id="yan" class="section level2">
 <h2>Yan</h2>
@@ -912,11 +893,11 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.8954618</code></pre>
+<pre><code>[1] 0.6517271</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.5991576</code></pre>
+<pre><code>[1] 0.8954618</code></pre>
 </div>
 <div id="treutlein" class="section level2">
 <h2>Treutlein</h2>
@@ -1032,11 +1013,11 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.3490127</code></pre>
+<pre><code>[1] 0.326254</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.4146639</code></pre>
+<pre><code>[1] 0.4426981</code></pre>
 </div>
 <div id="chu-cell-type" class="section level2">
 <h2>Chu (cell type)</h2>
@@ -1139,11 +1120,11 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.798453</code></pre>
+<pre><code>[1] 0.6712136</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.9964407</code></pre>
+<pre><code>[1] 0.9556889</code></pre>
 </div>
 <div id="chu-timecourse" class="section level2">
 <h2>Chu (timecourse)</h2>
@@ -1255,11 +1236,11 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res1 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> T, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res1<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.7241204</code></pre>
+<pre><code>[1] 0.6992235</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 res2 =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">log=</span>T, <span class="dt">filter=</span>F, <span class="dt">correct_detection_rate =</span> F, <span class="dt">numClust =</span> numClust)
 <span class="kw">adj.rand.index</span>(res2<span class="op">$</span>result, truth)</code></pre></div>
-<pre><code>[1] 0.6174572</code></pre>
+<pre><code>[1] 0.6997664</code></pre>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
