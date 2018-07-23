@@ -1,7 +1,8 @@
 #### Problem set up ####
 SLSL_setup = function(){
-  library(matrixStats)
+  library(data.table)
   library(inline)
+  library(matrixStats)
   library(quadprog)
   library(irlba)
   library(ggplot2)
@@ -10,13 +11,15 @@ SLSL_setup = function(){
   library(caret)
   library(fossil)
   library(pracma)
-  library(scatterplot3d)
-  library(igraph) #for nmi
+  library(igraph)
   library(Rtsne)
-  library(diceR)
   library(gplots)
   library(broom)
   library(abind)
+  library(stargazer)
+  library(scatterplot3d)
+  library(diceR)
+  library(parallel)
 
 
   set.seed(1)
