@@ -1,9 +1,9 @@
 SLSL_ref = function(X,
                     ref,
-                    #knn = T,
-                    #knn_keep = 10,
                     numClust = NA,
                     k = NA,
+                    # knn = TRUE,
+                    # knn_keep = NA,
                     log = T,
                     filter = F,
                     filter_p1 = 0.9,
@@ -26,6 +26,10 @@ SLSL_ref = function(X,
          Check that row names of the reference set and rownames of your data set have gene names.")
   }
 
+  # if(is.na(knn_keep)){
+  #   knn_keep = round(ncol(ref)/3)
+  # }
+
 
   if(verbose){print('data cleaning..')}
   ind1 = match(int, rownames(X))
@@ -44,9 +48,11 @@ SLSL_ref = function(X,
     det2 = qr(det)
     X = t(qr.resid(det2, t(X)))
     X = scale(X, center=T, scale=T)
+  }else{
+    X = scale(X)
   }
 
-  #X = scale(X)
+
 
   if(verbose){print('computing projection..')}
 
@@ -120,6 +126,5 @@ SLSL_ref = function(X,
                 )
   }
   out = list(result = res, projection = projection)
-  #out = list(SLSL_output = res, projection = projection, numGenes=length(int))
   return(out)
 }

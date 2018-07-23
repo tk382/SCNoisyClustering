@@ -78,28 +78,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dist_c
-arma::mat dist_c(arma::mat X);
-RcppExport SEXP _SCNoisyClustering_dist_c(SEXP XSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(dist_c(X));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_rank
-arma::vec get_rank(const arma::vec X);
-RcppExport SEXP _SCNoisyClustering_get_rank(SEXP XSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_rank(X));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_kernel_matrix
 arma::sp_mat get_kernel_matrix(arma::mat X, arma::mat Diff, int k, double sigma);
 RcppExport SEXP _SCNoisyClustering_get_kernel_matrix(SEXP XSEXP, SEXP DiffSEXP, SEXP kSEXP, SEXP sigmaSEXP) {
@@ -157,8 +135,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCNoisyClustering_armapmax", (DL_FUNC) &_SCNoisyClustering_armapmax, 2},
     {"_SCNoisyClustering_armapmin", (DL_FUNC) &_SCNoisyClustering_armapmin, 2},
     {"_SCNoisyClustering_nonnegASC_c", (DL_FUNC) &_SCNoisyClustering_nonnegASC_c, 1},
-    {"_SCNoisyClustering_dist_c", (DL_FUNC) &_SCNoisyClustering_dist_c, 1},
-    {"_SCNoisyClustering_get_rank", (DL_FUNC) &_SCNoisyClustering_get_rank, 1},
     {"_SCNoisyClustering_get_kernel_matrix", (DL_FUNC) &_SCNoisyClustering_get_kernel_matrix, 4},
     {"_SCNoisyClustering_sparse_scaledlasso_list_c", (DL_FUNC) &_SCNoisyClustering_sparse_scaledlasso_list_c, 9},
     {"_SCNoisyClustering_tsne_c", (DL_FUNC) &_SCNoisyClustering_tsne_c, 6},

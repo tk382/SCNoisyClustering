@@ -1,16 +1,18 @@
 # perform network diffusion of K steps over the network A
-"network.diffusion" <- function( A, K, alpha=0.7) {
+network.diffusion = function( A, K, alpha=0.7) {
+
+    A = as.matrix(A)
 
     # set the values of the diagonal of A to 0
     diag(A) = 0
 
     # compute the sign matrix of A
     sign_A = A
-    sign_A[which(A>0,arr.ind=TRUE)] = 1
-    sign_A[which(A<0,arr.ind=TRUE)] = -1  # shouldn't really exist..
+    sign_A[A>0] = 1
+    sign_A[A<0] = -1  # shouldn't really exist..
 
     # compute the dominate set for A and K
-    P = dominate.set(abs(A),min(K,nrow(A)-1)) * sign_A #returns knn matrix
+    P = dominate.set(abs(A), min(K,nrow(A)-1)) * sign_A #returns knn matrix
 
     # sum the absolute value of each row of P
     DD = apply(abs(P),MARGIN=1,FUN=sum)
