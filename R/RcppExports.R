@@ -25,14 +25,6 @@ nonnegASC_c <- function(B) {
     .Call('_SCNoisyClustering_nonnegASC_c', PACKAGE = 'SCNoisyClustering', B)
 }
 
-dist_c <- function(X) {
-    .Call('_SCNoisyClustering_dist_c', PACKAGE = 'SCNoisyClustering', X)
-}
-
-get_rank <- function(X) {
-    .Call('_SCNoisyClustering_get_rank', PACKAGE = 'SCNoisyClustering', X)
-}
-
 get_kernel_matrix <- function(X, Diff, k, sigma) {
     .Call('_SCNoisyClustering_get_kernel_matrix', PACKAGE = 'SCNoisyClustering', X, Diff, k, sigma)
 }
