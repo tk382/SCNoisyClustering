@@ -172,7 +172,7 @@ measuretime = TRUE
 Using the prespecified parameters above, run the SLSL function.
 
 ```{r wrapper}
-out = SLSL2(X                     = as.matrix(X),
+out = SLSL(X                     = as.matrix(X),
            numClust               = numClust,
            k                      = k,
            filter                 = filter,
@@ -192,7 +192,7 @@ out = SLSL2(X                     = as.matrix(X),
 Or, you can also use default parameters, and this will work as well.
 
 ```{r wrapper_not_performed, eval=F}
-out = SLSL2(X)
+out = SLSL(X)
 ```
 
 
@@ -356,7 +356,7 @@ shuffle = TRUE #default is TRUE
 Now run the algorithm with different methods.
 
 ```{r zeisel_run, cache = T}
-res = LSLSL2(X              = X,
+res = LSLSL(X              = X,
             numClust       = numClust,
             kernel_type    = kernel_type,
             core           = core,
@@ -371,7 +371,7 @@ res = LSLSL2(X              = X,
 adj.rand.index(truelabel, res$result)
 ```
 
-Let's try all the available consensus clustering methods in LSLSL function. The result is stored, so there is no need to run it again. The following chunk arranges the data set into a 4 dimensional array for the specification of package "diceR." [@diceR]
+There are other options for consensus clustering in LSLSL function. The following chunk arranges the data set into a 4 dimensional array for the specification of package "diceR." [@diceR]
 
 ```{r diceR specification}
 # construct an array called "out" for specification in diceR package.

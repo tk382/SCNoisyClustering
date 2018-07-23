@@ -73,11 +73,11 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=truth)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 ```
 
@@ -113,11 +113,11 @@ ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) +
 # ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
 plot(res1$tsne, col=rainbow(numClust)[res1$result])
@@ -154,11 +154,11 @@ R = t(qr.resid(det2, t(logX)))
 # ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
 ```
@@ -194,11 +194,11 @@ ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point()
 
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 ```
 
@@ -232,11 +232,11 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 
 ```
@@ -273,11 +273,11 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 ```
 
@@ -310,11 +310,11 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 ```
 
@@ -345,11 +345,11 @@ dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,
 ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
-res1 = SLSL2(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
+res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
 adj.rand.index(res1$result, truth)
 
 set.seed(1)
-res2 = SLSL2(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
+res2 = SLSL(X, log=T, filter=F, correct_detection_rate = F, numClust = numClust)
 adj.rand.index(res2$result, truth)
 ```
 
