@@ -43,10 +43,7 @@ library(stargazer)
 library(scatterplot3d)
 library(diceR)
 library(parallel)
-
-# set.seed(1)
-# R.utils::sourceDirectory("~/Dropbox/TaeProject/VariableError/SCNoisyClustering/R/", modifiedOnly=FALSE)
-# Rcpp::sourceCpp('~/Dropbox/TaeProject/VariableError/SCNoisyClustering/src/SCNoisyClustering.cpp')
+library(data.table)
 
 heat = function(S){
   ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() +
@@ -56,19 +53,88 @@ heat = function(S){
 }
 ```
 
-## Cell Type Panel
+
+
+```{r pbmc_read_data}
+X = readMM('../data/unnecessary_in_building/pbmc3k/matrix.mtx')
+X = as.matrix(X)
+genes = read.table('../data/unnecessary_in_building/pbmc3k/genes.tsv')
+rownames(X) = genes$V2
+
+ref_file = readRDS('../data/unnecessary_in_building/pbmc3k/all_pure_select_11types.rds')
+ref = t(ref_file$pure_avg)
+rownames(ref) = genes$V2[ref_file$pure_use_genes]
+colnames(ref) = ref_file$pure_id
+#ref = scale(ref, scale=FALSE)
+```
+
+## 10X data from PBMC Cells
+```{r pbmc_ref}
+out_pbmc_ref = SLSL_ref(X = X, 
+                        ref = ref,
+                        kernel_type = "euclidean",
+                        correct_detection_rate = TRUE,
+                        verbose = TRUE)
+
+myheatmap(out_pbmc_ref$projection, 0, 3*1e-04, "")
+
+plot(out_pbmc_ref$result$tsne[,1:2], col = out_pbmc_ref$result$result)
+
+out_pbmc_raw = LSLSL(X=X, 
+                     klist = c(10,15,20), 
+                     sigmalist = c(1,2), 
+                     correct_detection_rate = TRUE, 
+                     verbose = TRUE)
+
+tsne = Rtsne(t(X))
+
+par(mfrow = c(1,2))
+
+plot(tsne$Y, 
+     col = out_pbmc_ref$result$result,
+     xlab = 'dim1',
+     ylab = 'dim2', main = "Using Reference Panel")
+plot(tsne$Y, 
+     col = out_pbmc_raw$result,
+     xlab = 'dim1', ylab = 'dim2', main = "Using Raw Data")
+
+```
+
+## Smart-seq data from Human Embryonic Stem Cells
 
 ```{r ref_run}
-load('../data/unnecessary_in_building/Chu_celltype.RData')
+load('../data/unnecessary_in_building/7_Chu_celltype.RData')
 sysdata = SCNoisyClustering::reference_panel
 ref = reference_panel$cell
 
 X = Chu_celltype$X
 truth = as.numeric(as.factor(Chu_celltype$label))
-t1 = Sys.time()
-out_cell_ref = SLSL(X        = as.matrix(X), 
-                    ref      = as.matrix(ref))
-t2 = Sys.time()
+out_cell_ref = SLSL_ref(X                      = as.matrix(X), 
+                        ref                    = as.matrix(ref),
+                        correct_detection_rate = TRUE,
+                        numClust               = 7,
+                        verbose                = TRUE)
+
+
+out_cell_raw = SLSL(X                      = as.matrix(X),
+                    correct_detection_rate = TRUE,
+                    numClust               = 7,
+                    verbose                = TRUE)
+
+myheatmap(out_cell_ref$projection, -0.05, 0.35, "")
+
+tsne = Rtsne(t(log(X+1)))
+
+par(mfrow = c(1,2))
+plot(tsne$Y, 
+     col = rainbow(7)[out_cell_ref$result$result],
+     xlab = 'dim1',
+     ylab = 'dim2', 
+     main = "Using Reference Panel")
+plot(tsne$Y, 
+     col = out_cell_raw$result,
+     xlab = 'dim1', ylab = 'dim2', 
+     main = "Using Raw Data")
+
 
 ```
-
