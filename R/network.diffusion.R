@@ -1,25 +1,22 @@
-#' Estimate the optimal number of clusters using eigengap
+#' Perform network diffusion
 #'
-#' @param S estimated similarity matrix.
-#' @examples
-#' #create positive definite symmetric matrix
-#' X = matrix(rnorm(50), nrow = 10)
-#' S= t(X) %*% X
-#' getClustNum(S)
-network.diffusion = function( A, K, alpha=0.7) {
+#' @param S Estimated similarity matrix.
+#' @param k Number of neighbors for knn
+#' @param alpha diffusion parameter
+network.diffusion = function( S, k, alpha=0.7) {
 
-    A = as.matrix(A)
+    S = as.matrix(S)
 
-    # set the values of the diagonal of A to 0
-    diag(A) = 0
+    # set the values of the diagonal of S to 0
+    diag(S) = 0
 
-    # compute the sign matrix of A
-    sign_A = A
-    sign_A[A>0] = 1
-    sign_A[A<0] = -1  # shouldn't really exist..
+    # compute the sign matrix of S
+    sign_S = S
+    sign_S[S>0] = 1
+    sign_S[S<0] = -1  # shouldn't really exist..
 
-    # compute the dominate set for A and K
-    P = dominate.set(abs(A), min(K,nrow(A)-1)) * sign_A #returns knn matrix
+    # compute the dominate set for S and K
+    P = dominate.set(abs(S), min(K,nrow(S)-1)) * sign_S #returns knn matrix
 
     # sum the absolute value of each row of P
     DD = apply(abs(P),MARGIN=1,FUN=sum)

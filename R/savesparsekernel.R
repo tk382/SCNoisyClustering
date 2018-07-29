@@ -1,11 +1,12 @@
-#' Estimate the optimal number of clusters using eigengap
+#' For large version, save the large kernel matrices in the hard drive
 #'
-#' @param S estimated similarity matrix.
-#' @examples
-#' #create positive definite symmetric matrix
-#' X = matrix(rnorm(50), nrow = 10)
-#' S= t(X) %*% X
-#' getClustNum(S)
+#' @param X Data matrix to construct kernel from
+#' @param dir Directory to save the matrix, default as the current directory
+#' @param kernel_type Type of distance measure to use : euclidean, pearson, spearman, or combined
+#' @param klist Kernel parameters k
+#' @param sigmalist Kernel parameters sigma
+#' @param verbose Show progress if set to TRUE
+
 savesparsekernel = function(X,
                             dir = ".",
                             kernel_type = kernel_type,
@@ -22,7 +23,7 @@ savesparsekernel = function(X,
     for (kk in klist){
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff1, kk, ss)
-        filename = paste0(ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
         filenames = c(filenames, filename)
         write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
         if(verbose){print(paste0("           ", filename))}
@@ -40,7 +41,7 @@ savesparsekernel = function(X,
     for (kk in klist){
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff2, kk, ss)
-        filename = paste0(ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
         filenames = c(filenames, filename)
         write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
         if(verbose){print(paste0("           ", filename))}
@@ -59,7 +60,7 @@ savesparsekernel = function(X,
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff3, kk, ss)
         P[is.na(P)] = 0
-        filename = paste0(ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
         filenames = c(filenames, filename)
         write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
         if(verbose){print(paste0("           ", filename))}

@@ -1,11 +1,10 @@
-#' Estimate the optimal number of clusters using eigengap
+#' For large version, save the large kernel matrices in the hard drive
 #'
-#' @param S estimated similarity matrix.
-#' @examples
-#' #create positive definite symmetric matrix
-#' X = matrix(rnorm(50), nrow = 10)
-#' S= t(X) %*% X
-#' getClustNum(S)
+#' @param X Data matrix to construct kernel from
+#' @param kernel_type Type of distance measure to use : euclidean, pearson, spearman, or combined
+#' @param klist Kernel parameters k
+#' @param sigmalist Kernel parameters sigma
+#' @param verbose Show progress if set to TRUE
 #'
 makesparsekernel = function(X,
                             kernel_type = kernel_type,
