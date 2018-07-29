@@ -2,19 +2,17 @@
 % Please edit documentation in R/network.diffusion.R
 \name{network.diffusion}
 \alias{network.diffusion}
-\title{Estimate the optimal number of clusters using eigengap}
+\title{Perform network diffusion}
 \usage{
-network.diffusion(A, K, alpha = 0.7)
+network.diffusion(S, k, alpha = 0.7)
 }
 \arguments{
-\item{S}{estimated similarity matrix.}
+\item{S}{Estimated similarity matrix.}
+
+\item{k}{Number of neighbors for knn}
+
+\item{alpha}{diffusion parameter}
 }
 \description{
-Estimate the optimal number of clusters using eigengap
-}
-\examples{
-#create positive definite symmetric matrix
-X = matrix(rnorm(50), nrow = 10)
-S= t(X) \%*\% X
-getClustNum(S)
+Perform network diffusion
 }

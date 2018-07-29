@@ -2,21 +2,22 @@
 % Please edit documentation in R/makesparsekernel.R
 \name{makesparsekernel}
 \alias{makesparsekernel}
-\title{Estimate the optimal number of clusters using eigengap}
+\title{For large version, save the large kernel matrices in the hard drive}
 \usage{
 makesparsekernel(X, kernel_type = kernel_type, klist = seq(15, 25, by = 5),
   sigmalist = seq(1, 2, by = 0.2), verbose = FALSE)
 }
 \arguments{
-\item{S}{estimated similarity matrix.}
+\item{X}{Data matrix to construct kernel from}
+
+\item{kernel_type}{Type of distance measure to use : euclidean, pearson, spearman, or combined}
+
+\item{klist}{Kernel parameters k}
+
+\item{sigmalist}{Kernel parameters sigma}
+
+\item{verbose}{Show progress if set to TRUE}
 }
 \description{
-Estimate the optimal number of clusters using eigengap
-}
-\examples{
-#create positive definite symmetric matrix
-X = matrix(rnorm(50), nrow = 10)
-S= t(X) \%*\% X
-getClustNum(S)
-
+For large version, save the large kernel matrices in the hard drive
 }
