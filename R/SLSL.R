@@ -1,7 +1,33 @@
+#' Wrapper function for similarity learning algorithm. For details, refer to the manuscript.
+#' We recommend users to start with default setting for filter, kernel_type, klist, sigmalist, tau, gamma, and k.
+#' The only critical parameter is log. If X has been log-transformed and log is not set to FALSE, it will produce an error.
+#'
+#'
+#' @param X Expression level matrix in count, cells in columns, genes in rows
+#' @param numClust Number of Clusters. If unknown, NA. If set to NA, it will be estimated with minimum 3.
+#' @param log If set to TRUE, SLSL will take log from X. If it is already log-transformed, set FALSE.
+#' @param filter If set to TRUE, remove rows with little information
+#' @param filter_p1 Upper threshold for percentage of zeros in each row
+#' @param filter_p2 Lower threshold for percentage of zeros in each row
+#' @param correct_detection_rate If set to TRUE, detection rate will be regressed out
+#' @param kernel_type distance measure to use: one of "euclidean", "pearson", "spearman", or "combined"
+#' @param klist Kernel parameters setting.
+#' @param sigmalist Kernel parameters setting.
+#' @param tau Regularization parameter for L1 norm
+#' @param gamma Regularization parameter for Frobenius norm
+#' @param k Number of neighbors to use for knn procedure.
+#' @param verbose To show progress, set to TRUE
+#' @param measuretime Measure the time it takes for each step
+#' @param warning Warns if the data size is too large. To ignore, set to FALSE.
+#' @examples
+#'
+#' #create sample count matrix
+#' X = matrix(rpois(100000, 1), nrow = 1000)
+#' result = SLSL(X)
+#'
+#'
 SLSL = function(X,
                 numClust = NA,
-                core = NA,
-                k = NA,
                 log = T,
                 filter = F,
                 filter_p1 = 0.9,
@@ -9,9 +35,10 @@ SLSL = function(X,
                 correct_detection_rate = F,
                 kernel_type = "combined",
                 klist = seq(15,25,by=5),
-                sigmalist=seq(1,2,by=0.2),
+                sigmalist=seq(1,2,by=0.5),
                 tau = 5,
                 gamma = 0,
+                k = NA,
                 verbose=FALSE,
                 measuretime = FALSE,
                 warning=TRUE

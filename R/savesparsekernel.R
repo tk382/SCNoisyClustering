@@ -1,4 +1,13 @@
+#' Estimate the optimal number of clusters using eigengap
+#'
+#' @param S estimated similarity matrix.
+#' @examples
+#' #create positive definite symmetric matrix
+#' X = matrix(rnorm(50), nrow = 10)
+#' S= t(X) %*% X
+#' getClustNum(S)
 savesparsekernel = function(X,
+                            dir = ".",
                             kernel_type = kernel_type,
                             klist = seq(15,25,by=5),
                             sigmalist=seq(1,2,by=0.2),

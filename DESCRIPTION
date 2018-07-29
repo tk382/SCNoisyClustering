@@ -22,4 +22,6 @@ Imports:
     reshape,
     caret,
     fossil,
-    pracma
+    pracma,
+    data.table
+RoxygenNote: 6.0.1

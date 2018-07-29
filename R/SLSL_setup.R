@@ -1,4 +1,3 @@
-#### Problem set up ####
 SLSL_setup = function(){
   library(data.table)
   library(inline)
@@ -20,10 +19,10 @@ SLSL_setup = function(){
   library(scatterplot3d)
   library(diceR)
   library(parallel)
-
-
-  set.seed(1)
-  R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
-  Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
-  return(NA)
+#
+#
+#   set.seed(1)
+#   R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
+#   Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
+#   return(NA)
 }

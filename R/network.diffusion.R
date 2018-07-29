@@ -1,4 +1,11 @@
-# perform network diffusion of K steps over the network A
+#' Estimate the optimal number of clusters using eigengap
+#'
+#' @param S estimated similarity matrix.
+#' @examples
+#' #create positive definite symmetric matrix
+#' X = matrix(rnorm(50), nrow = 10)
+#' S= t(X) %*% X
+#' getClustNum(S)
 network.diffusion = function( A, K, alpha=0.7) {
 
     A = as.matrix(A)

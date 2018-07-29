@@ -1,4 +1,10 @@
-#tsne_spectral = function(A, L, numClust){
+#' dimension reduction wrapper
+#'
+#' @param A Estimated similarity matrix.
+#' @param numClust Number of clusters. This can't be NA. If unknown, it should be estimated from getNumClust function using A
+#' @param numEigen number of eigenvectors to be used. If NA, the number of clusters will be used
+#' @examples
+#'
 tsne_spectral = function(A, numClust, numEigen = NA){
   # compute the eigenvalues and eigenvectors of P
   if(is.na(numEigen)){numEigen = numClust}
