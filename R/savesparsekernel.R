@@ -23,9 +23,9 @@ savesparsekernel = function(X,
     for (kk in klist){
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff1, kk, ss)
-        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "_SLSL_kernels_pearson.mtx")
         filenames = c(filenames, filename)
-        write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
+        writeMM(P, filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
         if(verbose){print(paste0("           ", filename))}
         ii = ii + 1
       }
@@ -41,9 +41,10 @@ savesparsekernel = function(X,
     for (kk in klist){
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff2, kk, ss)
-        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "_SLSL_kernels.mtx")
         filenames = c(filenames, filename)
-        write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
+        # write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
+        writeMM(P, file=filename)
         if(verbose){print(paste0("           ", filename))}
         ii = ii+1
       }
@@ -60,9 +61,9 @@ savesparsekernel = function(X,
       for (ss in sigmalist){
         P = get_kernel_matrix(X, diff3, kk, ss)
         P[is.na(P)] = 0
-        filename = paste0(dir,'/',ker, ii, "SLSL_kernels_tmp.txt")
+        filename = paste0(dir,'/',ker, ii, "_SLSL_kernels.txt")
         filenames = c(filenames, filename)
-        write.table(as.matrix(P), filename, col.names=FALSE, row.names=FALSE, quote = FALSE)
+        writeMM(P, file=filename)
         if(verbose){print(paste0("           ", filename))}
         ii = ii+1
       }

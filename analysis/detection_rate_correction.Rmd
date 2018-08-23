@@ -51,10 +51,6 @@ truth    = Test_2_Kolod$true_labs$V1
 numClust = Test_2_Kolod$n_clust;
 rm(Test_2_Kolod)
 
-cellcount[i] = ncol(X)
-genecount[i] = nrow(X)
-
-
 logX = log(X+1)
 
 det = colSums(X!=0) / nrow(X)
@@ -97,7 +93,7 @@ rm(Pollen)
 
 logX = log(X+1)
 
-det = colSums(X!=0) / nrow(X)
+det = log(colSums(X!=0) / nrow(X))
 
 det2 = qr(cbind(rep(1,length(det)), det))
 R = t(qr.resid(det2, t(logX)))
@@ -136,22 +132,22 @@ rm(Usoskin)
 
 logX = log(X+1)
 
-det = colSums(X!=0) / nrow(X)
+det = log(colSums(X!=0) / nrow(X))
 
-plot(irlba(logX,1)$v[,1]~log(det))
+# plot(irlba(logX,1)$v[,1]~det)
 
-det2 = qr(cbind(rep(1, length(det)), log(det)))
+det2 = qr(cbind(rep(1, length(det)), det))
 R = t(qr.resid(det2, t(logX)))
 
-# pca1 = irlba(R,2); pca2 = irlba(logX,2)
-# dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c("After correction", "Before correction"), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
-# ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("PCA")
-# 
-# tsne1 = Rtsne(t(R), perplexity=20)
-# tsne2 = Rtsne(t(logX))
-# 
-# dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
-# ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
+pca1 = irlba(R,2); pca2 = irlba(logX,2)
+dat = data.frame(pc1=c(pca1$v[,1], pca2$v[,1]), detection.rate=rep(det, 2), label=rep(c("After correction", "Before correction"), each=nrow(pca1$v)), true.label=as.factor(rep(truth,2)))
+ggplot(dat, aes(x=pc1, y=detection.rate, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("PCA")
+
+tsne1 = Rtsne(t(R), perplexity=20)
+tsne2 = Rtsne(t(logX))
+
+dat = data.frame(v1 = c(tsne1$Y[,1], tsne2$Y[,1]), v2 = c(tsne1$Y[,2], tsne2$Y[,2]), label=rep(c("After correction", "Before correction"), each=nrow(tsne1$Y)), true.label = as.factor(rep(truth, 2)))
+ggplot(dat, aes(x=v1, y=v2, col=true.label)) + facet_grid(~label) + geom_point() + ggtitle("tSNE")
 
 set.seed(1)
 res1 = SLSL(X, log=T, filter=F, correct_detection_rate = T, numClust = numClust)
@@ -175,9 +171,15 @@ X        = as.matrix(Buettner$X)
 truth    = as.numeric(as.factor(Buettner$label))
 numClust = 3
 rm(Buettner)
+det = (colSums(X!=0) / nrow(X))
+
+remove = which(det < 0.2)
+X = X[,-remove]
+truth = truth[-remove]
+det = det[-remove]
 
 logX = log(X+1)
-det = colSums(X!=0) / nrow(X)
+# det = log(det)
 
 det2 = qr(det)
 R = t(qr.resid(det2, t(logX)))

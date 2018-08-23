@@ -27,25 +27,28 @@
 #'
 #'
 LSLSL = function(X,
-                  numClust = NA,
-                  core = NA,
-                  shuffle=TRUE,
-                  cluster_method = "CSPA",
-                  k=NA,
-                  log = T,
-                  filter = T,
-                  filter_p1 = 0.9,
-                  filter_p2 = 0,
-                  correct_detection_rate = F,
-                  kernel_type = "combined",
-                  klist = seq(15,25,by=5),
-                  sigmalist=seq(1,2,by=0.2),
-                  tau = 5,
-                  gamma = 0,
-                  verbose=F){
+                 seed = NA,
+                 numClust = NA,
+                 core = NA,
+                 shuffle=TRUE,
+                 cluster_method = "CSPA",
+                 k=NA,
+                 log = T,
+                 filter = T,
+                 filter_p1 = 0.9,
+                 filter_p2 = 0,
+                 correct_detection_rate = F,
+                 kernel_type = "combined",
+                 klist = seq(15,25,by=5),
+                 sigmalist=seq(1,2,by=0.5),
+                 tau = 5,
+                 gamma = 0,
+                 verbose=F){
   #CSPA:  Cluster-based Similarity Partitioning Algorithm
   #LCE:   Linkage Clustering Ensemble
   #majority_voting :  majority voting
+
+  if(is.na(seed)){set.seed(sample(1:1000))}
 
   if(!kernel_type %in% c("pearson","euclidean","spearman","combined")){
     stop("kernel_type must be one of 'pearson','euclidean','spearman', or,'combined'")
@@ -77,7 +80,7 @@ LSLSL = function(X,
     X = scale(X)
   }
 
-  X = scale(X)
+  X = t(scale(t(X)))
 
   #shuffle the data (so that labels are mixed up)
   if(shuffle){
@@ -94,7 +97,7 @@ LSLSL = function(X,
 
   #split X into multiple data sets
   nn = ncol(X)
-  division = round(nn/500)
+  division = round(nn/1000)
   skip = floor(nn/division)
   indvector = 1:skip; indlist = list()
   for (i in 1:(division-1)){
@@ -105,25 +108,25 @@ LSLSL = function(X,
   #form the pairs
   gl = combn(1:length(indlist), 2)
   N = ncol(gl)
-
   if(is.na(core)){core = detectCores()-1}
   if (core < 1) {
     core = 1
   }
   if(core>1){
     if(verbose){print("working on the following subsets:")}
-    #set up parallelization
     myfun = function(l){
       groups = gl[,l]
       if(verbose){print(paste0("     ", groups))}
       tmpind = c(indlist[[groups[1]]],
                  indlist[[groups[2]]])
       P = rep(list(Matrix(0, nrow=length(tmpind), ncol = length(tmpind), sparse=T)),
-               length(filenames))
+              length(filenames))
       for (i in length(filenames)){
-        tmp = as.matrix(setDF(fread(filenames[i], select=tmpind))[tmpind, ])
-        tmp2 = Matrix(tmp, sparse = TRUE)
-        P[[i]] = tmp2
+        # tmp = as.matrix(setDF(fread(filenames[i], select=tmpind))[tmpind, ])
+        tmp = readMM(filenames[i])[tmpind,tmpind]
+        # tmp2 = Matrix(tmp, sparse = TRUE)
+        # P[[i]] = tmp2
+        P[[i]] = tmp
       }
       res = sparse_scaledlasso_list_c(P=P,
                                       n=length(P),
@@ -138,9 +141,8 @@ LSLSL = function(X,
       tmp = tsne_spectral(S, numClust)
       return(list(result = tmp$cluster, groups = groups))
     }
-    cl = makeCluster(core, type = "FORK")
+    cl = makeCluster(core, type = "FORK", outfile = "")
     res = parLapply(cl, 1:N, myfun)
-
     final = matrix(NA, nn, N)
     for (i in 1:N){
       item = res[[i]]
@@ -192,9 +194,9 @@ LSLSL = function(X,
   }
 
   k = numClust
-  if(is.na(k)){
-    k = length(unique(as.numeric(final)))
-  }
+  # if(is.na(k)){
+  #   k = length(unique(as.numeric(final)))
+  # }
   out = array(0, dim=c(nrow(final), ncol(final),1,1))
   out[,,1,1] = final
   dimnames(out)[[1]] = paste0('R',1:nrow(final))

@@ -13,7 +13,6 @@ tsne_spectral = function(A, numClust, numEigen = NA){
   L = (L + t(L))/2
   eigen_L = eigen(L)
   U = eigen_L$vectors
-  #D = eigen_L$values
   U_index = seq(ncol(U), (ncol(U)-numEigen+1))
   F_last = tsne_c(A, initial_config = U[,U_index], k = numEigen)
   C = kmeans(F_last, numClust, nstart=200)

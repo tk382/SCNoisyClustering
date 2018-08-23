@@ -50,13 +50,13 @@ SLSL = function(X,
   # sigmalist   : kernel parameters
 
 
-  if(ncol(X)>3000 & warning){
+  if(ncol(X)>5000 & warning){
     stop("We detected more than 3,000 cells, and system might crash due to memory requirement.
          We recommend LSLSL function for large matrices.
          If you'd like to use SLSL anyway, set warning=FALSE")
   }
-  if(!kernel_type %in% c("pearson","euclidean","spearman","combined")){
-    stop("kernel_type must be one of 'pearson','euclidean','spearman', or,'combined'")
+  if(!kernel_type %in% c("pearson","euclidean","spearman","combined","kendall")){
+    stop("kernel_type must be one of 'pearson','euclidean','spearman', 'kendall',or,'combined'")
   }
   if(is.na(k)){
     k = max(10,ncol(X)/20)
@@ -118,7 +118,7 @@ SLSL = function(X,
     if(verbose){print('determining cluster number..')}
     numClust= getClustNum(S)
   }
-
+  if(verbose){print("dimension reduction..")}
   tmp = tsne_spectral(S, numClust)
   t6 = Sys.time()
   if(measuretime){cat(paste('gene filter & numClust',
@@ -133,8 +133,8 @@ SLSL = function(X,
                             as.difftime(round(t6-t5,2), units="secs"),
                             'seconds'))}
 
-  return(list(S=S,
+  return(list(S=Matrix(S, sparse=TRUE),
               result = tmp$cluster,
-              tsne=tmp$tsne,
+              tsne = tmp$tsne,
               sigma = sigmas))
   }

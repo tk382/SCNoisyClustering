@@ -9,7 +9,7 @@
 makesparsekernel = function(X,
                             kernel_type = kernel_type,
                             klist = seq(15,25,by=5),
-                            sigmalist=seq(1,2,by=0.2),
+                            sigmalist=seq(1,2,by=0.5),
                             verbose = FALSE){
   ii = 1
   if(kernel_type%in% c("pearson", "combined")){
@@ -54,6 +54,20 @@ makesparsekernel = function(X,
     }
     rm(diff3); gc()
   }
+  if(kernel_type=="jaccard"){
+    P4 = rep(list(Matrix(0, nrow=ncol(X), ncol = ncol(X), sparse=T)),
+             length(klist) * length(sigmalist))
+    diff4 = 1-cor(as.matrix(X), method = "kendall")
+    for (kk in klist){
+      for (ss in sigmalist){
+        tmp = get_kernel_matrix(X, diff4, kk, ss)
+        tmp[is.na(tmp)] = 0
+        P4[[ii]] = tmp
+        ii = ii+1
+      }
+    }
+    rm(diff4); gc()
+  }
 
   if(kernel_type == "pearson"){
     return(P1)
@@ -61,7 +75,9 @@ makesparsekernel = function(X,
     return(P2)
   }else if(kernel_type=="spearman"){
     return(P3)
-  }else{
+  }else if(kernel_type=="combined"){
     return(c(P1,P2,P3))
+  }else if(kernel_type=="kendall"){
+    return(P4)
   }
 }

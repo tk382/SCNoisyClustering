@@ -3,7 +3,7 @@
 #' @param S Estimated similarity matrix.
 #' @param k Number of neighbors for knn
 #' @param alpha diffusion parameter
-network.diffusion = function( S, k, alpha=0.7) {
+network.diffusion = function( S, K, alpha=0.7) {
 
     S = as.matrix(S)
 
