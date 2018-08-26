@@ -18,7 +18,9 @@ navbar:
       href: https://github.com/tk382/SCNoisyClustering
 output:
   workflowr::wflow_html:
-    toc: true
-    toc_float: true
-    theme: cosmo
-    highlight: textmate
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
