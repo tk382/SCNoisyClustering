@@ -4,8 +4,8 @@
 \alias{makesparsekernel}
 \title{For large version, save the large kernel matrices in the hard drive}
 \usage{
-makesparsekernel(X, kernel_type = kernel_type, klist = seq(15, 25, by = 5),
-  sigmalist = seq(1, 2, by = 0.2), verbose = FALSE)
+makesparsekernel(X, kernel_type = kernel_type, klist = seq(15, 25, by =
+  5), sigmalist = seq(1, 2, by = 0.5), verbose = FALSE)
 }
 \arguments{
 \item{X}{Data matrix to construct kernel from}

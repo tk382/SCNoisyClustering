@@ -6,11 +6,11 @@
 We recommend users to start with default setting for filter, kernel_type, klist, sigmalist, tau, gamma, and k.
 The only critical parameter is log. If X has been log-transformed and log is not set to FALSE, it will produce an error.}
 \usage{
-SLSL_ref(X, ref, numClust = NA, log = T, filter = F, filter_p1 = 0.9,
-  filter_p2 = 0, correct_detection_rate = F, kernel_type = "combined",
-  klist = seq(15, 25, by = 5), sigmalist = seq(1, 2, by = 0.2), tau = 5,
-  gamma = 0, k = NA, verbose = FALSE, measuretime = FALSE,
-  warning = TRUE)
+SLSL_ref(X, ref, numClust = NA, log = T, filter = F,
+  filter_p1 = 0.9, filter_p2 = 0, correct_detection_rate = F,
+  kernel_type = "combined", klist = seq(15, 25, by = 5),
+  sigmalist = seq(1, 2, by = 0.2), tau = 5, gamma = 0, k = NA,
+  verbose = FALSE, measuretime = FALSE, warning = TRUE)
 }
 \arguments{
 \item{X}{Expression level matrix in count, cells in columns, genes in rows. The gene names should be the row names of X.}
@@ -62,6 +62,5 @@ chu_ref = SLSL_ref(X = as.matrix(X),
                   ref = ref,
                   numClust = 7,
                   verbose = T)
-
 
 }

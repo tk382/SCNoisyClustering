@@ -6,11 +6,11 @@
 We recommend users to start with default setting for filter, kernel_type, klist, sigmalist, tau, gamma, and k.
 The only critical parameter is log. If X has been log-transformed and log is not set to FALSE, it will produce an error.}
 \usage{
-LSLSL(X, numClust = NA, core = NA, shuffle = TRUE,
+LSLSL(X, seed = NA, numClust = NA, core = NA, shuffle = TRUE,
   cluster_method = "CSPA", k = NA, log = T, filter = T,
   filter_p1 = 0.9, filter_p2 = 0, correct_detection_rate = F,
   kernel_type = "combined", klist = seq(15, 25, by = 5),
-  sigmalist = seq(1, 2, by = 0.2), tau = 5, gamma = 0, verbose = F)
+  sigmalist = seq(1, 2, by = 0.5), tau = 5, gamma = 0, verbose = F)
 }
 \arguments{
 \item{X}{Expression level matrix in count, cells in columns, genes in rows}
@@ -55,6 +55,5 @@ The only critical parameter is log. If X has been log-transformed and log is not
 #create sample count matrix
 X = matrix(rpois(100000, 1), nrow = 1000)
 result = SLSL(X)
-
 
 }

@@ -25,7 +25,7 @@
 #' X = matrix(rpois(100000, 1), nrow = 1000)
 #' result = SLSL(X)
 #'
-#'
+#' @export
 SLSL = function(X,
                 numClust = NA,
                 log = T,

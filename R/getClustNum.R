@@ -6,6 +6,7 @@
 #' X = matrix(rnorm(50), nrow = 10)
 #' S= t(X) %*% X
 #' getClustNum(S)
+#' @export
 getClustNum = function(S){
   s = svd(S)
   eigengap = abs(diff(s$d))

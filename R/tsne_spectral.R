@@ -5,6 +5,7 @@
 #' @param numEigen number of eigenvectors to be used. If NA, the number of clusters will be used
 #' @examples
 #'
+#' @export
 tsne_spectral = function(A, numClust, numEigen = NA){
   # compute the eigenvalues and eigenvectors of P
   if(is.na(numEigen)){numEigen = numClust}

@@ -32,7 +32,7 @@
 #'                   numClust = 7,
 #'                   verbose = T)
 #'
-#'
+#' @export
 SLSL_ref = function(X,
                     ref,
                     numClust = NA,

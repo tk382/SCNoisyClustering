@@ -5,6 +5,7 @@ using namespace Rcpp;
 using namespace std;
 
 // [[Rcpp::depends("RcppArmadillo")]]
+//' @export
 // [[Rcpp::export]]
 arma::sp_mat sparse_sum(Rcpp::List P, int length){
   arma::sp_mat out = as<arma::sp_mat>(P[0]);
@@ -28,6 +29,7 @@ arma::sp_mat sparse_sum(Rcpp::List P, int length){
 //   return out;
 // }
 
+//' @export
 // [[Rcpp::export]]
 arma::vec QminusPslice(arma::sp_mat Q,
                        Rcpp::List P,
@@ -39,12 +41,14 @@ arma::vec QminusPslice(arma::sp_mat Q,
   }
   return out;
 }
+//' @export
 // [[Rcpp::export]]
 arma::mat proj_c(arma::mat X, arma::mat ref){
   return((X.t() * ref / X.n_rows).t());
 }
 
 
+//' @export
 // [[Rcpp::export]]
 arma::mat armapmax(arma::mat A, double bound){
   int n = A.n_rows;
@@ -59,6 +63,7 @@ arma::mat armapmax(arma::mat A, double bound){
   return out;
 }
 
+//' @export
 // [[Rcpp::export]]
 arma::mat armapmin(arma::mat A, double bound){
   int n = A.n_rows;
@@ -73,7 +78,7 @@ arma::mat armapmin(arma::mat A, double bound){
   return out;
 }
 
-
+//' @export
 // [[Rcpp::export]]
 arma::mat nonnegASC_c(arma::mat B){
   int n = B.n_rows;
@@ -96,12 +101,7 @@ arma::mat nonnegASC_c(arma::mat B){
   return out;
 }
 
-
-
-
-
-
-
+//' @export
 // [[Rcpp::export]]
 arma::sp_mat get_kernel_matrix(arma::mat X,
                                arma::mat Diff,
@@ -151,7 +151,6 @@ arma::sp_mat get_kernel_matrix(arma::mat X,
   arma::mat div = numerator / denominator;
   arma::mat a(N, k+1);
   a.each_col() = arma::linspace(0, N-1, N);
-  //cout << "check 7" << "\n";
   for (int row = 0; row < N; ++row){
     for (int col = 0; col < k+1; ++col){
       if(div(row,col) != arma::datum::inf){
@@ -159,12 +158,11 @@ arma::sp_mat get_kernel_matrix(arma::mat X,
       }
     }
   }
-  //cout << "check 8" << "\n";
   out = (A + A.t())/2;
   return out;
 }
 
-
+//' @export
 // [[Rcpp::export]]
 Rcpp::List sparse_scaledlasso_list_c(Rcpp::List P,
                                      int n,
@@ -253,7 +251,7 @@ Rcpp::List sparse_scaledlasso_list_c(Rcpp::List P,
     // Rcpp::Named("noise") = noise
   );
 }
-
+//' @export
 // [[Rcpp::export]]
 arma::mat tsne_c(arma::mat X,
                  arma::mat initial_config,

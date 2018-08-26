@@ -6,6 +6,7 @@
 #' @param sigmalist Kernel parameters sigma
 #' @param verbose Show progress if set to TRUE
 #'
+#' @export
 makesparsekernel = function(X,
                             kernel_type = kernel_type,
                             klist = seq(15,25,by=5),

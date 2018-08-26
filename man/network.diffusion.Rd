@@ -4,14 +4,14 @@
 \alias{network.diffusion}
 \title{Perform network diffusion}
 \usage{
-network.diffusion(S, k, alpha = 0.7)
+network.diffusion(S, K, alpha = 0.7)
 }
 \arguments{
 \item{S}{Estimated similarity matrix.}
 
-\item{k}{Number of neighbors for knn}
-
 \item{alpha}{diffusion parameter}
+
+\item{k}{Number of neighbors for knn}
 }
 \description{
 Perform network diffusion

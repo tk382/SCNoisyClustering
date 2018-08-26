@@ -4,8 +4,9 @@
 \alias{savesparsekernel}
 \title{For large version, save the large kernel matrices in the hard drive}
 \usage{
-savesparsekernel(X, dir = ".", kernel_type = kernel_type, klist = seq(15,
-  25, by = 5), sigmalist = seq(1, 2, by = 0.2), verbose = FALSE)
+savesparsekernel(X, dir = ".", kernel_type = kernel_type,
+  klist = seq(15, 25, by = 5), sigmalist = seq(1, 2, by = 0.2),
+  verbose = FALSE)
 }
 \arguments{
 \item{X}{Data matrix to construct kernel from}

@@ -6,7 +6,8 @@
 #' @param klist Kernel parameters k
 #' @param sigmalist Kernel parameters sigma
 #' @param verbose Show progress if set to TRUE
-
+#'
+#' @export
 savesparsekernel = function(X,
                             dir = ".",
                             kernel_type = kernel_type,

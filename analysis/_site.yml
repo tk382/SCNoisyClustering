@@ -15,6 +15,8 @@ navbar:
       href: reference.html
     - text: "Detection Rate Correction"
       href: detection_rate_correction.html
+    - text: "10X Pipeline"
+      href: 10Xpreprocessing.html
     - text: "License"
       href: license.html
   right:
