@@ -1,0 +1,139 @@
+---
+title: "10X Pipeline"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: false
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment=NA,
+                      warning = FALSE,
+                      message = FALSE)
+library(MultiAssayExperiment)
+library(ggplot2)
+library(irlba)
+library(matrixStats)
+library(inline)
+library(quadprog)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(scatterplot3d)
+library(igraph) #for nmi
+library(Rtsne)
+library(diceR)
+library(gplots)
+library(Matrix)
+library(plotly)
+library(SCNoisyClustering)
+set.seed(1)
+```
+
+## Read Data : PBMC 27K
+
+Read data. Keep the gene names separately.
+
+```{r read_data}
+orig = readMM('data/unnecessary_in_building/pbmc3k/matrix.mtx')
+orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
+                            stringsAsFactors = FALSE)
+```
+
+
+## Quality Control and Cell Selections
+
+Get summary of the cells. The function "cellFilter" removes abnormal cells based on the read counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
+
+```{r cell_filter}
+nGene = colSums(orig > 0)
+hist(nGene)
+summaryX = cellFilter(X = orig, 
+                      genenames = orig_genenames$V2,
+                      minGene = 500, 
+                      maxGene = 2000, 
+                      maxMitoProp = 0.1)
+tmpX = summaryX$X
+nUMI = summaryX$nUMI
+nGene = summaryX$nGene
+percent.mito = summaryX$percent.mito
+det.rate = summaryX$det.rate
+dim(tmpX)
+```
+
+
+## Gene Filtering using normalized dispersion
+
+Next find variable genes using normalized dispersion. First, remove the genes where counts are 0 in all the cells, so that we use genes with at least one UMI count detected in at least one cell are used. Then genes are placed into a number of bins (user's choice in "bins" parameter in "dispersion" function, default is 20) based on their mean expression, and normalized dispersion is calculated as the absolute difference between dispersion and median dispersion of the expression mean, normalized by the median absolute deviation within each bin. (Grace Zheng et al., 2017)
+
+```{r basic_gene_filtering}
+X = tmpX[rowSums(tmpX) > 0, ]
+genenames = orig_genenames[rowSums(tmpX) > 0, ]
+
+#gene filter by dispersion
+disp = dispersion(X, bins = 20)
+plot(disp$z ~ disp$genemeans)
+select = which(abs(disp$z) > 1)
+X = X[select, ]
+genenames = genenames[select,]
+dim(X)
+```
+
+
+## UMI Normalization
+
+Normalize by the library size so that each cell has the same read count. First divide UMI counts by the total UMI counts in each cell, and then multiply with the median of the total UMI counts across cells. Note that entries with 0 are unaffected by the normalization and we can further clean the data based on the number of detected genes. 
+
+```{r normalize_library}
+X = UMI_normalize(as.matrix(X))
+```
+
+
+## Correct Detection Rate
+
+```{r log_transform_and_det_correction}
+#take log
+logX = as.matrix(log(X + .1))
+
+#check dependency
+out = correct_detection_rate(logX, det.rate)
+
+#regress out
+log.cpm = out$residual
+```
+
+## Dimension reduction on the data for visualization.
+
+```{r tsne}
+pc.base = irlba(log.cpm, 20)
+
+plot(pc.base$d, ylab = "singular values")
+
+tsne.base = Rtsne(pc.base$v[,1:10], dims=2, perplexity = 100, pca=FALSE)
+
+rm(pc.base)
+```
+
+Run SLSL on the log.cpm matrix.
+
+```{r slsl, cahce=TRUE}
+out.base = SLSL(log.cpm, log=FALSE,
+                filter = FALSE,
+                correct_detection_rate = FALSE,
+                klist = c(200,250,300),
+                sigmalist = c(1,1.5,2),
+                kernel_type = "pearson",
+                verbose=FALSE)
+tab = table(out.base$result)
+plot(tsne.base$Y, col=rainbow(length(tab))[out.base$result],
+     xlab = 'tsne1', ylab='tsne2', main="base SLSL", cex = 0.5)
+```
+
