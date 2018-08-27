@@ -66,7 +66,12 @@ nUMI = summaryX$nUMI
 nGene = summaryX$nGene
 percent.mito = summaryX$percent.mito
 det.rate = summaryX$det.rate
-dim(tmpX)
+
+par(mfrow = c(1,4))
+boxplot(nUMI, main='nUMI'); 
+boxplot(nGene, main='nGene'); 
+boxplot(percent.mito, main='percent'); 
+boxplot(det.rate, main='det')
 ```
 
 
@@ -80,20 +85,21 @@ genenames = orig_genenames[rowSums(tmpX) > 0, ]
 
 #gene filter by dispersion
 disp = dispersion(X, bins = 20)
-plot(disp$z ~ disp$genemeans)
+plot(disp$z ~ disp$genemeans,
+     xlab = "mean expression",
+     ylab = "normalized dispersion")
 select = which(abs(disp$z) > 1)
 X = X[select, ]
 genenames = genenames[select,]
-dim(X)
 ```
 
 
 ## UMI Normalization
 
-Normalize by the library size so that each cell has the same read count. First divide UMI counts by the total UMI counts in each cell, and then multiply with the median of the total UMI counts across cells. Note that entries with 0 are unaffected by the normalization and we can further clean the data based on the number of detected genes. 
+Use quantile-normalization to make the distribution of each cell the same. 
 
 ```{r normalize_library}
-X = UMI_normalize(as.matrix(X))
+X = quantile_normalize(as.matrix(X))
 ```
 
 
@@ -114,11 +120,8 @@ log.cpm = out$residual
 
 ```{r tsne}
 pc.base = irlba(log.cpm, 20)
-
 plot(pc.base$d, ylab = "singular values")
-
 tsne.base = Rtsne(pc.base$v[,1:10], dims=2, perplexity = 100, pca=FALSE)
-
 rm(pc.base)
 ```
 
