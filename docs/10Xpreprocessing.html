@@ -250,7 +250,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-26</p>
+<p><strong>Last updated:</strong> 2018-08-27</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -274,7 +274,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/98f3f77ca34ded3b5f32dabc8979a805db10ad93" target="_blank">98f3f77</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/1c1cfa81f4126f43fd625d6493d0da27ac1a962e" target="_blank">1c1cfa8</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -289,6 +289,7 @@ Untracked files:
     Untracked:  .DS_Store
     Untracked:  R/.DS_Store
     Untracked:  R/myheatmap.R
+    Untracked:  R/quantile_normalize.R
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
@@ -329,10 +330,14 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
+    Untracked:  man/quantile_normalize.Rd
+    Untracked:  normalized_out_1.Rdata
+    Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
     Untracked:  tutorial2.Rmd
 
 Unstaged changes:
+    Modified:   NAMESPACE
     Modified:   R/RcppExports.R
     Modified:   R/cellfilter.R
     Modified:   analysis/about.Rmd
@@ -340,6 +345,7 @@ Unstaged changes:
     Modified:   analysis/pipeline/.DS_Store
     Deleted:    analysis/reference.Rmd
     Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -368,6 +374,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/1c1cfa81f4126f43fd625d6493d0da27ac1a962e/analysis/10Xpreprocessing.Rmd" target="_blank">1c1cfa8</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-27
+</td>
+<td style="text-align:left;">
+wflow_publish(“analysis/10Xpreprocessing.Rmd”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/aa0b7e9c1c8b850ec8325571bd6fff64b0990c7d/docs/10Xpreprocessing.html" target="_blank">aa0b7e9</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-26
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -460,8 +500,13 @@ nUMI =<span class="st"> </span>summaryX<span class="op">$</span>nUMI
 nGene =<span class="st"> </span>summaryX<span class="op">$</span>nGene
 percent.mito =<span class="st"> </span>summaryX<span class="op">$</span>percent.mito
 det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
-<span class="kw">dim</span>(tmpX)</code></pre></div>
-<pre><code>[1] 32738  2471</code></pre>
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>))
+<span class="kw">boxplot</span>(nUMI, <span class="dt">main=</span><span class="st">&#39;nUMI&#39;</span>); 
+<span class="kw">boxplot</span>(nGene, <span class="dt">main=</span><span class="st">&#39;nGene&#39;</span>); 
+<span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;percent&#39;</span>); 
+<span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;det&#39;</span>)</code></pre></div>
+<p><img src="figure/10Xpreprocessing.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="gene-filtering-using-normalized-dispersion" class="section level2">
 <h2>Gene Filtering using normalized dispersion</h2>
@@ -471,7 +516,9 @@ genenames =<span class="st"> </span>orig_genenames[<span class="kw">rowSums</spa
 
 <span class="co">#gene filter by dispersion</span>
 disp =<span class="st"> </span><span class="kw">dispersion</span>(X, <span class="dt">bins =</span> <span class="dv">20</span>)
-<span class="kw">plot</span>(disp<span class="op">$</span>z <span class="op">~</span><span class="st"> </span>disp<span class="op">$</span>genemeans)</code></pre></div>
+<span class="kw">plot</span>(disp<span class="op">$</span>z <span class="op">~</span><span class="st"> </span>disp<span class="op">$</span>genemeans,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;normalized dispersion&quot;</span>)</code></pre></div>
 <p><img src="figure/10Xpreprocessing.Rmd/basic_gene_filtering-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of basic_gene_filtering-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -505,14 +552,12 @@ tk382
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select =<span class="st"> </span><span class="kw">which</span>(<span class="kw">abs</span>(disp<span class="op">$</span>z) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
 X =<span class="st"> </span>X[select, ]
-genenames =<span class="st"> </span>genenames[select,]
-<span class="kw">dim</span>(X)</code></pre></div>
-<pre><code>[1]  833 2471</code></pre>
+genenames =<span class="st"> </span>genenames[select,]</code></pre></div>
 </div>
 <div id="umi-normalization" class="section level2">
 <h2>UMI Normalization</h2>
-<p>Normalize by the library size so that each cell has the same read count. First divide UMI counts by the total UMI counts in each cell, and then multiply with the median of the total UMI counts across cells. Note that entries with 0 are unaffected by the normalization and we can further clean the data based on the number of detected genes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">UMI_normalize</span>(<span class="kw">as.matrix</span>(X))</code></pre></div>
+<p>Use quantile-normalization to make the distribution of each cell the same.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">quantile_normalize</span>(<span class="kw">as.matrix</span>(X))</code></pre></div>
 </div>
 <div id="correct-detection-rate" class="section level2">
 <h2>Correct Detection Rate</h2>
@@ -558,7 +603,6 @@ log.cpm =<span class="st"> </span>out<span class="op">$</span>residual</code></p
 <div id="dimension-reduction-on-the-data-for-visualization." class="section level2">
 <h2>Dimension reduction on the data for visualization.</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc.base =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
-
 <span class="kw">plot</span>(pc.base<span class="op">$</span>d, <span class="dt">ylab =</span> <span class="st">&quot;singular values&quot;</span>)</code></pre></div>
 <p><img src="figure/10Xpreprocessing.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tsne-1.png:</em></summary>
@@ -592,7 +636,6 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne.base =<span class="st"> </span><span class="kw">Rtsne</span>(pc.base<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">100</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
-
 <span class="kw">rm</span>(pc.base)</code></pre></div>
 <p>Run SLSL on the log.cpm matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out.base =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
