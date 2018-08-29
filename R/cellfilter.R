@@ -24,5 +24,5 @@ cellFilter = function(X, genenames, minGene = -Inf, maxGene = Inf, maxMitoProp =
   nGene = nGene[keep.cells]
   percent.mito = percent.mito[keep.cells]
   det.rate = Matrix::colSums(X>0) / nrow(X)
-  return(list(X=X, nUMI = nUMI, nGene = nGene, percent.mito = percent.mito, det.rate = det.rate))
+  return(list(X=X, keep.cells = keep.cells, nUMI = nUMI, nGene = nGene, percent.mito = percent.mito, det.rate = det.rate))
 }

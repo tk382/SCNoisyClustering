@@ -176,6 +176,9 @@ $(document).ready(function () {
   <a href="10Xpreprocessing.html">10X Pipeline</a>
 </li>
 <li>
+  <a href="Dropseqpreprocessing.html">Drop-seq Pipeline</a>
+</li>
+<li>
   <a href="license.html">License</a>
 </li>
       </ul>
@@ -207,7 +210,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-26</p>
+<p><strong>Last updated:</strong> 2018-08-29</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -216,7 +219,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/98f3f77ca34ded3b5f32dabc8979a805db10ad93" target="_blank">98f3f77</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/def66a3f9b7fa636a24f3e9a4b3a43a63f305d7f" target="_blank">def66a3</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -232,8 +235,16 @@ Untracked files:
     Untracked:  R/.DS_Store
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
+    Untracked:  analysis/Dropseqpreprocessing_cache/
+    Untracked:  analysis/SC3result_allgenes.Rdata
+    Untracked:  analysis/SC3result_selectedgenes.Rdata
+    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
+    Untracked:  analysis/biomarkers.R
     Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
+    Untracked:  analysis/dropseq_sc3_result.Rdata
+    Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pbmcheat.pdf
     Untracked:  analysis/pbmcref.pdf
@@ -271,17 +282,26 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
+    Untracked:  docs/figure/Dropseqpreprocessing.Rmd/
+    Untracked:  man/quantile_normalize.Rd
+    Untracked:  normalized_out_1.Rdata
+    Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
     Untracked:  tutorial2.Rmd
 
 Unstaged changes:
+    Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Modified:   R/cellfilter.R
     Modified:   analysis/about.Rmd
     Modified:   analysis/license.Rmd
     Modified:   analysis/pipeline/.DS_Store
-    Deleted:    analysis/reference.Rmd
     Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
+
+Staged changes:
+    Modified:   R/cellfilter.R
+    Modified:   analysis/10Xpreprocessing.Rmd
+    Deleted:    analysis/reference.Rmd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -310,6 +330,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/aa0b7e9c1c8b850ec8325571bd6fff64b0990c7d/docs/index.html" target="_blank">aa0b7e9</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-26
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html

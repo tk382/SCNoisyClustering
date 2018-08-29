@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Dropseq Pipeline</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Single Cell Clustering</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="10Xpreprocessing.html">10X Pipeline</a>
+</li>
+<li>
+  <a href="Dropseqpreprocessing.html">Drop-seq Pipeline</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tk382/SCNoisyClustering">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Dropseq Pipeline</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-08-29</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
+<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/def66a3f9b7fa636a24f3e9a4b3a43a63f305d7f" target="_blank">def66a3</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  R/.DS_Store
+    Untracked:  R/myheatmap.R
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/Dropseqpreprocessing_cache/
+    Untracked:  analysis/SC3result_allgenes.Rdata
+    Untracked:  analysis/SC3result_selectedgenes.Rdata
+    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
+    Untracked:  analysis/biomarkers.R
+    Untracked:  analysis/cellref.pdf
+    Untracked:  analysis/consistency_check.R
+    Untracked:  analysis/dropseq_sc3_result.Rdata
+    Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/marker-based.pdf
+    Untracked:  analysis/normalization_test.R
+    Untracked:  analysis/pbmcheat.pdf
+    Untracked:  analysis/pbmcref.pdf
+    Untracked:  analysis/pipeline/0_dropseq/
+    Untracked:  analysis/pipeline/1_10X/
+    Untracked:  analysis/pipeline/2_zeisel/
+    Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/writeup/cite.log
+    Untracked:  analysis/writeup/paper.aux
+    Untracked:  analysis/writeup/paper.bbl
+    Untracked:  analysis/writeup/paper.blg
+    Untracked:  analysis/writeup/paper.log
+    Untracked:  analysis/writeup/paper.out
+    Untracked:  analysis/writeup/paper.synctex.gz
+    Untracked:  analysis/writeup/paper.tex
+    Untracked:  analysis/writeup/writeup.aux
+    Untracked:  analysis/writeup/writeup.bbl
+    Untracked:  analysis/writeup/writeup.blg
+    Untracked:  analysis/writeup/writeup.dvi
+    Untracked:  analysis/writeup/writeup.log
+    Untracked:  analysis/writeup/writeup.out
+    Untracked:  analysis/writeup/writeup.synctex.gz
+    Untracked:  analysis/writeup/writeup.tex
+    Untracked:  analysis/writeup/writeup2.aux
+    Untracked:  analysis/writeup/writeup2.bbl
+    Untracked:  analysis/writeup/writeup2.blg
+    Untracked:  analysis/writeup/writeup2.log
+    Untracked:  analysis/writeup/writeup2.out
+    Untracked:  analysis/writeup/writeup2.pdf
+    Untracked:  analysis/writeup/writeup2.synctex.gz
+    Untracked:  analysis/writeup/writeup2.tex
+    Untracked:  analysis/writeup/writeup3.aux
+    Untracked:  analysis/writeup/writeup3.log
+    Untracked:  analysis/writeup/writeup3.out
+    Untracked:  analysis/writeup/writeup3.synctex.gz
+    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  data/unnecessary_in_building/
+    Untracked:  man/quantile_normalize.Rd
+    Untracked:  normalized_out_1.Rdata
+    Untracked:  not_normalized_out_1.Rdata
+    Untracked:  src/.gitignore
+    Untracked:  tutorial2.Rmd
+
+Unstaged changes:
+    Modified:   NAMESPACE
+    Modified:   R/RcppExports.R
+    Modified:   R/cellfilter.R
+    Modified:   analysis/10Xpreprocessing.Rmd
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/license.Rmd
+    Modified:   analysis/pipeline/.DS_Store
+    Deleted:    analysis/reference.Rmd
+    Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/def66a3f9b7fa636a24f3e9a4b3a43a63f305d7f/analysis/Dropseqpreprocessing.Rmd" target="_blank">def66a3</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+add dropseq
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<p>Read data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
+tmp =<span class="st"> </span><span class="kw">setDF</span>(<span class="kw">fread</span>(<span class="st">&#39;data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt&#39;</span>))
+orig =<span class="st"> </span>tmp[,<span class="op">-</span><span class="dv">1</span>]; <span class="kw">rownames</span>(orig) =<span class="st"> </span>tmp[,<span class="dv">1</span>]; <span class="kw">rm</span>(tmp)
+genenames =<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">strsplit</span>(<span class="kw">rownames</span>(orig), <span class="st">&quot;:&quot;</span>), <span class="cf">function</span>(x) x[<span class="dv">3</span>])
+<span class="kw">gc</span>(<span class="dt">verbose=</span><span class="ot">FALSE</span>);</code></pre></div>
+<pre><code>            used  (Mb) gc trigger   (Mb) limit (Mb)  max used  (Mb)
+Ncells   2790789 149.1    4252801  227.2         NA   4252801 227.2
+Vcells 106687645 814.0  155391250 1185.6      16384 107645675 821.3</code></pre>
+<div id="quality-control-and-cell-filter" class="section level2">
+<h2>Quality Control and Cell Filter</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
+<span class="kw">hist</span>(nGene)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summaryX =<span class="st"> </span><span class="kw">cellFilter</span>(<span class="dt">X =</span> orig, 
+                      <span class="dt">genenames =</span> genenames,
+                      <span class="dt">minGene =</span> <span class="dv">500</span>, 
+                      <span class="dt">maxGene =</span> <span class="dv">2000</span>, 
+                      <span class="dt">maxMitoProp =</span> <span class="fl">0.1</span>)
+tmpX =<span class="st"> </span>summaryX<span class="op">$</span>X
+nUMI =<span class="st"> </span>summaryX<span class="op">$</span>nUMI
+nGene =<span class="st"> </span>summaryX<span class="op">$</span>nGene
+percent.mito =<span class="st"> </span>summaryX<span class="op">$</span>percent.mito
+det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>))
+<span class="kw">boxplot</span>(nUMI, <span class="dt">main=</span><span class="st">&#39;nUMI&#39;</span>); 
+<span class="kw">boxplot</span>(nGene, <span class="dt">main=</span><span class="st">&#39;nGene&#39;</span>); 
+<span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitochondrial gene&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>)); 
+<span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gene-filtering" class="section level2">
+<h2>Gene filtering</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span>tmpX[<span class="kw">rowSums</span>(tmpX) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, ]
+genenames =<span class="st"> </span>genenames[<span class="kw">rowSums</span>(tmpX) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>]
+
+<span class="co">#gene filter by dispersion</span>
+disp =<span class="st"> </span><span class="kw">dispersion</span>(X, <span class="dt">bins =</span> <span class="dv">20</span>)
+<span class="kw">plot</span>(disp<span class="op">$</span>z <span class="op">~</span><span class="st"> </span>disp<span class="op">$</span>genemeans,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;normalized dispersion&quot;</span>)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/basic_gene_filtering-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select =<span class="st"> </span><span class="kw">which</span>(<span class="kw">abs</span>(disp<span class="op">$</span>z) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
+X =<span class="st"> </span>X[select, ]
+genenames =<span class="st"> </span>genenames[select]</code></pre></div>
+</div>
+<div id="umi-normalization" class="section level2">
+<h2>UMI Normalization</h2>
+<p>Use quantile-normalization to make the distribution of each cell the same.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nX =<span class="st"> </span><span class="kw">quantile_normalize</span>(<span class="kw">as.matrix</span>(X))</code></pre></div>
+</div>
+<div id="correct-detection-rate" class="section level2">
+<h2>Correct Detection Rate</h2>
+<p>After normalization, the linear relationship between the first PC and the detection rate usually disappears. The plots show that even without correction, the two are not heavily correlated. So we do not regress out the detection rate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#take log</span>
+logX =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">log</span>(nX <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))
+
+<span class="co">#check dependency</span>
+out =<span class="st"> </span><span class="kw">correct_detection_rate</span>(logX, det.rate)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/log_transform_and_det_correction-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#regress out</span>
+<span class="co"># log.cpm = out$residual</span>
+log.cpm =<span class="st"> </span>logX</code></pre></div>
+</div>
+<div id="dimension-reduction-on-the-data-for-visualization." class="section level2">
+<h2>Dimension reduction on the data for visualization.</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
+<span class="kw">plot</span>(pc<span class="op">$</span>d, <span class="dt">ylab =</span> <span class="st">&quot;singular values&quot;</span>)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(pc<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">100</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
+<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;tsne2&#39;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/tsne-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(pc)</code></pre></div>
+<p>Run SLSL on the log.cpm matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># out = SLSL(log.cpm, log=FALSE,</span>
+<span class="co">#                 filter = FALSE,</span>
+<span class="co">#                 correct_detection_rate = FALSE,</span>
+<span class="co">#                 klist = c(300,350,400),</span>
+<span class="co">#                 sigmalist = c(1,1.5,2),</span>
+<span class="co">#                 kernel_type = &quot;pearson&quot;,</span>
+<span class="co">#                 verbose=FALSE)</span>
+<span class="co"># save(out, file = &#39;dropseq_slsl1.Rdata&#39;)</span>
+<span class="kw">load</span>(<span class="st">&#39;analysis/dropseq_slsl1.Rdata&#39;</span>)
+tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">$</span>result)
+<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(tab))[out<span class="op">$</span>result],
+     <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SLSL&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Using SC3 with our gene and cell filter procedure and disabling the biology and filter feature of the function leads to the following result. Using SC3’s default methods lead to the error “distribution of gene expression in cells is too skewed towards 0”.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SingleCellExperiment)
+<span class="kw">library</span>(SC3)
+<span class="co"># colnames(X) = paste0(&quot;C&quot;, 1:ncol(X))</span>
+<span class="co"># sce = SingleCellExperiment(</span>
+<span class="co">#   assays = list(</span>
+<span class="co">#     counts = X,</span>
+<span class="co">#     logcounts = as.matrix(log(X+1))</span>
+<span class="co">#   ),</span>
+<span class="co">#   colData = colnames(X)</span>
+<span class="co"># )</span>
+<span class="co"># rowData(sce)$feature_symbol = genenames</span>
+<span class="co"># sce = sc3_prepare(sce, kmeans_nstart = 50)</span>
+<span class="co"># sce = sc3_estimate_k(sce)</span>
+<span class="co"># k = metadata(sce)$sc3$k_estimation</span>
+<span class="co"># N = ncol(X)</span>
+<span class="co"># sce = sc3(sce, ks=k, biology = FALSE, gene_filter=FALSE,</span>
+<span class="co">#          kmeans_nstart=10)</span>
+<span class="co"># col_data_selected = colData(sce)</span>
+<span class="co"># save(col_data_selected, file  = &quot;analysis/dropseq_sc3_result.Rdata&quot;)</span>
+<span class="kw">load</span>(<span class="st">&#39;analysis/dropseq_sc3_result.Rdata&#39;</span>)
+<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(k)[col_data_selected<span class="op">$</span>sc3_6_clusters],
+     <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SC3&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind =<span class="st"> </span><span class="kw">which</span>(genenames <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Chat&#39;</span>, <span class="st">&#39;Gad1&#39;</span>, <span class="st">&#39;Gad2&#39;</span>, <span class="st">&#39;Slc17a8&#39;</span>, <span class="st">&#39;Slc6a9&#39;</span>, <span class="st">&#39;Gjd2&#39;</span>))
+df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne<span class="op">$</span>Y[,<span class="dv">2</span>],
+                <span class="dt">Slc17a8 =</span> log.cpm[ind[<span class="dv">1</span>], ],
+                <span class="dt">Gad2 =</span> log.cpm[ind[<span class="dv">2</span>], ],
+                <span class="dt">Gad1 =</span> log.cpm[ind[<span class="dv">3</span>],]
+                )
+g1 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> Slc17a8)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;Slc17a8&#39;</span>)
+g2 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> Gad2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;Gad2&#39;</span>)
+g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> Gad1)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;Gad1&#39;</span>)
+<span class="kw">grid.arrange</span>(g1,g2,g3, <span class="dt">nrow=</span><span class="dv">1</span>)</code></pre></div>
+<p><img src="figure/Dropseqpreprocessing.Rmd/markers-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] bindrcpp_0.2.2          data.table_1.11.4      
+ [3] gridExtra_2.3           gdata_2.18.0           
+ [5] stargazer_5.2.2         abind_1.4-5            
+ [7] broom_0.5.0             gplots_3.0.1           
+ [9] diceR_0.5.1             Rtsne_0.13             
+[11] igraph_1.2.2            scatterplot3d_0.3-41   
+[13] pracma_2.1.4            fossil_0.3.7           
+[15] shapefiles_0.7          foreign_0.8-71         
+[17] maps_3.3.0              sp_1.3-1               
+[19] caret_6.0-80            lattice_0.20-35        
+[21] reshape_0.8.7           dplyr_0.7.6            
+[23] ggplot2_3.0.0           irlba_2.3.2            
+[25] Matrix_1.2-14           quadprog_1.5-5         
+[27] inline_0.3.15           matrixStats_0.54.0     
+[29] SCNoisyClustering_0.1.0
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-137              bitops_1.0-6             
+ [3] lubridate_1.7.4           dimRed_0.1.0             
+ [5] rprojroot_1.3-2           tools_3.5.1              
+ [7] backports_1.1.2           R6_2.2.2                 
+ [9] KernSmooth_2.23-15        rpart_4.1-13             
+[11] lazyeval_0.2.1            colorspace_1.3-2         
+[13] nnet_7.3-12               withr_2.1.2              
+[15] tidyselect_0.2.4          compiler_3.5.1           
+[17] git2r_0.23.0              labeling_0.3             
+[19] caTools_1.17.1.1          scales_0.5.0             
+[21] sfsmisc_1.1-2             DEoptimR_1.0-8           
+[23] robustbase_0.93-2         stringr_1.3.1            
+[25] digest_0.6.15             rmarkdown_1.10           
+[27] R.utils_2.6.0             pkgconfig_2.0.1          
+[29] htmltools_0.3.6           rlang_0.2.1              
+[31] ddalpha_1.3.4             bindr_0.1.1              
+[33] gtools_3.8.1              mclust_5.4.1             
+[35] ModelMetrics_1.1.0        R.oo_1.22.0              
+[37] magrittr_1.5              Rcpp_0.12.18             
+[39] munsell_0.5.0             R.methodsS3_1.7.1        
+[41] stringi_1.2.4             whisker_0.3-2            
+[43] yaml_2.2.0                MASS_7.3-50              
+[45] plyr_1.8.4                recipes_0.1.3            
+[47] grid_3.5.1                pls_2.6-0                
+[49] crayon_1.3.4              splines_3.5.1            
+[51] knitr_1.20                pillar_1.3.0             
+[53] reshape2_1.4.3            codetools_0.2-15         
+[55] stats4_3.5.1              CVST_0.2-2               
+[57] magic_1.5-8               glue_1.3.0               
+[59] evaluate_0.11             RcppArmadillo_0.8.600.0.0
+[61] foreach_1.4.4             gtable_0.2.0             
+[63] purrr_0.2.5               tidyr_0.8.1              
+[65] kernlab_0.9-26            assertthat_0.2.0         
+[67] DRR_0.0.3                 gower_0.1.2              
+[69] prodlim_2018.04.18        class_7.3-14             
+[71] survival_2.42-6           geometry_0.3-6           
+[73] timeDate_3043.102         RcppRoll_0.3.0           
+[75] tibble_1.4.2              iterators_1.0.10         
+[77] workflowr_1.1.1           lava_1.6.2               
+[79] ipred_0.9-6              </code></pre>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
