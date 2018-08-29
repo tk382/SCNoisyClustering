@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Smart-seq Example</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Single Cell Clustering</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="example_10x.html">10X Pipeline</a>
+</li>
+<li>
+  <a href="example_dropseq.html">Drop-seq Pipeline</a>
+</li>
+<li>
+  <a href="example_smartseq.html">Smart-seq Pipeline</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tk382/SCNoisyClustering">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Smart-seq Example</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-08-29</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
+<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/1d40cf581cffcd52546285774ca02a7149feae2e" target="_blank">1d40cf5</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  R/.DS_Store
+    Untracked:  R/myheatmap.R
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/Dropseqpreprocessing_cache/
+    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
+    Untracked:  analysis/biomarkers.R
+    Untracked:  analysis/cellref.pdf
+    Untracked:  analysis/consistency_check.R
+    Untracked:  analysis/dropseq_heatmap.pdf
+    Untracked:  analysis/dropseq_sc3_result.Rdata
+    Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/example_dropseq_cache/
+    Untracked:  analysis/figure/
+    Untracked:  analysis/marker-based.pdf
+    Untracked:  analysis/normalization_test.R
+    Untracked:  analysis/pbmcheat.pdf
+    Untracked:  analysis/pbmcref.pdf
+    Untracked:  analysis/pipeline/0_dropseq/
+    Untracked:  analysis/pipeline/1_10X/
+    Untracked:  analysis/pipeline/2_zeisel/
+    Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/writeup/cite.log
+    Untracked:  analysis/writeup/paper.aux
+    Untracked:  analysis/writeup/paper.bbl
+    Untracked:  analysis/writeup/paper.blg
+    Untracked:  analysis/writeup/paper.log
+    Untracked:  analysis/writeup/paper.out
+    Untracked:  analysis/writeup/paper.synctex.gz
+    Untracked:  analysis/writeup/paper.tex
+    Untracked:  analysis/writeup/writeup.aux
+    Untracked:  analysis/writeup/writeup.bbl
+    Untracked:  analysis/writeup/writeup.blg
+    Untracked:  analysis/writeup/writeup.dvi
+    Untracked:  analysis/writeup/writeup.log
+    Untracked:  analysis/writeup/writeup.out
+    Untracked:  analysis/writeup/writeup.synctex.gz
+    Untracked:  analysis/writeup/writeup.tex
+    Untracked:  analysis/writeup/writeup2.aux
+    Untracked:  analysis/writeup/writeup2.bbl
+    Untracked:  analysis/writeup/writeup2.blg
+    Untracked:  analysis/writeup/writeup2.log
+    Untracked:  analysis/writeup/writeup2.out
+    Untracked:  analysis/writeup/writeup2.pdf
+    Untracked:  analysis/writeup/writeup2.synctex.gz
+    Untracked:  analysis/writeup/writeup2.tex
+    Untracked:  analysis/writeup/writeup3.aux
+    Untracked:  analysis/writeup/writeup3.log
+    Untracked:  analysis/writeup/writeup3.out
+    Untracked:  analysis/writeup/writeup3.synctex.gz
+    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  data/unnecessary_in_building/
+    Untracked:  dropseq_heatmap.pdf
+    Untracked:  normalized_out_1.Rdata
+    Untracked:  not_normalized_out_1.Rdata
+    Untracked:  src/.gitignore
+    Untracked:  tutorial2.Rmd
+
+Unstaged changes:
+    Modified:   NAMESPACE
+    Modified:   R/RcppExports.R
+    Deleted:    analysis/10Xpreprocessing.Rmd
+    Deleted:    analysis/Dropseqpreprocessing.Rmd
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/example_10x.Rmd
+    Modified:   analysis/example_dropseq.Rmd
+    Modified:   analysis/license.Rmd
+    Modified:   analysis/pipeline/.DS_Store
+    Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<hr />
+<div id="read-data-yan" class="section level2">
+<h2>Read Data : Yan</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;data/Yan.rda&#39;</span>)
+X         =<span class="st"> </span><span class="kw">as.matrix</span>(yan)
+genenames =<span class="st"> </span><span class="kw">rownames</span>(X)
+truelabel =<span class="st"> </span><span class="kw">as.character</span>(ann<span class="op">$</span>cell_type1)
+numClust  =<span class="st"> </span><span class="dv">6</span>
+<span class="kw">rm</span>(ann, yan)</code></pre></div>
+</div>
+<div id="quality-control-and-cell-filter" class="section level2">
+<h2>Quality Control and Cell Filter</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span><span class="kw">colSums</span>(X <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
+<span class="kw">hist</span>(nGene)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summaryX =<span class="st"> </span><span class="kw">cellFilter</span>(<span class="dt">X =</span> X, 
+                      <span class="dt">genenames =</span> <span class="kw">rownames</span>(X),
+                      <span class="dt">minGene =</span> <span class="op">-</span><span class="ot">Inf</span>, 
+                      <span class="dt">maxGene =</span> <span class="ot">Inf</span>, 
+                      <span class="dt">maxMitoProp =</span> <span class="fl">0.1</span>)
+tmpX =<span class="st"> </span>summaryX<span class="op">$</span>X
+nUMI =<span class="st"> </span>summaryX<span class="op">$</span>nUMI
+nGene =<span class="st"> </span>summaryX<span class="op">$</span>nGene
+percent.mito =<span class="st"> </span>summaryX<span class="op">$</span>percent.mito
+det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>))
+<span class="kw">boxplot</span>(nUMI, <span class="dt">main=</span><span class="st">&#39;nUMI&#39;</span>); 
+<span class="kw">boxplot</span>(nGene, <span class="dt">main=</span><span class="st">&#39;nGene&#39;</span>); 
+<span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitochondrial gene&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>)); 
+<span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gene-filtering" class="section level2">
+<h2>Gene filtering</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span>X[<span class="kw">rowSums</span>(X) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, ]
+genenames =<span class="st"> </span>genenames[<span class="kw">rowSums</span>(X) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>]
+
+<span class="co">#gene filter by dispersion</span>
+disp =<span class="st"> </span><span class="kw">dispersion</span>(X, <span class="dt">bins =</span> <span class="dv">20</span>)
+<span class="kw">plot</span>(disp<span class="op">$</span>z <span class="op">~</span><span class="st"> </span>disp<span class="op">$</span>genemeans,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;normalized dispersion&quot;</span>)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/basic_gene_filtering-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select =<span class="st"> </span><span class="kw">which</span>(<span class="kw">abs</span>(disp<span class="op">$</span>z) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
+X =<span class="st"> </span>X[select, ]
+genenames =<span class="st"> </span>genenames[select]</code></pre></div>
+</div>
+<div id="umi-normalization" class="section level2">
+<h2>UMI Normalization</h2>
+<p>Use quantile-normalization to make the distribution of each cell the same.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nX =<span class="st"> </span><span class="kw">quantile_normalize</span>(<span class="kw">as.matrix</span>(X))</code></pre></div>
+</div>
+<div id="correct-detection-rate" class="section level2">
+<h2>Correct Detection Rate</h2>
+<p>After normalization, the linear relationship between the first PC and the detection rate usually disappears. The plots show that even without correction, the two are not heavily correlated. So we do not regress out the detection rate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#take log</span>
+logX =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">log</span>(nX <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))
+
+<span class="co">#check dependency</span>
+out =<span class="st"> </span><span class="kw">correct_detection_rate</span>(logX, det.rate)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/log_transform_and_det_correction-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#regress out</span>
+log.cpm =<span class="st"> </span>out<span class="op">$</span>residual
+<span class="co"># log.cpm = logX</span></code></pre></div>
+</div>
+<div id="dimension-reduction-and-visualization." class="section level2">
+<h2>Dimension reduction and visualization.</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
+<span class="kw">plot</span>(pc<span class="op">$</span>d, <span class="dt">ylab =</span> <span class="st">&quot;singular values&quot;</span>)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(pc<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">10</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
+df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne<span class="op">$</span>Y[,<span class="dv">2</span>], <span class="dt">truelabel =</span> truelabel)
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;True Label&quot;</span>)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/tsne-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(pc)</code></pre></div>
+</div>
+<div id="run-the-algorithm" class="section level2">
+<h2>Run the algorithm</h2>
+<p>Run SLSL on the log.cpm matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
+                <span class="dt">filter =</span> <span class="ot">FALSE</span>,
+                <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
+                <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>),
+                <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
+                <span class="dt">kernel_type =</span> <span class="st">&quot;combined&quot;</span>,
+                <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+df<span class="op">$</span>SLSL =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col=</span>SLSL))<span class="op">+</span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(out<span class="op">$</span>result, <span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(truelabel)))</code></pre></div>
+<pre><code>[1] 0.8681222</code></pre>
+</div>
+<div id="analyze" class="section level2">
+<h2>Analyze</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">S =<span class="st"> </span><span class="kw">as.matrix</span>(out<span class="op">$</span>S)
+palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;ivory&quot;</span>, <span class="st">&quot;pink&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;brown&quot;</span>))(<span class="dv">30</span>)
+labRow =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;&quot;</span>, <span class="dv">90</span>)
+labRow[<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">10</span>,<span class="dv">18</span>, <span class="dv">35</span>, <span class="dv">52</span>, <span class="dv">76</span>) ] =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;zygote&quot;</span>,
+                                    <span class="st">&quot;2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, <span class="st">&quot;16cell&quot;</span>,
+                                    <span class="st">&quot;blast&quot;</span>)
+<span class="kw">heatmap.2</span>(S,
+          <span class="dt">trace =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">col =</span> palette.gr.marray,
+          <span class="dt">Colv =</span> F,
+          <span class="dt">Rowv =</span> F, 
+          <span class="dt">rowsep =</span> <span class="kw">which</span>(truelabel[<span class="dv">1</span><span class="op">:</span><span class="dv">89</span>] <span class="op">!=</span><span class="st"> </span>truelabel[<span class="dv">2</span><span class="op">:</span><span class="dv">90</span>]),
+          <span class="dt">colsep =</span> <span class="kw">which</span>(truelabel[<span class="dv">1</span><span class="op">:</span><span class="dv">89</span>] <span class="op">!=</span><span class="st"> </span>truelabel[<span class="dv">2</span><span class="op">:</span><span class="dv">90</span>]),
+          <span class="dt">sepcolor =</span> <span class="st">&quot;gray&quot;</span>,
+          <span class="dt">dendrogram =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">labRow =</span> labRow,
+          <span class="dt">labCol =</span> labRow,
+          <span class="dt">key =</span> F,
+          <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="kw">min</span>(S), <span class="kw">max</span>(S),<span class="dt">length=</span><span class="dv">31</span>),
+          <span class="dt">cexRow =</span> <span class="dv">1</span>,
+          <span class="dt">symbreaks =</span> T)</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/analyze-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] bindrcpp_0.2.2          gridExtra_2.3          
+ [3] gdata_2.18.0            stargazer_5.2.2        
+ [5] abind_1.4-5             broom_0.5.0            
+ [7] gplots_3.0.1            diceR_0.5.1            
+ [9] Rtsne_0.13              igraph_1.2.2           
+[11] scatterplot3d_0.3-41    pracma_2.1.4           
+[13] fossil_0.3.7            shapefiles_0.7         
+[15] foreign_0.8-71          maps_3.3.0             
+[17] sp_1.3-1                caret_6.0-80           
+[19] lattice_0.20-35         reshape_0.8.7          
+[21] dplyr_0.7.6             ggplot2_3.0.0          
+[23] irlba_2.3.2             Matrix_1.2-14          
+[25] quadprog_1.5-5          inline_0.3.15          
+[27] matrixStats_0.54.0      SCNoisyClustering_0.1.0
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-137              bitops_1.0-6             
+ [3] lubridate_1.7.4           dimRed_0.1.0             
+ [5] rprojroot_1.3-2           tools_3.5.1              
+ [7] backports_1.1.2           R6_2.2.2                 
+ [9] KernSmooth_2.23-15        rpart_4.1-13             
+[11] lazyeval_0.2.1            colorspace_1.3-2         
+[13] nnet_7.3-12               withr_2.1.2              
+[15] tidyselect_0.2.4          compiler_3.5.1           
+[17] git2r_0.23.0              labeling_0.3             
+[19] caTools_1.17.1.1          scales_0.5.0             
+[21] sfsmisc_1.1-2             DEoptimR_1.0-8           
+[23] robustbase_0.93-2         stringr_1.3.1            
+[25] digest_0.6.15             rmarkdown_1.10           
+[27] R.utils_2.6.0             pkgconfig_2.0.1          
+[29] htmltools_0.3.6           rlang_0.2.1              
+[31] ddalpha_1.3.4             bindr_0.1.1              
+[33] gtools_3.8.1              mclust_5.4.1             
+[35] ModelMetrics_1.1.0        R.oo_1.22.0              
+[37] magrittr_1.5              Rcpp_0.12.18             
+[39] munsell_0.5.0             R.methodsS3_1.7.1        
+[41] stringi_1.2.4             whisker_0.3-2            
+[43] yaml_2.2.0                MASS_7.3-50              
+[45] plyr_1.8.4                recipes_0.1.3            
+[47] grid_3.5.1                pls_2.6-0                
+[49] crayon_1.3.4              splines_3.5.1            
+[51] knitr_1.20                pillar_1.3.0             
+[53] reshape2_1.4.3            codetools_0.2-15         
+[55] stats4_3.5.1              CVST_0.2-2               
+[57] magic_1.5-8               glue_1.3.0               
+[59] evaluate_0.11             RcppArmadillo_0.8.600.0.0
+[61] data.table_1.11.4         foreach_1.4.4            
+[63] gtable_0.2.0              purrr_0.2.5              
+[65] tidyr_0.8.1               kernlab_0.9-26           
+[67] assertthat_0.2.0          DRR_0.0.3                
+[69] gower_0.1.2               prodlim_2018.04.18       
+[71] class_7.3-14              survival_2.42-6          
+[73] geometry_0.3-6            timeDate_3043.102        
+[75] RcppRoll_0.3.0            tibble_1.4.2             
+[77] iterators_1.0.10          workflowr_1.1.1          
+[79] lava_1.6.2                ipred_0.9-6              </code></pre>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
