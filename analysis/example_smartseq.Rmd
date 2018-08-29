@@ -1,0 +1,199 @@
+---
+title: "Smart-seq Example"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: true
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, comment = NA)
+library(SCNoisyClustering)
+library(matrixStats)
+library(inline)
+library(parallel)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(scatterplot3d)
+library(igraph) #for nmi
+library(Rtsne)
+library(diceR)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(gdata)
+library(gridExtra)
+R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
+heat = function(S){
+  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() + scale_fill_gradient()
+}
+```
+
+## Read Data : Yan
+
+```{r read data}
+load('data/Yan.rda')
+X         = as.matrix(yan)
+genenames = rownames(X)
+truelabel = as.character(ann$cell_type1)
+numClust  = 6
+rm(ann, yan)
+```
+
+
+## Quality Control and Cell Filter
+
+```{r cell_filter}
+nGene = colSums(X > 0)
+hist(nGene)
+summaryX = cellFilter(X = X, 
+                      genenames = rownames(X),
+                      minGene = -Inf, 
+                      maxGene = Inf, 
+                      maxMitoProp = 0.1)
+tmpX = summaryX$X
+nUMI = summaryX$nUMI
+nGene = summaryX$nGene
+percent.mito = summaryX$percent.mito
+det.rate = summaryX$det.rate
+
+par(mfrow = c(1,4))
+boxplot(nUMI, main='nUMI'); 
+boxplot(nGene, main='nGene'); 
+boxplot(percent.mito, main='mitochondrial gene', ylim=c(0,0.5)); 
+boxplot(det.rate, main='detection rate', ylim=c(0,0.1))
+```
+
+## Gene filtering
+
+```{r basic_gene_filtering}
+X = X[rowSums(X) > 0, ]
+genenames = genenames[rowSums(X) > 0]
+
+#gene filter by dispersion
+disp = dispersion(X, bins = 20)
+plot(disp$z ~ disp$genemeans,
+     xlab = "mean expression",
+     ylab = "normalized dispersion")
+select = which(abs(disp$z) > 1)
+X = X[select, ]
+genenames = genenames[select]
+```
+
+
+## UMI Normalization
+
+Use quantile-normalization to make the distribution of each cell the same. 
+
+```{r normalize_library}
+nX = quantile_normalize(as.matrix(X))
+```
+
+
+## Correct Detection Rate
+
+After normalization, the linear relationship between the first PC and the detection rate usually disappears. The plots show that even without correction, the two are not heavily correlated. So we do not regress out the detection rate. 
+
+```{r log_transform_and_det_correction}
+#take log
+logX = as.matrix(log(nX + 1))
+
+#check dependency
+out = correct_detection_rate(logX, det.rate)
+
+#regress out
+log.cpm = out$residual
+# log.cpm = logX
+```
+
+## Dimension reduction and visualization.
+
+```{r tsne}
+pc = irlba(log.cpm, 20)
+plot(pc$d, ylab = "singular values")
+tsne = Rtsne(pc$v[,1:15], dims=2, perplexity = 10, pca=FALSE)
+df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2], truelabel = truelabel)
+ggplot(df, aes(x=tsne1, y=tsne2, col = truelabel)) + geom_point()+
+  ggtitle("True Label")
+rm(pc)
+```
+
+## Run the algorithm
+
+Run SLSL on the log.cpm matrix.
+
+```{r slsl}
+out = SLSL(log.cpm, log=FALSE,
+                filter = FALSE,
+                correct_detection_rate = FALSE,
+                klist = c(5,10,15),
+                sigmalist = c(1,1.5,2),
+                kernel_type = "combined",
+                verbose=FALSE)
+df$SLSL = as.factor(out$result)
+ggplot(df, aes(x=tsne1, y=tsne2, col=SLSL))+geom_point()
+adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
+```
+
+## Analyze
+
+```{r analyze}
+S = as.matrix(out$S)
+palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(30)
+labRow = rep("", 90)
+labRow[c(3, 10,18, 35, 52, 76) ] = c("zygote",
+                                    "2cell", "4cell", "8cell", "16cell",
+                                    "blast")
+heatmap.2(S,
+          trace = "none",
+          col = palette.gr.marray,
+          Colv = F,
+          Rowv = F, 
+          rowsep = which(truelabel[1:89] != truelabel[2:90]),
+          colsep = which(truelabel[1:89] != truelabel[2:90]),
+          sepcolor = "gray",
+          dendrogram = "none",
+          labRow = labRow,
+          labCol = labRow,
+          key = F,
+          breaks = seq(min(S), max(S),length=31),
+          cexRow = 1,
+          symbreaks = T)
+```
+```{r sc3, warning = FALSE, echo = FALSE, eval = FALSE}
+library(SingleCellExperiment)
+library(SC3)
+X         = as.matrix(yan)
+colnames(X) = paste0("C", 1:ncol(X))
+sce = SingleCellExperiment(
+  assays = list(
+    counts = X,
+    logcounts = as.matrix(log(X+1))
+  ),
+  colData = colnames(X)
+)
+rowData(sce)$feature_symbol = rownames(X)
+sce = sc3_prepare(sce, kmeans_nstart = 50)
+sce = sc3_estimate_k(sce)
+k = metadata(sce)$sc3$k_estimation
+N = ncol(X)
+sce = sc3(sce, ks=k, biology = TRUE, gene_filter=TRUE,
+         kmeans_nstart=10)
+col_data_selected = colData(sce)
+df$sc3 = col_data_selected$sc3_6_clusters
+ggplot(df, aes(x=tsne1, y=tsne2, col=sc3))+geom_point()
+adj.rand.index(as.numeric(as.factor(truelabel)), col_data_selected$sc3_6_clusters)
+```
