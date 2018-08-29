@@ -10,9 +10,9 @@ navbar:
     - text: "About"
       href: about.html
     - text: "10X Pipeline"
-      href: 10Xpreprocessing.html
+      href: example_10x.html
     - text: "Drop-seq Pipeline"
-      href: Dropseqpreprocessing.html
+      href: example_dropseq.html
     - text: "License"
       href: license.html
   right:
