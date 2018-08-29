@@ -11,6 +11,8 @@ navbar:
       href: about.html
     - text: "10X Pipeline"
       href: 10Xpreprocessing.html
+    - text: "Drop-seq Pipeline"
+      href: Dropseqpreprocessing.html
     - text: "License"
       href: license.html
   right:
