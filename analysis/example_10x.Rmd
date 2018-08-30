@@ -38,6 +38,8 @@ library(SCNoisyClustering)
 library(SingleCellExperiment)
 library(SC3)
 library(gridExtra)
+R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
 set.seed(1)
 ```
 
@@ -119,8 +121,7 @@ log.cpm = logX #not correct the detection rate (no strict linear pattern)
 ```
 
 
-## Dimension reduction on the data for visualization.
-
+## Dimension reduction and visualization
 ```{r tsne}
 pc.base = irlba(log.cpm, 20)
 tsne.base = Rtsne(pc.base$v[,1:10], dims=2, perplexity = 100, pca=FALSE)
@@ -131,34 +132,32 @@ plot(tsne.base$Y, cex=0.5)
 ## Run SLSL
 
 ```{r slsl, cahce=TRUE}
-out.base = SLSL(log.cpm, log=FALSE,
-                filter = FALSE,
-                correct_detection_rate = FALSE,
-                klist = c(200,250,300),
-                sigmalist = c(1,1.5,2),
-                kernel_type = "pearson",
-                verbose=FALSE)
-tab = table(out.base$result)
-plot(tsne.base$Y, col=rainbow(7)[out.base$result],
+out = SLSL(log.cpm, log=FALSE,
+           filter = FALSE,
+           correct_detection_rate = FALSE,
+           klist = c(200,250,300),
+           sigmalist = c(1,1.5,2),
+           kernel_type = "pearson",
+           verbose=FALSE)
+tab = table(out$result)
+plot(tsne.base$Y, col=rainbow(7)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
-S = as.matrix(out.base$S)
+S = as.matrix(out$S)
 ind = sort(out$result, index.return=TRUE)$ix
-palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(30)
-pdf("10x_heatmap.pdf", width=7, height=7)
-heatmap.2(S[ind,ind],
+palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(50)
+heatmap.2(S[ind, ind],
           trace = "none",
           col = palette.gr.marray,
           Colv = F,
           Rowv = F, 
           sepcolor = "gray",
           dendrogram = "none",
-          labRow = "none",
-          labCol = "none",
+          labRow = NA,
+          labCol = NA,
           key = F,
-          breaks = seq(min(S), max(S),length=31),
+          breaks = seq(min(S), max(S),length=51),
           cexRow = 1,
           symbreaks = T)
-dev.off()
 ```
 
 
