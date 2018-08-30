@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
 <script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
@@ -195,6 +198,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -220,6 +318,9 @@ $(document).ready(function () {
 </li>
 <li>
   <a href="example_dropseq.html">Drop-seq Pipeline</a>
+</li>
+<li>
+  <a href="example_smartseq.html">Smart-seq Pipeline</a>
 </li>
 <li>
   <a href="license.html">License</a>
@@ -253,7 +354,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-29</p>
+<p><strong>Last updated:</strong> 2018-08-30</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -277,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/92037024436614454b0bb0c2e47a73a6cae3d1c6" target="_blank">9203702</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fa8da961c77d65ecc65e8e3bd353852aad53acfd" target="_blank">fa8da96</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -293,15 +394,14 @@ Untracked files:
     Untracked:  R/.DS_Store
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
-    Untracked:  analysis/Dropseqpreprocessing_cache/
+    Untracked:  analysis/10x_heatmap.pdf
     Untracked:  analysis/SLSL_marker_based_logcpm.pdf
     Untracked:  analysis/biomarkers.R
     Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
+    Untracked:  analysis/dropseq_heatmap.pdf
     Untracked:  analysis/dropseq_sc3_result.Rdata
     Untracked:  analysis/dropseq_slsl1.Rdata
-    Untracked:  analysis/example_smartseq.Rmd
-    Untracked:  analysis/figure/
     Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pbmcheat.pdf
@@ -340,6 +440,7 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
+    Untracked:  dropseq_heatmap.pdf
     Untracked:  normalized_out_1.Rdata
     Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
@@ -348,10 +449,7 @@ Untracked files:
 Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Deleted:    analysis/10Xpreprocessing.Rmd
-    Deleted:    analysis/Dropseqpreprocessing.Rmd
-    Modified:   analysis/about.Rmd
-    Modified:   analysis/license.Rmd
+    Modified:   analysis/example_dropseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
@@ -360,6 +458,67 @@ Unstaged changes:
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
 </li>
 </ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/64d04da670898f7d09b9c7d1f17ed78359fb9b33/analysis/example_10x.Rmd" target="_blank">64d04da</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+add toc
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/example_10x.html" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
 <hr />
 <div id="read-data-pbmc-27k" class="section level2">
 <h2>Read Data : PBMC 27K</h2>
@@ -374,6 +533,36 @@ orig_genenames =<span class="st"> </span><span class="kw">read.table</span>(<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
 <span class="kw">hist</span>(nGene)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of cell_filter-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/cell_filter-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summaryX =<span class="st"> </span><span class="kw">cellFilter</span>(<span class="dt">X =</span> orig, 
                       <span class="dt">genenames =</span> orig_genenames<span class="op">$</span>V2,
                       <span class="dt">minGene =</span> <span class="dv">500</span>, 
@@ -391,9 +580,39 @@ det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
 <span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitogene prop&#39;</span>); 
 <span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of cell_filter-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/cell_filter-2.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
-<div id="gene-filtering-using-normalized-dispersion" class="section level2">
-<h2>Gene Filtering using normalized dispersion</h2>
+<div id="gene-filtering" class="section level2">
+<h2>Gene Filtering</h2>
 <p>Next find variable genes using normalized dispersion. First, remove the genes where counts are 0 in all the cells, so that we use genes with at least one UMI count detected in at least one cell are used. Then genes are placed into a number of bins (user’s choice in “bins” parameter in “dispersion” function, default is 20) based on their mean expression, and normalized dispersion is calculated as the absolute difference between dispersion and median dispersion of the expression mean, normalized by the median absolute deviation within each bin. (Grace Zheng et al., 2017)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span>tmpX[Matrix<span class="op">::</span><span class="kw">rowSums</span>(tmpX) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, ]
 genenames =<span class="st"> </span>orig_genenames[Matrix<span class="op">::</span><span class="kw">rowSums</span>(tmpX) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, ]
@@ -402,6 +621,36 @@ disp =<span class="st"> </span><span class="kw">dispersion</span>(X, <span class
      <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
      <span class="dt">ylab =</span> <span class="st">&quot;normalized dispersion&quot;</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/basic_gene_filtering-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of basic_gene_filtering-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/basic_gene_filtering-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select =<span class="st"> </span><span class="kw">which</span>(<span class="kw">abs</span>(disp<span class="op">$</span>z) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
 X =<span class="st"> </span>X[select, ]
 genenames =<span class="st"> </span>genenames[select,]</code></pre></div>
@@ -419,60 +668,144 @@ logX =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw
 <span class="co">#check dependency</span>
 out =<span class="st"> </span><span class="kw">correct_detection_rate</span>(logX, det.rate)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/log_transform_and_det_correction-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of log_transform_and_det_correction-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/log_transform_and_det_correction-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#regress out</span>
 log.cpm =<span class="st"> </span>logX <span class="co">#not correct the detection rate (no strict linear pattern)</span>
 <span class="co">#if there is a pattern, log.cpm = out$residual</span></code></pre></div>
 </div>
-<div id="dimension-reduction-on-the-data-for-visualization." class="section level2">
-<h2>Dimension reduction on the data for visualization.</h2>
+<div id="dimension-reduction-and-visualization" class="section level2">
+<h2>Dimension reduction and visualization</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc.base =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
 tsne.base =<span class="st"> </span><span class="kw">Rtsne</span>(pc.base<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">100</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
 <span class="kw">rm</span>(pc.base)
 <span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">cex=</span><span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Run SLSL on the log.cpm matrix.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out.base =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
-                <span class="dt">filter =</span> <span class="ot">FALSE</span>,
-                <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
-                <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">250</span>,<span class="dv">300</span>),
-                <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
-                <span class="dt">kernel_type =</span> <span class="st">&quot;pearson&quot;</span>,
-                <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-tab =<span class="st"> </span><span class="kw">table</span>(out.base<span class="op">$</span>result)
-<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">7</span>)[out.base<span class="op">$</span>result],
+<details> <summary><em>Expand here to see past versions of tsne-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/tsne-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+</div>
+<div id="run-slsl" class="section level2">
+<h2>Run SLSL</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
+           <span class="dt">filter =</span> <span class="ot">FALSE</span>,
+           <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
+           <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">250</span>,<span class="dv">300</span>),
+           <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
+           <span class="dt">kernel_type =</span> <span class="st">&quot;pearson&quot;</span>,
+           <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">$</span>result)
+<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">7</span>)[out<span class="op">$</span>result],
      <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SLSL result&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="compare-with-sc3" class="section level3">
-<h3>Compare with SC3</h3>
-<p>The default settings of SC3 leads to error “Distribution of gene expression in cells is too skewed towards 0”, so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SingleCellExperiment)
-<span class="kw">library</span>(SC3)
-<span class="kw">rownames</span>(X) =<span class="st"> </span>genenames[,<span class="dv">2</span>]
-<span class="kw">colnames</span>(X) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;C&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(X))
-tmpX =<span class="st"> </span><span class="kw">as.matrix</span>(X)
-sce =<span class="st"> </span><span class="kw">SingleCellExperiment</span>(
-  <span class="dt">assays =</span> <span class="kw">list</span>(
-    <span class="dt">counts =</span> tmpX,
-    <span class="dt">logcounts =</span> <span class="kw">as.matrix</span>(<span class="kw">log</span>(X<span class="op">+</span><span class="dv">1</span>))
-  ),
-  <span class="dt">colData =</span> <span class="kw">colnames</span>(tmpX)
-)
-<span class="kw">rowData</span>(sce)<span class="op">$</span>feature_symbol =<span class="st"> </span><span class="kw">rownames</span>(tmpX)
-sce =<span class="st"> </span><span class="kw">sc3_prepare</span>(sce, <span class="dt">kmeans_nstart =</span> <span class="dv">50</span>)
-sce =<span class="st"> </span><span class="kw">sc3_estimate_k</span>(sce)
-N =<span class="st"> </span><span class="kw">ncol</span>(tmpX)
-k =<span class="st"> </span><span class="kw">metadata</span>(sce)<span class="op">$</span>k_estimation
-sce =<span class="st"> </span><span class="kw">sc3</span>(sce, <span class="dt">ks=</span><span class="dv">9</span>, <span class="dt">biology =</span> <span class="ot">FALSE</span>, <span class="dt">gene_filter=</span><span class="ot">FALSE</span>,
-         <span class="dt">kmeans_nstart=</span><span class="dv">50</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_data_selected =<span class="st"> </span><span class="kw">colData</span>(sce)
-<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">10</span>)[col_data_selected<span class="op">$</span>sc3_9_clusters], <span class="dt">cex=</span><span class="fl">0.5</span>,
-     <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;tsne1&#39;</span>, <span class="dt">main=</span><span class="st">&#39;SC3 result&#39;</span>)</code></pre></div>
-<p><img src="figure/example_10x.Rmd/sc3_2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of slsl-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/slsl-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">S =<span class="st"> </span><span class="kw">as.matrix</span>(out<span class="op">$</span>S)
+ind =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
+palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;ivory&quot;</span>, <span class="st">&quot;pink&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;brown&quot;</span>))(<span class="dv">50</span>)
+<span class="kw">heatmap.2</span>(S[ind, ind],
+          <span class="dt">trace =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">col =</span> palette.gr.marray,
+          <span class="dt">Colv =</span> F,
+          <span class="dt">Rowv =</span> F, 
+          <span class="dt">sepcolor =</span> <span class="st">&quot;gray&quot;</span>,
+          <span class="dt">dendrogram =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">labRow =</span> <span class="ot">NA</span>,
+          <span class="dt">labCol =</span> <span class="ot">NA</span>,
+          <span class="dt">key =</span> F,
+          <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="kw">min</span>(S), <span class="kw">max</span>(S),<span class="dt">length=</span><span class="dv">51</span>),
+          <span class="dt">cexRow =</span> <span class="dv">1</span>,
+          <span class="dt">symbreaks =</span> T)</code></pre></div>
+<p><img src="figure/example_10x.Rmd/slsl-2.png" width="672" style="display: block; margin: auto;" /></p>
+<!-- ## Benchmark SC3 -->
+<!-- The default settings of SC3 leads to error "Distribution of gene expression in cells is too skewed towards 0", so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method.  -->
 </div>
-</div>
-<div id="biomarkers-from-log.cpm-matrix-in-our-pre-processing." class="section level2">
-<h2>Biomarkers from log.cpm matrix in our pre-processing.</h2>
-<p>We use Kolgomorov-smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals.</p>
+<div id="important-features" class="section level2">
+<h2>Important Features</h2>
+<p>We use Kolgomorov-Smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gene_selected_names =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;S100A4&#39;</span>,<span class="st">&#39;B2M&#39;</span>,<span class="st">&#39;LGALS1&#39;</span>,<span class="st">&#39;S100A9&#39;</span>,<span class="st">&#39;S100A8&#39;</span>, <span class="st">&#39;LST1&#39;</span>)
 gene_selected =<span class="st"> </span><span class="kw">match</span>(gene_selected_names, genenames<span class="op">$</span>V2)
 ind =<span class="st"> </span>gene_selected
@@ -498,9 +831,39 @@ g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw"
 
 <span class="kw">grid.arrange</span>(g1,g2,g3, g4,g5,g6,<span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/markers1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of markers1-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/markers1-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
-<div id="compare-with-results-using-known-markers." class="section level2">
-<h2>Compare with results using known markers.</h2>
+<div id="known-markers" class="section level2">
+<h2>Known Markers</h2>
 <p>I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat’s tutorial or the original 10X paper about PBMC cells Zheng et al.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#list comes from 10X paper and Seurat</span>
 ind =<span class="st"> </span><span class="kw">which</span>(genenames<span class="op">$</span>V2 <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CD3D&#39;</span>, <span class="st">&#39;CD8A&#39;</span>, <span class="st">&#39;NKG7&#39;</span>, <span class="st">&#39;FCER1A&#39;</span>, <span class="st">&#39;CD16&#39;</span>, <span class="st">&#39;S100A8&#39;</span>,
@@ -531,6 +894,36 @@ g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw"
 <span class="kw">grid.arrange</span>(g1,g2,g3,g4,
              g5,g6, <span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/biomarkers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of biomarkers-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/biomarkers-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
@@ -651,6 +1044,8 @@ footer is added to webpages before the MathJax javascript. -->
 <hr>
 
 
+</div>
+</div>
 
 </div>
 

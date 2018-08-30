@@ -173,7 +173,13 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="10Xpreprocessing.html">10X Pipeline</a>
+  <a href="example_10x.html">10X Pipeline</a>
+</li>
+<li>
+  <a href="example_dropseq.html">Drop-seq Pipeline</a>
+</li>
+<li>
+  <a href="example_smartseq.html">Smart-seq Pipeline</a>
 </li>
 <li>
   <a href="license.html">License</a>
@@ -207,7 +213,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-26</p>
+<p><strong>Last updated:</strong> 2018-08-30</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -216,7 +222,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/b3ba9858cca3cdc7d907a72e6f2cf23a477a982a" target="_blank">b3ba985</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fa8da961c77d65ecc65e8e3bd353852aad53acfd" target="_blank">fa8da96</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -232,8 +238,15 @@ Untracked files:
     Untracked:  R/.DS_Store
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
+    Untracked:  analysis/10x_heatmap.pdf
+    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
+    Untracked:  analysis/biomarkers.R
     Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
+    Untracked:  analysis/dropseq_heatmap.pdf
+    Untracked:  analysis/dropseq_sc3_result.Rdata
+    Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pbmcheat.pdf
     Untracked:  analysis/pbmcref.pdf
@@ -271,15 +284,20 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
+    Untracked:  dropseq_heatmap.pdf
+    Untracked:  normalized_out_1.Rdata
+    Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
     Untracked:  tutorial2.Rmd
 
 Unstaged changes:
+    Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Modified:   R/cellfilter.R
+    Modified:   analysis/example_10x.Rmd
+    Modified:   analysis/example_dropseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
-    Deleted:    analysis/reference.Rmd
     Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -308,6 +326,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/64d04da670898f7d09b9c7d1f17ed78359fb9b33/analysis/about.Rmd" target="_blank">64d04da</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+add toc
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/2a3ec972fc8aaf9905fdd0df71f29703a7b11e69/docs/about.html" target="_blank">2a3ec97</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-26
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
