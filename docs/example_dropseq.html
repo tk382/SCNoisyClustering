@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
 <script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
@@ -195,6 +198,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -220,6 +318,9 @@ $(document).ready(function () {
 </li>
 <li>
   <a href="example_dropseq.html">Drop-seq Pipeline</a>
+</li>
+<li>
+  <a href="smart_dropseq.html">Smart-seq Pipeline</a>
 </li>
 <li>
   <a href="license.html">License</a>
@@ -257,8 +358,7 @@ div.section {
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -277,7 +377,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/92037024436614454b0bb0c2e47a73a6cae3d1c6" target="_blank">9203702</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/f6c8902df47149f56aa525b71928061bfd3a76d5" target="_blank">f6c8902</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -300,7 +400,9 @@ Untracked files:
     Untracked:  analysis/consistency_check.R
     Untracked:  analysis/dropseq_sc3_result.Rdata
     Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/example_dropseq_cache/
     Untracked:  analysis/example_smartseq.Rmd
+    Untracked:  analysis/figure/
     Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pbmcheat.pdf
@@ -339,7 +441,6 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
-    Untracked:  docs/figure/example_10x.Rmd/
     Untracked:  normalized_out_1.Rdata
     Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
@@ -350,7 +451,10 @@ Unstaged changes:
     Modified:   R/RcppExports.R
     Deleted:    analysis/10Xpreprocessing.Rmd
     Deleted:    analysis/Dropseqpreprocessing.Rmd
+    Modified:   analysis/_site.yml
     Modified:   analysis/about.Rmd
+    Modified:   analysis/example_10x.Rmd
+    Modified:   analysis/example_dropseq.Rmd
     Modified:   analysis/license.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
@@ -360,6 +464,50 @@ Unstaged changes:
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
 </li>
 </ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/example_dropseq.html" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
 <hr />
 <p>Read data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
@@ -367,14 +515,44 @@ tmp =<span class="st"> </span><span class="kw">setDF</span>(<span class="kw">fre
 orig =<span class="st"> </span>tmp[,<span class="op">-</span><span class="dv">1</span>]; <span class="kw">rownames</span>(orig) =<span class="st"> </span>tmp[,<span class="dv">1</span>]; <span class="kw">rm</span>(tmp)
 genenames =<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">strsplit</span>(<span class="kw">rownames</span>(orig), <span class="st">&quot;:&quot;</span>), <span class="cf">function</span>(x) x[<span class="dv">3</span>])
 <span class="kw">gc</span>(<span class="dt">verbose=</span><span class="ot">FALSE</span>);</code></pre></div>
-<pre><code>            used (Mb) gc trigger   (Mb) limit (Mb)  max used  (Mb)
-Ncells   2789945  149    4252298  227.1         NA   4252298 227.1
-Vcells 106685452  814  155388100 1185.6      16384 107643487 821.3</code></pre>
+<pre><code>            used  (Mb) gc trigger   (Mb) limit (Mb)  max used  (Mb)
+Ncells   2792253 149.2    4257502  227.4         NA   4257502 227.4
+Vcells 106691790 814.0  155381158 1185.5      16384 107648931 821.3</code></pre>
 <div id="quality-control-and-cell-filter" class="section level2">
 <h2>Quality Control and Cell Filter</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
 <span class="kw">hist</span>(nGene)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of cell_filter-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/cell_filter-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summaryX =<span class="st"> </span><span class="kw">cellFilter</span>(<span class="dt">X =</span> orig, 
                       <span class="dt">genenames =</span> genenames,
                       <span class="dt">minGene =</span> <span class="dv">500</span>, 
@@ -392,6 +570,36 @@ det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
 <span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitochondrial gene&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>)); 
 <span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of cell_filter-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/cell_filter-2.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="gene-filtering" class="section level2">
 <h2>Gene filtering</h2>
@@ -404,6 +612,36 @@ disp =<span class="st"> </span><span class="kw">dispersion</span>(X, <span class
      <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
      <span class="dt">ylab =</span> <span class="st">&quot;normalized dispersion&quot;</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/basic_gene_filtering-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of basic_gene_filtering-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/basic_gene_filtering-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select =<span class="st"> </span><span class="kw">which</span>(<span class="kw">abs</span>(disp<span class="op">$</span>z) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
 X =<span class="st"> </span>X[select, ]
 genenames =<span class="st"> </span>genenames[select]</code></pre></div>
@@ -422,6 +660,36 @@ logX =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw
 <span class="co">#check dependency</span>
 out =<span class="st"> </span><span class="kw">correct_detection_rate</span>(logX, det.rate)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/log_transform_and_det_correction-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of log_transform_and_det_correction-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/log_transform_and_det_correction-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#regress out</span>
 <span class="co"># log.cpm = out$residual</span>
 log.cpm =<span class="st"> </span>logX</code></pre></div>
@@ -431,9 +699,69 @@ log.cpm =<span class="st"> </span>logX</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
 <span class="kw">plot</span>(pc<span class="op">$</span>d, <span class="dt">ylab =</span> <span class="st">&quot;singular values&quot;</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tsne-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/tsne-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(pc<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">100</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
 <span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;tsne2&#39;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/tsne-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of tsne-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/tsne-2.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(pc)</code></pre></div>
 <p>Run SLSL on the log.cpm matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># out = SLSL(log.cpm, log=FALSE,</span>
@@ -486,6 +814,36 @@ g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw"
 <span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;Gad1&#39;</span>)
 <span class="kw">grid.arrange</span>(g1,g2,g3, <span class="dt">nrow=</span><span class="dv">1</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/markers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of markers-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/markers-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
@@ -586,6 +944,8 @@ footer is added to webpages before the MathJax javascript. -->
 <hr>
 
 
+</div>
+</div>
 
 </div>
 
