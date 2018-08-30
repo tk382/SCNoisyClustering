@@ -5,7 +5,7 @@ output:
   workflowr::wflow_html:
     theme: yeti
     highlight: tango
-    toc: false
+    toc: true
     toc_float: 
       collapsed: true
       smooth_scroll: true
@@ -78,7 +78,7 @@ boxplot(det.rate, main='detection rate')
 ```
 
 
-## Gene Filtering using normalized dispersion
+## Gene Filtering
 
 Next find variable genes using normalized dispersion. First, remove the genes where counts are 0 in all the cells, so that we use genes with at least one UMI count detected in at least one cell are used. Then genes are placed into a number of bins (user's choice in "bins" parameter in "dispersion" function, default is 20) based on their mean expression, and normalized dispersion is calculated as the absolute difference between dispersion and median dispersion of the expression mean, normalized by the median absolute deviation within each bin. (Grace Zheng et al., 2017)
 
@@ -128,7 +128,7 @@ rm(pc.base)
 plot(tsne.base$Y, cex=0.5)
 ```
 
-Run SLSL on the log.cpm matrix.
+## Run SLSL
 
 ```{r slsl, cahce=TRUE}
 out.base = SLSL(log.cpm, log=FALSE,
@@ -141,14 +141,32 @@ out.base = SLSL(log.cpm, log=FALSE,
 tab = table(out.base$result)
 plot(tsne.base$Y, col=rainbow(7)[out.base$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
+S = as.matrix(out.base$S)
+ind = sort(out$result, index.return=TRUE)$ix
+palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(30)
+pdf("10x_heatmap.pdf", width=7, height=7)
+heatmap.2(S[ind,ind],
+          trace = "none",
+          col = palette.gr.marray,
+          Colv = F,
+          Rowv = F, 
+          sepcolor = "gray",
+          dendrogram = "none",
+          labRow = "none",
+          labCol = "none",
+          key = F,
+          breaks = seq(min(S), max(S),length=31),
+          cexRow = 1,
+          symbreaks = T)
+dev.off()
 ```
 
 
-### Compare with SC3
+<!-- ## Benchmark SC3 -->
 
-The default settings of SC3 leads to error "Distribution of gene expression in cells is too skewed towards 0", so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method. 
+<!-- The default settings of SC3 leads to error "Distribution of gene expression in cells is too skewed towards 0", so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method.  -->
 
-```{r sc3_2}
+```{r sc3_2, eval = FALSE, echo = FALSE}
 library(SingleCellExperiment)
 library(SC3)
 rownames(X) = genenames[,2]
@@ -173,9 +191,9 @@ plot(tsne.base$Y, col=rainbow(10)[col_data_selected$sc3_9_clusters], cex=0.5,
      ylab='tsne2', xlab='tsne1', main='SC3 result')
 ```
 
-## Biomarkers from log.cpm matrix in our pre-processing.
+## Important Features
 
-We use Kolgomorov-smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals. 
+We use Kolgomorov-Smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals. 
 
 ```{r markers1, warning=FALSE}
 gene_selected_names = c('S100A4','B2M','LGALS1','S100A9','S100A8', 'LST1')
@@ -206,7 +224,7 @@ grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
 ```
 
 
-## Compare with results using known markers.
+## Known Markers
 
 I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat's tutorial or the original 10X paper about PBMC cells Zheng et al. 
 

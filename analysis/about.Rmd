@@ -6,7 +6,9 @@ output:
     theme: yeti
     highlight: tango
     toc: false
-    toc_float: true
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
 ---
 
 

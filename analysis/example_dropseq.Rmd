@@ -5,7 +5,7 @@ output:
   workflowr::wflow_html:
     theme: yeti
     highlight: tango
-    toc: false
+    toc: true
     toc_float: 
       collapsed: true
       smooth_scroll: true
@@ -35,19 +35,15 @@ library(abind)
 library(stargazer)
 library(gdata)
 library(gridExtra)
-R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
-Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
-heat = function(S){
-  ggplot(melt(S), aes(x=X1, y=X2, fill=value)) + geom_tile() + scale_fill_gradient()
-}
+R.utils::sourceDirectory("../R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('../src/SCNoisyClustering.cpp')
 ```
 
-
-Read data. 
+## Read Data : Retina Cells 9K
 
 ```{r read_data}
 library(data.table)
-tmp = setDF(fread('data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt'))
+tmp = setDF(fread('../data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt'))
 orig = tmp[,-1]; rownames(orig) = tmp[,1]; rm(tmp)
 genenames = sapply(strsplit(rownames(orig), ":"), function(x) x[3])
 gc(verbose=FALSE);
@@ -101,8 +97,6 @@ Use quantile-normalization to make the distribution of each cell the same.
 nX = quantile_normalize(as.matrix(X))
 ```
 
-
-
 ## Correct Detection Rate
 
 After normalization, the linear relationship between the first PC and the detection rate usually disappears. The plots show that even without correction, the two are not heavily correlated. So we do not regress out the detection rate. 
@@ -120,7 +114,7 @@ log.cpm = logX
 ```
 
 
-## Dimension reduction on the data for visualization.
+## Dimension reduction and visualization.
 
 ```{r tsne}
 pc = irlba(log.cpm, 20)
@@ -130,27 +124,44 @@ plot(tsne$Y, xlab = 'tsne1', ylab = 'tsne2', cex = 0.5)
 rm(pc)
 ```
 
-
+## Run SLSL
 
 Run SLSL on the log.cpm matrix.
 
 ```{r slsl, cache = TRUE}
-# out = SLSL(log.cpm, log=FALSE,
-#                 filter = FALSE,
-#                 correct_detection_rate = FALSE,
-#                 klist = c(300,350,400),
-#                 sigmalist = c(1,1.5,2),
-#                 kernel_type = "pearson",
-#                 verbose=FALSE)
-# save(out, file = 'dropseq_slsl1.Rdata')
-load('analysis/dropseq_slsl1.Rdata')
+out = SLSL(log.cpm, log=FALSE,
+                filter = FALSE,
+                correct_detection_rate = FALSE,
+                klist = c(300,400,500),
+                sigmalist = c(1,1.5,2),
+                kernel_type = "pearson",
+                verbose=FALSE)
 tab = table(out$result)
+ind = sort(out$result, index.return=TRUE)$ix
 plot(tsne$Y, col=rainbow(length(tab))[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL", cex = 0.5)
-
+S = as.matrix(out$S)
+palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(50)
+pdf("dropseq_heatmap.pdf", width=7, height=7)
+heatmap.2(S[ind,ind],
+          trace = "none",
+          col = palette.gr.marray,
+          Colv = F,
+          Rowv = F, 
+          sepcolor = "gray",
+          dendrogram = "none",
+          labRow = "none",
+          labCol = "none",
+          key = F,
+          breaks = seq(min(S), max(S),length=51),
+          cexRow = 1,
+          symbreaks = T)
+dev.off()
 ```
 
-Using SC3 with our gene and cell filter procedure and disabling the biology and filter feature of the function leads to the following result. Using SC3's default methods lead to the error "distribution of gene expression in cells is too skewed towards 0".
+<!-- ## Benchmark SC3 -->
+
+<!-- Using SC3 with our gene and cell filter procedure and disabling the biology and filter feature of the function leads to the following result. Using SC3's default methods lead to the error "distribution of gene expression in cells is too skewed towards 0". -->
 
 ```{r sc3, echo=TRUE, eval = FALSE}
 library(SingleCellExperiment)
@@ -177,6 +188,7 @@ plot(tsne$Y, col=rainbow(k)[col_data_selected$sc3_6_clusters],
      xlab = 'tsne1', ylab='tsne2', main="SC3", cex = 0.5)
 ```
 
+## Known Biomarkers
 
 ```{r markers}
 ind = which(genenames %in% c('Chat', 'Gad1', 'Gad2', 'Slc17a8', 'Slc6a9', 'Gjd2'))

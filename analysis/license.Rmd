@@ -1,8 +1,14 @@
 ---
 title: "License"
+site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
-    toc: false
+    theme: yeti
+    highlight: tango
+    toc: true
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
 ---
 
 What license are you using for your code? See [choosealicense.com][choose] for
