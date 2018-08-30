@@ -40,12 +40,11 @@ library(SC3)
 library(gridExtra)
 R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
 Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
-set.seed(1)
 ```
 
 ## Read Data : PBMC 27K
 
-Read data. Keep the gene names separately.
+Read data and keep the gene names separately.
 
 ```{r read_data}
 orig = readMM('data/unnecessary_in_building/pbmc3k/matrix.mtx')
@@ -56,7 +55,7 @@ orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
 
 ## Quality Control and Cell Selections
 
-Get summary of the cells. The function "cellFilter" removes abnormal cells based on the read counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
+Get summary of the cells. The function "cellFilter" removes abnormal cells based on the gene counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
 
 ```{r cell_filter}
 nGene = Matrix::colSums(orig > 0)
@@ -132,13 +131,15 @@ plot(tsne.base$Y, cex=0.5)
 ## Run SLSL
 
 ```{r slsl, cahce=TRUE}
-out = SLSL(log.cpm, log=FALSE,
-           filter = FALSE,
-           correct_detection_rate = FALSE,
-           klist = c(200,250,300),
-           sigmalist = c(1,1.5,2),
-           kernel_type = "pearson",
-           verbose=FALSE)
+# out = SLSL(log.cpm, log=FALSE,
+#            filter = FALSE,
+#            correct_detection_rate = FALSE,
+#            klist = c(200,250,300),
+#            sigmalist = c(1,1.5,2),
+#            kernel_type = "pearson",
+#            verbose=FALSE)
+# save(out, file = 'slsl_10x.Rdata')
+load('analysis/slsl_10x.Rdata')
 tab = table(out$result)
 plot(tsne.base$Y, col=rainbow(7)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
@@ -149,7 +150,7 @@ heatmap.2(S[ind, ind],
           trace = "none",
           col = palette.gr.marray,
           Colv = F,
-          Rowv = F, 
+          Rowv = F,
           sepcolor = "gray",
           dendrogram = "none",
           labRow = NA,
@@ -157,7 +158,8 @@ heatmap.2(S[ind, ind],
           key = F,
           breaks = seq(min(S), max(S),length=51),
           cexRow = 1,
-          symbreaks = T)
+          symbreaks = T,
+          main = "Similarity Matrix (sorted)")
 ```
 
 
@@ -190,37 +192,7 @@ plot(tsne.base$Y, col=rainbow(10)[col_data_selected$sc3_9_clusters], cex=0.5,
      ylab='tsne2', xlab='tsne1', main='SC3 result')
 ```
 
-## Important Features
 
-We use Kolgomorov-Smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals. 
-
-```{r markers1, warning=FALSE}
-gene_selected_names = c('S100A4','B2M','LGALS1','S100A9','S100A8', 'LST1')
-gene_selected = match(gene_selected_names, genenames$V2)
-ind = gene_selected
-df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
-                S100A4 = log.cpm[ind[1], ],
-                B2M = log.cpm[ind[2], ],
-                LGALS1 = log.cpm[ind[3],],
-                S100A9 = log.cpm[ind[4], ],
-                S100A8 = log.cpm[ind[5],],
-                LST1 = log.cpm[ind[6], ])
-g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A4)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A4')
-g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = B2M)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('B2M')
-g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = LGALS1)) + geom_point(size=0.1) + 
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LGALS1')
-g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A9')
-g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
-g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LST1')
-
-grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
-
-```
 
 
 ## Known Markers
@@ -228,6 +200,8 @@ grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
 I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat's tutorial or the original 10X paper about PBMC cells Zheng et al. 
 
 ```{r biomarkers}
+sorted_type = sort(out$result, index.return=TRUE)$ix
+
 #list comes from 10X paper and Seurat
 ind = which(genenames$V2 %in% c('CD3D', 'CD8A', 'NKG7', 'FCER1A', 'CD16', 'S100A8',
                                      'MS4A1', 'GNLY', 'CD3E', 'CD14', 'FCGR3A',
@@ -240,6 +214,13 @@ df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
                 PPBP = log.cpm[ind[4], ],
                 LYZ = log.cpm[ind[5], ],
                 NKG7 = log.cpm[ind[6], ])
+
+par(mfrow = c(2,3))
+for (i in 1:6){
+  plot(log.cpm[ind[i], sorted_type], col = as.factor(out$result[sorted_type]),
+       main = genenames$V2[ind[i]], cex=0.5)
+}
+
 
 g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
@@ -255,4 +236,48 @@ g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = NKG7)) + geom_point(size=0.1) + scal
 
 grid.arrange(g1,g2,g3,g4,
              g5,g6, nrow=2)
+```
+
+
+
+## Differentially Expressed Genes
+
+```{r find_markers}
+p = rep(0, nrow(log.cpm))
+for (i in 1:nrow(log.cpm)){
+  p[i] = kruskal.test(log.cpm[i,], as.factor(out$result))$p.value
+}
+sorted_p = sort(-log10(p), index.return=TRUE, decreasing = TRUE)
+
+sorted_type = sort(out$result, index.return=TRUE)$ix
+par(mfrow = c(2,3))
+for (i in 1:6){
+  plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
+       main = genenames[sorted_p$ix[i], 2], cex=0.5)
+}
+
+
+df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2])
+df = cbind(df, t(log.cpm[ind[1:6], ]))
+colnames(df) = c('tsne1', 'tsne2', genenames[sorted_p$ix[1:6], 2])
+colnames(df)[8] = "HLA_DRA"
+g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[3])
+
+g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[4])
+
+g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + 
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[5])
+
+g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[6])
+
+g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[7])
+
+g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[8])
+
+grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
 ```

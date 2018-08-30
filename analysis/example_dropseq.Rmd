@@ -35,15 +35,15 @@ library(abind)
 library(stargazer)
 library(gdata)
 library(gridExtra)
-R.utils::sourceDirectory("../R/", modifiedOnly=FALSE)
-Rcpp::sourceCpp('../src/SCNoisyClustering.cpp')
+R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
 ```
 
 ## Read Data : Retina Cells 9K
 
 ```{r read_data}
 library(data.table)
-tmp = setDF(fread('../data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt'))
+tmp = setDF(fread('data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt'))
 orig = tmp[,-1]; rownames(orig) = tmp[,1]; rm(tmp)
 genenames = sapply(strsplit(rownames(orig), ":"), function(x) x[3])
 gc(verbose=FALSE);
@@ -114,7 +114,7 @@ log.cpm = logX
 ```
 
 
-## Dimension reduction and visualization.
+## Dimension reduction and visualization
 
 ```{r tsne}
 pc = irlba(log.cpm, 20)
@@ -183,9 +183,9 @@ library(SC3)
 #          kmeans_nstart=10)
 # col_data_selected = colData(sce)
 # save(col_data_selected, file  = "analysis/dropseq_sc3_result.Rdata")
-load('analysis/dropseq_sc3_result.Rdata')
-plot(tsne$Y, col=rainbow(k)[col_data_selected$sc3_6_clusters],
-     xlab = 'tsne1', ylab='tsne2', main="SC3", cex = 0.5)
+# load('analysis/dropseq_sc3_result.Rdata')
+# plot(tsne$Y, col=rainbow(k)[col_data_selected$sc3_6_clusters],
+#      xlab = 'tsne1', ylab='tsne2', main="SC3", cex = 0.5)
 ```
 
 ## Known Biomarkers
@@ -205,3 +205,47 @@ g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = Gad1)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('Gad1')
 grid.arrange(g1,g2,g3, nrow=1)
 ```
+
+
+## Differentially Expressed Genes
+
+```{r find_markers}
+p = rep(0, nrow(log.cpm))
+for (i in 1:nrow(log.cpm)){
+  p[i] = kruskal.test(log.cpm[i,], as.factor(out$result))$p.value
+}
+sorted_p = sort(-log10(p), index.return=TRUE, decreasing = TRUE)
+
+sorted_type = sort(out$result, index.return=TRUE)$ix
+par(mfrow = c(2,3))
+for (i in 1:6){
+  plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
+       main = genenames[sorted_p$ix[i]], cex=0.5)
+}
+
+# 
+# df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2])
+# df = cbind(df, t(log.cpm[ind[1:6], ]))
+# colnames(df) = c('tsne1', 'tsne2', genenames[sorted_p$ix[1:6]])
+# colnames(df) = gsub("-", "_", colnames(df))
+# g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[3])
+# 
+# g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[4])
+# 
+# g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + 
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[5])
+# 
+# g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[6])
+# 
+# g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[7])
+# 
+# g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[8])
+# 
+# grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
+```
+
