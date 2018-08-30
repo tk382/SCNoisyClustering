@@ -320,7 +320,7 @@ div.tocify {
   <a href="example_dropseq.html">Drop-seq Pipeline</a>
 </li>
 <li>
-  <a href="smart_dropseq.html">Smart-seq Pipeline</a>
+  <a href="example_smartseq.html">Smart-seq Pipeline</a>
 </li>
 <li>
   <a href="license.html">License</a>
@@ -354,11 +354,12 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-29</p>
+<p><strong>Last updated:</strong> 2018-08-30</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </details>
 </li>
 <li>
@@ -377,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/f6c8902df47149f56aa525b71928061bfd3a76d5" target="_blank">f6c8902</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/d19827071f1f4b23383f96c7958464cfa661e624" target="_blank">d198270</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -393,24 +394,18 @@ Untracked files:
     Untracked:  R/.DS_Store
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
-    Untracked:  analysis/Dropseqpreprocessing_cache/
-    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
+    Untracked:  analysis/10x_heatmap.pdf
     Untracked:  analysis/biomarkers.R
-    Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
-    Untracked:  analysis/dropseq_sc3_result.Rdata
-    Untracked:  analysis/dropseq_slsl1.Rdata
+    Untracked:  analysis/dropseq_heatmap.pdf
     Untracked:  analysis/example_dropseq_cache/
-    Untracked:  analysis/example_smartseq.Rmd
-    Untracked:  analysis/figure/
-    Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
-    Untracked:  analysis/pbmcheat.pdf
-    Untracked:  analysis/pbmcref.pdf
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
     Untracked:  analysis/pipeline/2_zeisel/
     Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/slsl_10x.Rdata
+    Untracked:  analysis/slsl_dropseq.Rdata
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
     Untracked:  analysis/writeup/paper.bbl
@@ -441,6 +436,7 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.synctex.gz
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
+    Untracked:  dropseq_heatmap.pdf
     Untracked:  normalized_out_1.Rdata
     Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
@@ -449,13 +445,8 @@ Untracked files:
 Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Deleted:    analysis/10Xpreprocessing.Rmd
-    Deleted:    analysis/Dropseqpreprocessing.Rmd
-    Modified:   analysis/_site.yml
-    Modified:   analysis/about.Rmd
     Modified:   analysis/example_10x.Rmd
-    Modified:   analysis/example_dropseq.Rmd
-    Modified:   analysis/license.Rmd
+    Modified:   analysis/example_smartseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
@@ -489,6 +480,57 @@ Message
 <tbody>
 <tr>
 <td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/d19827071f1f4b23383f96c7958464cfa661e624/analysis/example_dropseq.Rmd" target="_blank">d198270</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+wflow_publish(c(“analysis/example_10x.Rmd”, “analysis/example_dropseq.Rmd”))
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/64d04da670898f7d09b9c7d1f17ed78359fb9b33/analysis/example_dropseq.Rmd" target="_blank">64d04da</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+add toc
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/b1d63bec118734a869b7052f4bddbfbce1df62e8/docs/example_dropseq.html" target="_blank">b1d63be</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+<td style="text-align:left;">
+new format for workflowr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 html
 </td>
 <td style="text-align:left;">
@@ -509,15 +551,17 @@ Build site.
 </ul>
 <p></details></p>
 <hr />
-<p>Read data.</p>
+<div id="read-data-retina-cells-9k" class="section level2">
+<h2>Read Data : Retina Cells 9K</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
 tmp =<span class="st"> </span><span class="kw">setDF</span>(<span class="kw">fread</span>(<span class="st">&#39;data/unnecessary_in_building/GSM1626794_P14Retina_2.digital_expression.txt&#39;</span>))
 orig =<span class="st"> </span>tmp[,<span class="op">-</span><span class="dv">1</span>]; <span class="kw">rownames</span>(orig) =<span class="st"> </span>tmp[,<span class="dv">1</span>]; <span class="kw">rm</span>(tmp)
 genenames =<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">strsplit</span>(<span class="kw">rownames</span>(orig), <span class="st">&quot;:&quot;</span>), <span class="cf">function</span>(x) x[<span class="dv">3</span>])
 <span class="kw">gc</span>(<span class="dt">verbose=</span><span class="ot">FALSE</span>);</code></pre></div>
 <pre><code>            used  (Mb) gc trigger   (Mb) limit (Mb)  max used  (Mb)
-Ncells   2792253 149.2    4257502  227.4         NA   4257502 227.4
-Vcells 106691790 814.0  155381158 1185.5      16384 107648931 821.3</code></pre>
+Ncells   2791078 149.1    4253248  227.2         NA   4253248 227.2
+Vcells 106687712 814.0  155260761 1184.6      16384 107645801 821.3</code></pre>
+</div>
 <div id="quality-control-and-cell-filter" class="section level2">
 <h2>Quality Control and Cell Filter</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
@@ -694,8 +738,8 @@ tk382
 <span class="co"># log.cpm = out$residual</span>
 log.cpm =<span class="st"> </span>logX</code></pre></div>
 </div>
-<div id="dimension-reduction-on-the-data-for-visualization." class="section level2">
-<h2>Dimension reduction on the data for visualization.</h2>
+<div id="dimension-reduction-and-visualization" class="section level2">
+<h2>Dimension reduction and visualization</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
 <span class="kw">plot</span>(pc<span class="op">$</span>d, <span class="dt">ylab =</span> <span class="st">&quot;singular values&quot;</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -763,21 +807,73 @@ tk382
 </table>
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(pc)</code></pre></div>
+</div>
+<div id="run-slsl" class="section level2">
+<h2>Run SLSL</h2>
 <p>Run SLSL on the log.cpm matrix.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># out = SLSL(log.cpm, log=FALSE,</span>
-<span class="co">#                 filter = FALSE,</span>
-<span class="co">#                 correct_detection_rate = FALSE,</span>
-<span class="co">#                 klist = c(300,350,400),</span>
-<span class="co">#                 sigmalist = c(1,1.5,2),</span>
-<span class="co">#                 kernel_type = &quot;pearson&quot;,</span>
-<span class="co">#                 verbose=FALSE)</span>
-<span class="co"># save(out, file = &#39;dropseq_slsl1.Rdata&#39;)</span>
-<span class="kw">load</span>(<span class="st">&#39;analysis/dropseq_slsl1.Rdata&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
+                <span class="dt">filter =</span> <span class="ot">FALSE</span>,
+                <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
+                <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">400</span>,<span class="dv">500</span>),
+                <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
+                <span class="dt">kernel_type =</span> <span class="st">&quot;pearson&quot;</span>,
+                <span class="dt">verbose=</span><span class="ot">FALSE</span>)
 tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">$</span>result)
+ind =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
 <span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(tab))[out<span class="op">$</span>result],
      <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SLSL&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Using SC3 with our gene and cell filter procedure and disabling the biology and filter feature of the function leads to the following result. Using SC3’s default methods lead to the error “distribution of gene expression in cells is too skewed towards 0”.</p>
+<details> <summary><em>Expand here to see past versions of slsl-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_dropseq.Rmd/slsl-1.png" target="_blank">f6c8902</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-29
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">S =<span class="st"> </span><span class="kw">as.matrix</span>(out<span class="op">$</span>S)
+palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;ivory&quot;</span>, <span class="st">&quot;pink&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;brown&quot;</span>))(<span class="dv">50</span>)
+<span class="kw">pdf</span>(<span class="st">&quot;dropseq_heatmap.pdf&quot;</span>, <span class="dt">width=</span><span class="dv">7</span>, <span class="dt">height=</span><span class="dv">7</span>)
+<span class="kw">heatmap.2</span>(S[ind,ind],
+          <span class="dt">trace =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">col =</span> palette.gr.marray,
+          <span class="dt">Colv =</span> F,
+          <span class="dt">Rowv =</span> F, 
+          <span class="dt">sepcolor =</span> <span class="st">&quot;gray&quot;</span>,
+          <span class="dt">dendrogram =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">labRow =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">labCol =</span> <span class="st">&quot;none&quot;</span>,
+          <span class="dt">key =</span> F,
+          <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="kw">min</span>(S), <span class="kw">max</span>(S),<span class="dt">length=</span><span class="dv">51</span>),
+          <span class="dt">cexRow =</span> <span class="dv">1</span>,
+          <span class="dt">symbreaks =</span> T)
+<span class="kw">dev.off</span>()</code></pre></div>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<!-- ## Benchmark SC3 -->
+<!-- Using SC3 with our gene and cell filter procedure and disabling the biology and filter feature of the function leads to the following result. Using SC3's default methods lead to the error "distribution of gene expression in cells is too skewed towards 0". -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SingleCellExperiment)
 <span class="kw">library</span>(SC3)
 <span class="co"># colnames(X) = paste0(&quot;C&quot;, 1:ncol(X))</span>
@@ -797,9 +893,12 @@ tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">
 <span class="co">#          kmeans_nstart=10)</span>
 <span class="co"># col_data_selected = colData(sce)</span>
 <span class="co"># save(col_data_selected, file  = &quot;analysis/dropseq_sc3_result.Rdata&quot;)</span>
-<span class="kw">load</span>(<span class="st">&#39;analysis/dropseq_sc3_result.Rdata&#39;</span>)
-<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(k)[col_data_selected<span class="op">$</span>sc3_6_clusters],
-     <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SC3&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
+<span class="co"># load(&#39;analysis/dropseq_sc3_result.Rdata&#39;)</span>
+<span class="co"># plot(tsne$Y, col=rainbow(k)[col_data_selected$sc3_6_clusters],</span>
+<span class="co">#      xlab = &#39;tsne1&#39;, ylab=&#39;tsne2&#39;, main=&quot;SC3&quot;, cex = 0.5)</span></code></pre></div>
+</div>
+<div id="known-biomarkers" class="section level2">
+<h2>Known Biomarkers</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind =<span class="st"> </span><span class="kw">which</span>(genenames <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Chat&#39;</span>, <span class="st">&#39;Gad1&#39;</span>, <span class="st">&#39;Gad2&#39;</span>, <span class="st">&#39;Slc17a8&#39;</span>, <span class="st">&#39;Slc6a9&#39;</span>, <span class="st">&#39;Gjd2&#39;</span>))
 df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne<span class="op">$</span>Y[,<span class="dv">2</span>],
                 <span class="dt">Slc17a8 =</span> log.cpm[ind[<span class="dv">1</span>], ],
@@ -844,6 +943,46 @@ tk382
 </tbody>
 </table>
 <p></details></p>
+</div>
+<div id="differentially-expressed-genes" class="section level2">
+<h2>Differentially Expressed Genes</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">nrow</span>(log.cpm))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(log.cpm)){
+  p[i] =<span class="st"> </span><span class="kw">kruskal.test</span>(log.cpm[i,], <span class="kw">as.factor</span>(out<span class="op">$</span>result))<span class="op">$</span>p.value
+}
+sorted_p =<span class="st"> </span><span class="kw">sort</span>(<span class="op">-</span><span class="kw">log10</span>(p), <span class="dt">index.return=</span><span class="ot">TRUE</span>, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)
+
+sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
+  <span class="kw">plot</span>(log.cpm[sorted_p<span class="op">$</span>ix[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+       <span class="dt">main =</span> genenames[sorted_p<span class="op">$</span>ix[i]], <span class="dt">cex=</span><span class="fl">0.5</span>)
+}</code></pre></div>
+<p><img src="figure/example_dropseq.Rmd/find_markers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span>
+<span class="co"># df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2])</span>
+<span class="co"># df = cbind(df, t(log.cpm[ind[1:6], ]))</span>
+<span class="co"># colnames(df) = c(&#39;tsne1&#39;, &#39;tsne2&#39;, genenames[sorted_p$ix[1:6]])</span>
+<span class="co"># colnames(df) = gsub(&quot;-&quot;, &quot;_&quot;, colnames(df))</span>
+<span class="co"># g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +</span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[3])</span>
+<span class="co"># </span>
+<span class="co"># g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +</span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[4])</span>
+<span class="co"># </span>
+<span class="co"># g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + </span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[5])</span>
+<span class="co"># </span>
+<span class="co"># g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +</span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[6])</span>
+<span class="co"># </span>
+<span class="co"># g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +</span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[7])</span>
+<span class="co"># </span>
+<span class="co"># g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +</span>
+<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[8])</span>
+<span class="co"># </span>
+<span class="co"># grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)</span></code></pre></div>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>

@@ -378,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fa8da961c77d65ecc65e8e3bd353852aad53acfd" target="_blank">fa8da96</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/d19827071f1f4b23383f96c7958464cfa661e624" target="_blank">d198270</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -395,21 +395,18 @@ Untracked files:
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/10x_heatmap.pdf
-    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
     Untracked:  analysis/biomarkers.R
-    Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
     Untracked:  analysis/dropseq_heatmap.pdf
-    Untracked:  analysis/dropseq_sc3_result.Rdata
-    Untracked:  analysis/dropseq_slsl1.Rdata
-    Untracked:  analysis/marker-based.pdf
+    Untracked:  analysis/example_dropseq_cache/
+    Untracked:  analysis/figure/
     Untracked:  analysis/normalization_test.R
-    Untracked:  analysis/pbmcheat.pdf
-    Untracked:  analysis/pbmcref.pdf
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
     Untracked:  analysis/pipeline/2_zeisel/
     Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/slsl_10x.Rdata
+    Untracked:  analysis/slsl_dropseq.Rdata
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
     Untracked:  analysis/writeup/paper.bbl
@@ -449,7 +446,7 @@ Untracked files:
 Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Modified:   analysis/example_dropseq.Rmd
+    Modified:   analysis/example_smartseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
@@ -481,6 +478,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/1333c7f4da9fc6dec4abe302ea0ca99aee9d48bf/docs/example_10x.html" target="_blank">1333c7f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -522,14 +536,14 @@ Build site.
 <hr />
 <div id="read-data-pbmc-27k" class="section level2">
 <h2>Read Data : PBMC 27K</h2>
-<p>Read data. Keep the gene names separately.</p>
+<p>Read data and keep the gene names separately.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">orig =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;data/unnecessary_in_building/pbmc3k/matrix.mtx&#39;</span>)
 orig_genenames =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;data/unnecessary_in_building/pbmc3k/genes.tsv&#39;</span>,
                             <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 </div>
 <div id="quality-control-and-cell-selections" class="section level2">
 <h2>Quality Control and Cell Selections</h2>
-<p>Get summary of the cells. The function “cellFilter” removes abnormal cells based on the read counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1.</p>
+<p>Get summary of the cells. The function “cellFilter” removes abnormal cells based on the gene counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
 <span class="kw">hist</span>(nGene)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -742,13 +756,15 @@ tk382
 </div>
 <div id="run-slsl" class="section level2">
 <h2>Run SLSL</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
-           <span class="dt">filter =</span> <span class="ot">FALSE</span>,
-           <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
-           <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">250</span>,<span class="dv">300</span>),
-           <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
-           <span class="dt">kernel_type =</span> <span class="st">&quot;pearson&quot;</span>,
-           <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># out = SLSL(log.cpm, log=FALSE,</span>
+<span class="co">#            filter = FALSE,</span>
+<span class="co">#            correct_detection_rate = FALSE,</span>
+<span class="co">#            klist = c(200,250,300),</span>
+<span class="co">#            sigmalist = c(1,1.5,2),</span>
+<span class="co">#            kernel_type = &quot;pearson&quot;,</span>
+<span class="co">#            verbose=FALSE)</span>
+<span class="co"># save(out, file = &#39;slsl_10x.Rdata&#39;)</span>
+<span class="kw">load</span>(<span class="st">&#39;analysis/slsl_10x.Rdata&#39;</span>)
 tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">$</span>result)
 <span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">7</span>)[out<span class="op">$</span>result],
      <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SLSL result&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
@@ -790,7 +806,7 @@ palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalett
           <span class="dt">trace =</span> <span class="st">&quot;none&quot;</span>,
           <span class="dt">col =</span> palette.gr.marray,
           <span class="dt">Colv =</span> F,
-          <span class="dt">Rowv =</span> F, 
+          <span class="dt">Rowv =</span> F,
           <span class="dt">sepcolor =</span> <span class="st">&quot;gray&quot;</span>,
           <span class="dt">dendrogram =</span> <span class="st">&quot;none&quot;</span>,
           <span class="dt">labRow =</span> <span class="ot">NA</span>,
@@ -798,40 +814,10 @@ palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalett
           <span class="dt">key =</span> F,
           <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="kw">min</span>(S), <span class="kw">max</span>(S),<span class="dt">length=</span><span class="dv">51</span>),
           <span class="dt">cexRow =</span> <span class="dv">1</span>,
-          <span class="dt">symbreaks =</span> T)</code></pre></div>
+          <span class="dt">symbreaks =</span> T,
+          <span class="dt">main =</span> <span class="st">&quot;Similarity Matrix (sorted)&quot;</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/slsl-2.png" width="672" style="display: block; margin: auto;" /></p>
-<!-- ## Benchmark SC3 -->
-<!-- The default settings of SC3 leads to error "Distribution of gene expression in cells is too skewed towards 0", so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method.  -->
-</div>
-<div id="important-features" class="section level2">
-<h2>Important Features</h2>
-<p>We use Kolgomorov-Smirov test to select some of the genes for the clusters not found in SC3 result to verify that our clustering result is based on real signals.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gene_selected_names =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;S100A4&#39;</span>,<span class="st">&#39;B2M&#39;</span>,<span class="st">&#39;LGALS1&#39;</span>,<span class="st">&#39;S100A9&#39;</span>,<span class="st">&#39;S100A8&#39;</span>, <span class="st">&#39;LST1&#39;</span>)
-gene_selected =<span class="st"> </span><span class="kw">match</span>(gene_selected_names, genenames<span class="op">$</span>V2)
-ind =<span class="st"> </span>gene_selected
-df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">2</span>],
-                <span class="dt">S100A4 =</span> log.cpm[ind[<span class="dv">1</span>], ],
-                <span class="dt">B2M =</span> log.cpm[ind[<span class="dv">2</span>], ],
-                <span class="dt">LGALS1 =</span> log.cpm[ind[<span class="dv">3</span>],],
-                <span class="dt">S100A9 =</span> log.cpm[ind[<span class="dv">4</span>], ],
-                <span class="dt">S100A8 =</span> log.cpm[ind[<span class="dv">5</span>],],
-                <span class="dt">LST1 =</span> log.cpm[ind[<span class="dv">6</span>], ])
-g1 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A4)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;S100A4&#39;</span>)
-g2 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> B2M)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;B2M&#39;</span>)
-g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> LGALS1)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;LGALS1&#39;</span>)
-g4 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A9)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;S100A9&#39;</span>)
-g5 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A8)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;S100A8&#39;</span>)
-g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> LST1)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;LST1&#39;</span>)
-
-<span class="kw">grid.arrange</span>(g1,g2,g3, g4,g5,g6,<span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
-<p><img src="figure/example_10x.Rmd/markers1-1.png" width="672" style="display: block; margin: auto;" /></p>
-<details> <summary><em>Expand here to see past versions of markers1-1.png:</em></summary>
+<details> <summary><em>Expand here to see past versions of slsl-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
 <tr>
@@ -849,23 +835,27 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
-<a href="https://github.com/tk382/SCNoisyClustering/blob/f6c8902df47149f56aa525b71928061bfd3a76d5/docs/figure/example_10x.Rmd/markers1-1.png" target="_blank">f6c8902</a>
+<a href="https://github.com/tk382/SCNoisyClustering/blob/1333c7f4da9fc6dec4abe302ea0ca99aee9d48bf/docs/figure/example_10x.Rmd/slsl-2.png" target="_blank">1333c7f</a>
 </td>
 <td style="text-align:left;">
 tk382
 </td>
 <td style="text-align:left;">
-2018-08-29
+2018-08-30
 </td>
 </tr>
 </tbody>
 </table>
 <p></details></p>
+<!-- ## Benchmark SC3 -->
+<!-- The default settings of SC3 leads to error "Distribution of gene expression in cells is too skewed towards 0", so we use the pre-processed data and does not use the filtering method of SC3. The number of clusters was determined by the default method.  -->
 </div>
 <div id="known-markers" class="section level2">
 <h2>Known Markers</h2>
 <p>I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat’s tutorial or the original 10X paper about PBMC cells Zheng et al.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#list comes from 10X paper and Seurat</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
+
+<span class="co">#list comes from 10X paper and Seurat</span>
 ind =<span class="st"> </span><span class="kw">which</span>(genenames<span class="op">$</span>V2 <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CD3D&#39;</span>, <span class="st">&#39;CD8A&#39;</span>, <span class="st">&#39;NKG7&#39;</span>, <span class="st">&#39;FCER1A&#39;</span>, <span class="st">&#39;CD16&#39;</span>, <span class="st">&#39;S100A8&#39;</span>,
                                      <span class="st">&#39;MS4A1&#39;</span>, <span class="st">&#39;GNLY&#39;</span>, <span class="st">&#39;CD3E&#39;</span>, <span class="st">&#39;CD14&#39;</span>, <span class="st">&#39;FCGR3A&#39;</span>,
                                      <span class="st">&#39;LYZ&#39;</span>,<span class="st">&#39;PPBP&#39;</span>))
@@ -879,20 +869,11 @@ genenames<span class="op">$</span>V2[ind]</code></pre></div>
                 <span class="dt">LYZ =</span> log.cpm[ind[<span class="dv">5</span>], ],
                 <span class="dt">NKG7 =</span> log.cpm[ind[<span class="dv">6</span>], ])
 
-g1 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A8)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;S100A8&#39;</span>)
-g2 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> FCER1A)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;FCER1A&#39;</span>)
-g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> GNLY)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;GNLY&#39;</span>)
-g4 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> PPBP)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;PPBP&#39;</span>)
-g5 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> LYZ)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;LYZ&#39;</span>)
-g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> NKG7)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;NKG7&#39;</span>)
-
-
-<span class="kw">grid.arrange</span>(g1,g2,g3,g4,
-             g5,g6, <span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
+  <span class="kw">plot</span>(log.cpm[ind[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+       <span class="dt">main =</span> genenames<span class="op">$</span>V2[ind[i]], <span class="dt">cex=</span><span class="fl">0.5</span>)
+}</code></pre></div>
 <p><img src="figure/example_10x.Rmd/biomarkers-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of biomarkers-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -924,6 +905,61 @@ tk382
 </tbody>
 </table>
 <p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g1 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A8)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;S100A8&#39;</span>)
+g2 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> FCER1A)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;FCER1A&#39;</span>)
+g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> GNLY)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;GNLY&#39;</span>)
+g4 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> PPBP)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;PPBP&#39;</span>)
+g5 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> LYZ)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;LYZ&#39;</span>)
+g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> NKG7)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&#39;NKG7&#39;</span>)
+
+
+<span class="kw">grid.arrange</span>(g1,g2,g3,g4,
+             g5,g6, <span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
+<p><img src="figure/example_10x.Rmd/biomarkers-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="differentially-expressed-genes" class="section level2">
+<h2>Differentially Expressed Genes</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">nrow</span>(log.cpm))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(log.cpm)){
+  p[i] =<span class="st"> </span><span class="kw">kruskal.test</span>(log.cpm[i,], <span class="kw">as.factor</span>(out<span class="op">$</span>result))<span class="op">$</span>p.value
+}
+sorted_p =<span class="st"> </span><span class="kw">sort</span>(<span class="op">-</span><span class="kw">log10</span>(p), <span class="dt">index.return=</span><span class="ot">TRUE</span>, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)
+
+sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
+  <span class="kw">plot</span>(log.cpm[sorted_p<span class="op">$</span>ix[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+       <span class="dt">main =</span> genenames[sorted_p<span class="op">$</span>ix[i], <span class="dv">2</span>], <span class="dt">cex=</span><span class="fl">0.5</span>)
+}</code></pre></div>
+<p><img src="figure/example_10x.Rmd/find_markers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">2</span>])
+df =<span class="st"> </span><span class="kw">cbind</span>(df, <span class="kw">t</span>(log.cpm[ind[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>], ]))
+<span class="kw">colnames</span>(df) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;tsne1&#39;</span>, <span class="st">&#39;tsne2&#39;</span>, genenames[sorted_p<span class="op">$</span>ix[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>], <span class="dv">2</span>])
+<span class="kw">colnames</span>(df)[<span class="dv">8</span>] =<span class="st"> &quot;HLA_DRA&quot;</span>
+g1 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A9)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">3</span>])
+
+g2 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> S100A8)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">4</span>])
+
+g3 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> FCER1G)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">5</span>])
+
+g4 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> LST1)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">6</span>])
+
+g5 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> AIF1)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">7</span>])
+
+g6 =<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> HLA_DRA)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_gradient</span>(<span class="dt">low=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">high=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">colnames</span>(df)[<span class="dv">8</span>])
+
+<span class="kw">grid.arrange</span>(g1,g2,g3, g4,g5,g6,<span class="dt">nrow=</span><span class="dv">2</span>)</code></pre></div>
+<p><img src="figure/example_10x.Rmd/find_markers-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
