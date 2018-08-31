@@ -378,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fa8da961c77d65ecc65e8e3bd353852aad53acfd" target="_blank">fa8da96</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/7d28102523fe57bbc65625ee107d1eed667d158d" target="_blank">7d28102</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -395,21 +395,17 @@ Untracked files:
     Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
     Untracked:  analysis/10x_heatmap.pdf
-    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
     Untracked:  analysis/biomarkers.R
-    Untracked:  analysis/cellref.pdf
     Untracked:  analysis/consistency_check.R
     Untracked:  analysis/dropseq_heatmap.pdf
-    Untracked:  analysis/dropseq_sc3_result.Rdata
-    Untracked:  analysis/dropseq_slsl1.Rdata
-    Untracked:  analysis/marker-based.pdf
+    Untracked:  analysis/example_dropseq_cache/
     Untracked:  analysis/normalization_test.R
-    Untracked:  analysis/pbmcheat.pdf
-    Untracked:  analysis/pbmcref.pdf
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
     Untracked:  analysis/pipeline/2_zeisel/
     Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/slsl_10x.Rdata
+    Untracked:  analysis/slsl_dropseq.Rdata
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
     Untracked:  analysis/writeup/paper.bbl
@@ -450,7 +446,6 @@ Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
     Modified:   analysis/example_10x.Rmd
-    Modified:   analysis/example_dropseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
@@ -482,6 +477,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/7d28102523fe57bbc65625ee107d1eed667d158d/analysis/example_smartseq.Rmd" target="_blank">7d28102</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+wflow_publish(“analysis/example_smartseq.Rmd”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/1333c7f4da9fc6dec4abe302ea0ca99aee9d48bf/docs/example_smartseq.html" target="_blank">1333c7f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html
@@ -562,8 +591,8 @@ det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>))
 <span class="kw">boxplot</span>(nUMI, <span class="dt">main=</span><span class="st">&#39;nUMI&#39;</span>); 
 <span class="kw">boxplot</span>(nGene, <span class="dt">main=</span><span class="st">&#39;nGene&#39;</span>); 
-<span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitochondrial gene&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>)); 
-<span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))</code></pre></div>
+<span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitochondrial gene&#39;</span>); 
+<span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>)</code></pre></div>
 <p><img src="figure/example_smartseq.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of cell_filter-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -861,6 +890,23 @@ tk382
 </tbody>
 </table>
 <p></details></p>
+</div>
+<div id="differentially-expressed-genes" class="section level2">
+<h2>Differentially Expressed Genes</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">nrow</span>(log.cpm))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(log.cpm)){
+  p[i] =<span class="st"> </span><span class="kw">kruskal.test</span>(log.cpm[i,], <span class="kw">as.factor</span>(out<span class="op">$</span>result))<span class="op">$</span>p.value
+}
+sorted_p =<span class="st"> </span><span class="kw">sort</span>(<span class="op">-</span><span class="kw">log10</span>(p), <span class="dt">index.return=</span><span class="ot">TRUE</span>, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)
+
+sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
+  <span class="kw">plot</span>(log.cpm[sorted_p<span class="op">$</span>ix[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+       <span class="dt">main =</span> genenames[sorted_p<span class="op">$</span>ix[i]], <span class="dt">cex=</span><span class="fl">0.5</span>,
+       <span class="dt">ylab =</span> <span class="st">&#39;pre-processed log expression&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;cells&#39;</span>)
+}</code></pre></div>
+<p><img src="figure/example_smartseq.Rmd/find_markers-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
