@@ -378,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/d19827071f1f4b23383f96c7958464cfa661e624" target="_blank">d198270</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fc23dfa8829b925d8ce3bad7fa5fb58a54e39fb4" target="_blank">fc23dfa</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -445,8 +445,6 @@ Untracked files:
 Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
-    Modified:   analysis/example_10x.Rmd
-    Modified:   analysis/example_smartseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
@@ -478,6 +476,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/fc23dfa8829b925d8ce3bad7fa5fb58a54e39fb4/analysis/example_dropseq.Rmd" target="_blank">fc23dfa</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+wflow_publish(c(“analysis/example_dropseq.Rmd”, “analysis/example_10x.Rmd”))
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/3018a28878ebd648ea724838f2234a0fee4d132a/docs/example_dropseq.html" target="_blank">3018a28</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -559,8 +591,8 @@ orig =<span class="st"> </span>tmp[,<span class="op">-</span><span class="dv">1<
 genenames =<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">strsplit</span>(<span class="kw">rownames</span>(orig), <span class="st">&quot;:&quot;</span>), <span class="cf">function</span>(x) x[<span class="dv">3</span>])
 <span class="kw">gc</span>(<span class="dt">verbose=</span><span class="ot">FALSE</span>);</code></pre></div>
 <pre><code>            used  (Mb) gc trigger   (Mb) limit (Mb)  max used  (Mb)
-Ncells   2791078 149.1    4253248  227.2         NA   4253248 227.2
-Vcells 106687712 814.0  155260761 1184.6      16384 107645801 821.3</code></pre>
+Ncells   2791199 149.1    4254964  227.3         NA   4254964 227.3
+Vcells 106688241 814.0  155375766 1185.5      16384 107646300 821.3</code></pre>
 </div>
 <div id="quality-control-and-cell-filter" class="section level2">
 <h2>Quality Control and Cell Filter</h2>
@@ -868,7 +900,8 @@ palette.gr.marray &lt;-<span class="st"> </span><span class="kw">colorRampPalett
           <span class="dt">key =</span> F,
           <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="kw">min</span>(S), <span class="kw">max</span>(S),<span class="dt">length=</span><span class="dv">51</span>),
           <span class="dt">cexRow =</span> <span class="dv">1</span>,
-          <span class="dt">symbreaks =</span> T)
+          <span class="dt">symbreaks =</span> T,
+          <span class="dt">main=</span><span class="st">&#39;Similarity Matrix (sorted)&#39;</span>)
 <span class="kw">dev.off</span>()</code></pre></div>
 <pre><code>quartz_off_screen 
                 2 </code></pre>
@@ -959,30 +992,36 @@ sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span clas
        <span class="dt">main =</span> genenames[sorted_p<span class="op">$</span>ix[i]], <span class="dt">cex=</span><span class="fl">0.5</span>)
 }</code></pre></div>
 <p><img src="figure/example_dropseq.Rmd/find_markers-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span>
-<span class="co"># df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2])</span>
-<span class="co"># df = cbind(df, t(log.cpm[ind[1:6], ]))</span>
-<span class="co"># colnames(df) = c(&#39;tsne1&#39;, &#39;tsne2&#39;, genenames[sorted_p$ix[1:6]])</span>
-<span class="co"># colnames(df) = gsub(&quot;-&quot;, &quot;_&quot;, colnames(df))</span>
-<span class="co"># g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +</span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[3])</span>
-<span class="co"># </span>
-<span class="co"># g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +</span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[4])</span>
-<span class="co"># </span>
-<span class="co"># g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + </span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[5])</span>
-<span class="co"># </span>
-<span class="co"># g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +</span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[6])</span>
-<span class="co"># </span>
-<span class="co"># g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +</span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[7])</span>
-<span class="co"># </span>
-<span class="co"># g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +</span>
-<span class="co">#   scale_colour_gradient(low=&quot;pink&quot;, high=&quot;black&quot;) + guides(color = FALSE) + ggtitle(colnames(df)[8])</span>
-<span class="co"># </span>
-<span class="co"># grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)</span></code></pre></div>
+<details> <summary><em>Expand here to see past versions of find_markers-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/3018a28878ebd648ea724838f2234a0fee4d132a/docs/figure/example_dropseq.Rmd/find_markers-1.png" target="_blank">3018a28</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
