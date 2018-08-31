@@ -126,8 +126,9 @@ pc = irlba(log.cpm, 20)
 plot(pc$d, ylab = "singular values")
 tsne = Rtsne(pc$v[,1:15], dims=2, perplexity = 10, pca=FALSE)
 df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2], truelabel = truelabel)
-ggplot(df, aes(x=tsne1, y=tsne2, col = truelabel)) + geom_point()+
-  ggtitle("True Label")
+plot(df$tsne1, df$tsne2, col = rainbow(6)[df$truelabel],
+     xlab = 'tsne1', ylab = 'tsne2', main = 'True Label',
+     cex = 0.5)
 rm(pc)
 ```
 
@@ -143,8 +144,9 @@ out = SLSL(log.cpm, log=FALSE,
                 sigmalist = c(1,1.5,2),
                 kernel_type = "combined",
                 verbose=FALSE)
-df$SLSL = as.factor(out$result)
-ggplot(df, aes(x=tsne1, y=tsne2, col=SLSL))+geom_point()
+plot(df$tsne1, df$tsne2, col = rainbow(5)[as.numeric(as.factor(out$result))],
+     xlab = 'tsne1', ylab = 'tsne2', main = 'SLSL result',
+     cex = 0.5)
 adj.rand.index(out$result, as.numeric(as.factor(truelabel)))
 ```
 
@@ -173,6 +175,7 @@ heatmap.2(S,
           cexRow = 1,
           symbreaks = T)
 ```
+
 ```{r sc3, warning = FALSE, echo = FALSE, eval = FALSE}
 library(SingleCellExperiment)
 library(SC3)
@@ -195,8 +198,11 @@ sce = sc3(sce, ks=k, biology = TRUE, gene_filter=TRUE,
 col_data_selected = colData(sce)
 df$sc3 = col_data_selected$sc3_6_clusters
 ggplot(df, aes(x=tsne1, y=tsne2, col=sc3))+geom_point()
-adj.rand.index(as.numeric(as.factor(truelabel)), col_data_selected$sc3_6_clusters)
+adj.rand.index(as.numeric(as.factor(truelabel)),
+               col_data_selected$sc3_6_clusters)
 ```
+
+
 ## Differentially Expressed Genes
 
 ```{r find_markers}
@@ -209,7 +215,7 @@ sorted_p = sort(-log10(p), index.return=TRUE, decreasing = TRUE)
 sorted_type = sort(out$result, index.return=TRUE)$ix
 par(mfrow = c(2,3))
 for (i in 1:6){
-  plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
+  plot(log.cpm[sorted_p$ix[i], sorted_type], col = rainbow(5)[ as.factor(out$result[sorted_type])],
        main = genenames[sorted_p$ix[i]], cex=0.5,
        ylab = 'pre-processed log expression', xlab='cells')
 }
