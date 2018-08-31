@@ -73,8 +73,8 @@ det.rate = summaryX$det.rate
 par(mfrow = c(1,4))
 boxplot(nUMI, main='nUMI'); 
 boxplot(nGene, main='nGene'); 
-boxplot(percent.mito, main='mitochondrial gene', ylim=c(0,0.5)); 
-boxplot(det.rate, main='detection rate', ylim=c(0,0.1))
+boxplot(percent.mito, main='mitochondrial gene'); 
+boxplot(det.rate, main='detection rate')
 ```
 
 ## Gene filtering
@@ -197,3 +197,21 @@ df$sc3 = col_data_selected$sc3_6_clusters
 ggplot(df, aes(x=tsne1, y=tsne2, col=sc3))+geom_point()
 adj.rand.index(as.numeric(as.factor(truelabel)), col_data_selected$sc3_6_clusters)
 ```
+## Differentially Expressed Genes
+
+```{r find_markers}
+p = rep(0, nrow(log.cpm))
+for (i in 1:nrow(log.cpm)){
+  p[i] = kruskal.test(log.cpm[i,], as.factor(out$result))$p.value
+}
+sorted_p = sort(-log10(p), index.return=TRUE, decreasing = TRUE)
+
+sorted_type = sort(out$result, index.return=TRUE)$ix
+par(mfrow = c(2,3))
+for (i in 1:6){
+  plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
+       main = genenames[sorted_p$ix[i]], cex=0.5,
+       ylab = 'pre-processed log expression', xlab='cells')
+}
+```
+
