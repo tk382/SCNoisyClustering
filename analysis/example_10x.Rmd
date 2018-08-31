@@ -131,15 +131,13 @@ plot(tsne.base$Y, cex=0.5)
 ## Run SLSL
 
 ```{r slsl, cahce=TRUE}
-# out = SLSL(log.cpm, log=FALSE,
-#            filter = FALSE,
-#            correct_detection_rate = FALSE,
-#            klist = c(200,250,300),
-#            sigmalist = c(1,1.5,2),
-#            kernel_type = "pearson",
-#            verbose=FALSE)
-# save(out, file = 'slsl_10x.Rdata')
-load('analysis/slsl_10x.Rdata')
+out = SLSL(log.cpm, log=FALSE,
+           filter = FALSE,
+           correct_detection_rate = FALSE,
+           klist = c(200,250,300),
+           sigmalist = c(1,1.5,2),
+           kernel_type = "pearson",
+           verbose=FALSE)
 tab = table(out$result)
 plot(tsne.base$Y, col=rainbow(7)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
@@ -193,8 +191,6 @@ plot(tsne.base$Y, col=rainbow(10)[col_data_selected$sc3_9_clusters], cex=0.5,
 ```
 
 
-
-
 ## Known Markers
 
 I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat's tutorial or the original 10X paper about PBMC cells Zheng et al. 
@@ -221,7 +217,6 @@ for (i in 1:6){
        main = genenames$V2[ind[i]], cex=0.5)
 }
 
-
 g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
 g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1A)) + geom_point(size=0.1) +
@@ -232,7 +227,6 @@ g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = PPBP)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('PPBP')
 g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = LYZ)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LYZ')
 g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = NKG7)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('NKG7')
-
 
 grid.arrange(g1,g2,g3,g4,
              g5,g6, nrow=2)
@@ -255,29 +249,32 @@ for (i in 1:6){
   plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
        main = genenames[sorted_p$ix[i], 2], cex=0.5)
 }
+```
 
-
-df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2])
-df = cbind(df, t(log.cpm[ind[1:6], ]))
-colnames(df) = c('tsne1', 'tsne2', genenames[sorted_p$ix[1:6], 2])
-colnames(df)[8] = "HLA_DRA"
-g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[3])
-
-g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[4])
-
-g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + 
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[5])
-
-g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[6])
-
-g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[7])
-
-g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[8])
-
-grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
+```{r echo=FALSE, eval=FALSE}
+# 
+# 
+# df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2])
+# df = cbind(df, t(log.cpm[ind[1:6], ]))
+# colnames(df) = c('tsne1', 'tsne2', genenames[sorted_p$ix[1:6], 2])
+# colnames(df)[8] = "HLA_DRA"
+# g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[3])
+# 
+# g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[4])
+# 
+# g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + 
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[5])
+# 
+# g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[6])
+# 
+# g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[7])
+# 
+# g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +
+#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[8])
+# 
+# grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
 ```

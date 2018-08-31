@@ -155,7 +155,8 @@ heatmap.2(S[ind,ind],
           key = F,
           breaks = seq(min(S), max(S),length=51),
           cexRow = 1,
-          symbreaks = T)
+          symbreaks = T,
+          main='Similarity Matrix (sorted)')
 dev.off()
 ```
 
@@ -222,6 +223,9 @@ for (i in 1:6){
   plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
        main = genenames[sorted_p$ix[i]], cex=0.5)
 }
+```
+
+```{r echo=FALSE, eval=FALSE}
 
 # 
 # df = data.frame(tsne1 = tsne$Y[,1], tsne2 = tsne$Y[,2])
