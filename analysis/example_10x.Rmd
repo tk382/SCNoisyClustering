@@ -85,14 +85,14 @@ Next find variable genes using normalized dispersion. First, remove the genes wh
 
 ```{r basic_gene_filtering}
 X = tmpX[Matrix::rowSums(tmpX) > 0, ]
-genenames = orig_genenames[Matrix::rowSums(tmpX) > 0, ]
+genenames = orig_genenames[Matrix::rowSums(tmpX) > 0, 2]
 disp = dispersion(X, bins = 20)
 plot(disp$z ~ disp$genemeans,
      xlab = "mean expression",
      ylab = "normalized dispersion")
 select = which(abs(disp$z) > 1)
 X = X[select, ]
-genenames = genenames[select,]
+genenames = genenames[select]
 ```
 
 
@@ -131,13 +131,14 @@ plot(tsne.base$Y, cex=0.5)
 ## Run SLSL
 
 ```{r slsl, cahce=TRUE}
-out = SLSL(log.cpm, log=FALSE,
-           filter = FALSE,
-           correct_detection_rate = FALSE,
-           klist = c(200,250,300),
-           sigmalist = c(1,1.5,2),
-           kernel_type = "pearson",
-           verbose=FALSE)
+# out = SLSL(log.cpm, log=FALSE,
+#            filter = FALSE,
+#            correct_detection_rate = FALSE,
+#            klist = c(200,250,300),
+#            sigmalist = c(1,1.5,2),
+#            kernel_type = "pearson",
+#            verbose=FALSE)
+load('analysis/slsl_10x.Rdata')
 tab = table(out$result)
 plot(tsne.base$Y, col=rainbow(7)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
@@ -168,7 +169,7 @@ heatmap.2(S[ind, ind],
 ```{r sc3_2, eval = FALSE, echo = FALSE}
 library(SingleCellExperiment)
 library(SC3)
-rownames(X) = genenames[,2]
+rownames(X) = genenames
 colnames(X) = paste0("C", 1:ncol(X))
 tmpX = as.matrix(X)
 sce = SingleCellExperiment(
@@ -199,10 +200,9 @@ I also check the markers provided in the past works about the same data set. The
 sorted_type = sort(out$result, index.return=TRUE)$ix
 
 #list comes from 10X paper and Seurat
-ind = which(genenames$V2 %in% c('CD3D', 'CD8A', 'NKG7', 'FCER1A', 'CD16', 'S100A8',
+ind = which(genenames %in% c('CD3D', 'CD8A', 'NKG7', 'FCER1A', 'CD16', 'S100A8',
                                      'MS4A1', 'GNLY', 'CD3E', 'CD14', 'FCGR3A',
                                      'LYZ','PPBP'))
-genenames$V2[ind]
 df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
                 S100A8 = log.cpm[ind[1], ],
                 FCER1A = log.cpm[ind[2], ],
@@ -214,9 +214,12 @@ df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
 par(mfrow = c(2,3))
 for (i in 1:6){
   plot(log.cpm[ind[i], sorted_type], col = as.factor(out$result[sorted_type]),
-       main = genenames$V2[ind[i]], cex=0.5)
+       main = genenames[ind[i]], cex=0.5,
+       xlab = 'cells', ylab = 'pre-processed log expression')
 }
+```
 
+```{r ggplots1, echo=FALSE}
 g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
 g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1A)) + geom_point(size=0.1) +
@@ -233,7 +236,6 @@ grid.arrange(g1,g2,g3,g4,
 ```
 
 
-
 ## Differentially Expressed Genes
 
 ```{r find_markers}
@@ -242,39 +244,39 @@ for (i in 1:nrow(log.cpm)){
   p[i] = kruskal.test(log.cpm[i,], as.factor(out$result))$p.value
 }
 sorted_p = sort(-log10(p), index.return=TRUE, decreasing = TRUE)
-
 sorted_type = sort(out$result, index.return=TRUE)$ix
+
 par(mfrow = c(2,3))
 for (i in 1:6){
-  plot(log.cpm[sorted_p$ix[i], sorted_type], col = as.factor(out$result[sorted_type]),
-       main = genenames[sorted_p$ix[i], 2], cex=0.5)
+  plot(log.cpm[sorted_p$ix[i], sorted_type], 
+       col = rainbow(length(tab))[as.factor(out$result[sorted_type])],
+       main = genenames[sorted_p$ix[i]], cex=0.5,
+       ylab = "pre-processed log expression", xlab = "cells")
 }
+
 ```
 
-```{r echo=FALSE, eval=FALSE}
-# 
-# 
-# df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2])
-# df = cbind(df, t(log.cpm[ind[1:6], ]))
-# colnames(df) = c('tsne1', 'tsne2', genenames[sorted_p$ix[1:6], 2])
-# colnames(df)[8] = "HLA_DRA"
-# g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[3])
-# 
-# g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[4])
-# 
-# g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) + 
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[5])
-# 
-# g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[6])
-# 
-# g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) +
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[7])
-# 
-# g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) +
-#   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle(colnames(df)[8])
-# 
-# grid.arrange(g1,g2,g3, g4,g5,g6,nrow=2)
+```{r ggplots2, echo=FALSE}
+ind = which(genenames %in% c('S100A9', 'S100A8', 'FCER1G', 'LST1', 'AIF1', 'HLA-DRA'))
+df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
+                S100A9 = log.cpm[ind[1], ],
+                S100A8 = log.cpm[ind[2], ],
+                FCER1G = log.cpm[ind[3], ],
+                LST1 = log.cpm[ind[4], ],
+                AIF1 = log.cpm[ind[5], ],
+                HLA_DRA = log.cpm[ind[6], ])
+g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A9)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A9')
+g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
+g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1G)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('FCER1G')
+g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
+  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LST1')
+g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('AIF1')
+g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('HLA-DRA')
+
+grid.arrange(g1,g2,g3,g4,
+             g5,g6, nrow=2)
 ```
+
