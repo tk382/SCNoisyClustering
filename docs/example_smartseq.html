@@ -354,7 +354,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-30</p>
+<p><strong>Last updated:</strong> 2018-08-31</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -378,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/7d28102523fe57bbc65625ee107d1eed667d158d" target="_blank">7d28102</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/0d419e5d7297027c36babda5630ac472c91a427a" target="_blank">0d419e5</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -445,6 +445,7 @@ Untracked files:
 Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
+    Modified:   R/SLSL.R
     Modified:   analysis/example_10x.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
@@ -477,6 +478,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/0d419e5d7297027c36babda5630ac472c91a427a/analysis/example_smartseq.Rmd" target="_blank">0d419e5</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-31
+</td>
+<td style="text-align:left;">
+wflow_publish(c(“analysis/example_dropseq.Rmd”,
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/026662fce12bd750d743c6a185a1881a3f2abc61/docs/example_smartseq.html" target="_blank">026662f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -610,6 +645,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/026662fce12bd750d743c6a185a1881a3f2abc61/docs/figure/example_smartseq.Rmd/cell_filter-2.png" target="_blank">026662f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/0d53b7e4565e4424c1d9b344ea07d0153bcdbc16/docs/figure/example_smartseq.Rmd/cell_filter-2.png" target="_blank">0d53b7e</a>
@@ -755,8 +801,9 @@ tk382
 <p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(pc<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">10</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
 df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne<span class="op">$</span>Y[,<span class="dv">2</span>], <span class="dt">truelabel =</span> truelabel)
-<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col =</span> truelabel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()<span class="op">+</span>
-<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;True Label&quot;</span>)</code></pre></div>
+<span class="kw">plot</span>(df<span class="op">$</span>tsne1, df<span class="op">$</span>tsne2, <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">6</span>)[df<span class="op">$</span>truelabel],
+     <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;tsne2&#39;</span>, <span class="dt">main =</span> <span class="st">&#39;True Label&#39;</span>,
+     <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_smartseq.Rmd/tsne-2.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tsne-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -800,8 +847,9 @@ tk382
                 <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
                 <span class="dt">kernel_type =</span> <span class="st">&quot;combined&quot;</span>,
                 <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-df<span class="op">$</span>SLSL =<span class="st"> </span><span class="kw">as.factor</span>(out<span class="op">$</span>result)
-<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>tsne1, <span class="dt">y=</span>tsne2, <span class="dt">col=</span>SLSL))<span class="op">+</span><span class="kw">geom_point</span>()</code></pre></div>
+<span class="kw">plot</span>(df<span class="op">$</span>tsne1, df<span class="op">$</span>tsne2, <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">5</span>)[<span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(out<span class="op">$</span>result))],
+     <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;tsne2&#39;</span>, <span class="dt">main =</span> <span class="st">&#39;SLSL result&#39;</span>,
+     <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_smartseq.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of slsl-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -902,11 +950,41 @@ sorted_p =<span class="st"> </span><span class="kw">sort</span>(<span class="op"
 sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
-  <span class="kw">plot</span>(log.cpm[sorted_p<span class="op">$</span>ix[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+  <span class="kw">plot</span>(log.cpm[sorted_p<span class="op">$</span>ix[i], sorted_type], <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">5</span>)[ <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type])],
        <span class="dt">main =</span> genenames[sorted_p<span class="op">$</span>ix[i]], <span class="dt">cex=</span><span class="fl">0.5</span>,
        <span class="dt">ylab =</span> <span class="st">&#39;pre-processed log expression&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;cells&#39;</span>)
 }</code></pre></div>
 <p><img src="figure/example_smartseq.Rmd/find_markers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of find_markers-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/026662fce12bd750d743c6a185a1881a3f2abc61/docs/figure/example_smartseq.Rmd/find_markers-1.png" target="_blank">026662f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
@@ -951,38 +1029,38 @@ loaded via a namespace (and not attached):
 [11] lazyeval_0.2.1            colorspace_1.3-2         
 [13] nnet_7.3-12               withr_2.1.2              
 [15] tidyselect_0.2.4          compiler_3.5.1           
-[17] git2r_0.23.0              labeling_0.3             
-[19] caTools_1.17.1.1          scales_0.5.0             
-[21] sfsmisc_1.1-2             DEoptimR_1.0-8           
-[23] robustbase_0.93-2         stringr_1.3.1            
-[25] digest_0.6.15             rmarkdown_1.10           
-[27] R.utils_2.6.0             pkgconfig_2.0.1          
-[29] htmltools_0.3.6           rlang_0.2.1              
-[31] ddalpha_1.3.4             bindr_0.1.1              
-[33] gtools_3.8.1              mclust_5.4.1             
-[35] ModelMetrics_1.1.0        R.oo_1.22.0              
-[37] magrittr_1.5              Rcpp_0.12.18             
-[39] munsell_0.5.0             R.methodsS3_1.7.1        
-[41] stringi_1.2.4             whisker_0.3-2            
-[43] yaml_2.2.0                MASS_7.3-50              
-[45] plyr_1.8.4                recipes_0.1.3            
-[47] grid_3.5.1                pls_2.6-0                
-[49] crayon_1.3.4              splines_3.5.1            
-[51] knitr_1.20                pillar_1.3.0             
-[53] reshape2_1.4.3            codetools_0.2-15         
-[55] stats4_3.5.1              CVST_0.2-2               
-[57] magic_1.5-8               glue_1.3.0               
-[59] evaluate_0.11             RcppArmadillo_0.8.600.0.0
-[61] data.table_1.11.4         foreach_1.4.4            
-[63] gtable_0.2.0              purrr_0.2.5              
-[65] tidyr_0.8.1               kernlab_0.9-26           
-[67] assertthat_0.2.0          DRR_0.0.3                
-[69] gower_0.1.2               prodlim_2018.04.18       
-[71] class_7.3-14              survival_2.42-6          
-[73] geometry_0.3-6            timeDate_3043.102        
-[75] RcppRoll_0.3.0            tibble_1.4.2             
-[77] iterators_1.0.10          workflowr_1.1.1          
-[79] lava_1.6.2                ipred_0.9-6              </code></pre>
+[17] git2r_0.23.0              caTools_1.17.1.1         
+[19] scales_0.5.0              sfsmisc_1.1-2            
+[21] DEoptimR_1.0-8            robustbase_0.93-2        
+[23] stringr_1.3.1             digest_0.6.15            
+[25] rmarkdown_1.10            R.utils_2.6.0            
+[27] pkgconfig_2.0.1           htmltools_0.3.6          
+[29] rlang_0.2.1               ddalpha_1.3.4            
+[31] bindr_0.1.1               gtools_3.8.1             
+[33] mclust_5.4.1              ModelMetrics_1.1.0       
+[35] R.oo_1.22.0               magrittr_1.5             
+[37] Rcpp_0.12.18              munsell_0.5.0            
+[39] R.methodsS3_1.7.1         stringi_1.2.4            
+[41] whisker_0.3-2             yaml_2.2.0               
+[43] MASS_7.3-50               plyr_1.8.4               
+[45] recipes_0.1.3             grid_3.5.1               
+[47] pls_2.6-0                 crayon_1.3.4             
+[49] splines_3.5.1             knitr_1.20               
+[51] pillar_1.3.0              reshape2_1.4.3           
+[53] codetools_0.2-15          stats4_3.5.1             
+[55] CVST_0.2-2                magic_1.5-8              
+[57] glue_1.3.0                evaluate_0.11            
+[59] RcppArmadillo_0.8.600.0.0 data.table_1.11.4        
+[61] foreach_1.4.4             gtable_0.2.0             
+[63] purrr_0.2.5               tidyr_0.8.1              
+[65] kernlab_0.9-26            assertthat_0.2.0         
+[67] DRR_0.0.3                 gower_0.1.2              
+[69] prodlim_2018.04.18        class_7.3-14             
+[71] survival_2.42-6           geometry_0.3-6           
+[73] timeDate_3043.102         RcppRoll_0.3.0           
+[75] tibble_1.4.2              iterators_1.0.10         
+[77] workflowr_1.1.1           lava_1.6.2               
+[79] ipred_0.9-6              </code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
