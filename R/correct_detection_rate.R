@@ -14,13 +14,10 @@
 #'
 #' @export
 correct_detection_rate = function(X, det.rate){
-  if(sum(X<0) ==0){
-    warning("X must be a log-transformed matrix")
-  }
   pc1 = irlba(X,1)$v[,1]
   det.rate2 = qr(cbind(rep(1,length(det.rate)), det.rate))
 
-  residual = t(qr.resid(det.rate2, t(logX)))
+  residual = t(qr.resid(det.rate2, t(X)))
 
   newpc1 = irlba(residual,1)$v[,1]
   par(mfrow = c(1,2))

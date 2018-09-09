@@ -44,7 +44,8 @@ makesparsekernel = function(X,
   if(kernel_type %in% c("spearman", "combined")){
     P3 = rep(list(Matrix(0, nrow=ncol(X), ncol = ncol(X), sparse=T)),
              length(klist) * length(sigmalist))
-    diff3 = 1-cor(as.matrix(X), method = "spearman")
+    # diff3 = 1-cor(as.matrix(X), method = "spearman")
+    diff3 = 1-rankingcor(as.matrix(X))
     for (kk in klist){
       for (ss in sigmalist){
         tmp = get_kernel_matrix(X, diff3, kk, ss)

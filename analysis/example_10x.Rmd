@@ -38,8 +38,8 @@ library(SCNoisyClustering)
 library(SingleCellExperiment)
 library(SC3)
 library(gridExtra)
-R.utils::sourceDirectory("R/", modifiedOnly=FALSE)
-Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
+R.utils::sourceDirectory("../R/", modifiedOnly=FALSE)
+Rcpp::sourceCpp('../src/SCNoisyClustering.cpp')
 ```
 
 ## Read Data : PBMC 27K
@@ -47,8 +47,8 @@ Rcpp::sourceCpp('src/SCNoisyClustering.cpp')
 Read data and keep the gene names separately.
 
 ```{r read_data}
-orig = readMM('data/unnecessary_in_building/pbmc3k/matrix.mtx')
-orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
+orig = readMM('../data/unnecessary_in_building/pbmc3k/matrix.mtx')
+orig_genenames = read.table('../data/unnecessary_in_building/pbmc3k/genes.tsv',
                             stringsAsFactors = FALSE)
 ```
 
@@ -57,7 +57,7 @@ orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
 
 Get summary of the cells. The function "cellFilter" removes abnormal cells based on the gene counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
 
-```{r cell_filter}
+```{r cell_filter, out.width = 5}
 nGene = Matrix::colSums(orig > 0)
 hist(nGene)
 summaryX = cellFilter(X = orig, 
@@ -71,11 +71,13 @@ nGene = summaryX$nGene
 percent.mito = summaryX$percent.mito
 det.rate = summaryX$det.rate
 
-par(mfrow = c(1,4))
+par(mfrow = c(2,2))
 boxplot(nUMI, main='nUMI'); 
 boxplot(nGene, main='nGene'); 
 boxplot(percent.mito, main='mitogene prop'); 
 boxplot(det.rate, main='detection rate')
+supervised_label = read.table('../analysis/supervised_markers_6types.txt')$V1
+# supervised_label = supervised_label[summaryX$keep.cells]
 ```
 
 
@@ -125,22 +127,24 @@ log.cpm = logX #not correct the detection rate (no strict linear pattern)
 pc.base = irlba(log.cpm, 20)
 tsne.base = Rtsne(pc.base$v[,1:10], dims=2, perplexity = 100, pca=FALSE)
 rm(pc.base)
-plot(tsne.base$Y, cex=0.5)
+plot(tsne.base$Y, cex=0.5, xlab = "tsne1", ylab = "tsne2")
 ```
 
 ## Run SLSL
 
+
+
 ```{r slsl, cahce=TRUE}
-# out = SLSL(log.cpm, log=FALSE,
-#            filter = FALSE,
-#            correct_detection_rate = FALSE,
-#            klist = c(200,250,300),
-#            sigmalist = c(1,1.5,2),
-#            kernel_type = "pearson",
-#            verbose=FALSE)
-load('analysis/slsl_10x.Rdata')
+out = SLSL(log.cpm,
+           klist = c(150,200,250,300,350),
+           sigmalist = c(1,1.5,2,2.5),
+           kernel_type = "combined",
+           verbose=FALSE)
+# save(out, file = "../analysis/slsl_spearman_10x.Rdata")
+# load('../analysis/slsl_spearman_10x.Rdata')
 tab = table(out$result)
-plot(tsne.base$Y, col=rainbow(7)[out$result],
+adj.rand.index(out$result, supervised_label)
+plot(tsne.base$Y, col=rainbow(11)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
 S = as.matrix(out$S)
 ind = sort(out$result, index.return=TRUE)$ix
@@ -183,11 +187,11 @@ rowData(sce)$feature_symbol = rownames(tmpX)
 sce = sc3_prepare(sce, kmeans_nstart = 50)
 sce = sc3_estimate_k(sce)
 N = ncol(tmpX)
-k = metadata(sce)$k_estimation
+k = metadata(sce)$sc3$k_estimation
 sce = sc3(sce, ks=9, biology = FALSE, gene_filter=FALSE,
          kmeans_nstart=50)
 col_data_selected = colData(sce)
-plot(tsne.base$Y, col=rainbow(10)[col_data_selected$sc3_9_clusters], cex=0.5,
+plot(tsne.base$Y, col=rainbow(11)[col_data_selected$sc3_9_clusters], cex=0.5,
      ylab='tsne2', xlab='tsne1', main='SC3 result')
 ```
 
@@ -200,26 +204,30 @@ I also check the markers provided in the past works about the same data set. The
 sorted_type = sort(out$result, index.return=TRUE)$ix
 
 #list comes from 10X paper and Seurat
-ind = which(genenames %in% c('CD3D', 'CD8A', 'NKG7', 'FCER1A', 'CD16', 'S100A8',
-                                     'MS4A1', 'GNLY', 'CD3E', 'CD14', 'FCGR3A',
-                                     'LYZ','PPBP'))
-df = data.frame(tsne1 = tsne.base$Y[,1], tsne2 = tsne.base$Y[,2],
-                S100A8 = log.cpm[ind[1], ],
-                FCER1A = log.cpm[ind[2], ],
-                GNLY = log.cpm[ind[3], ],
-                PPBP = log.cpm[ind[4], ],
-                LYZ = log.cpm[ind[5], ],
-                NKG7 = log.cpm[ind[6], ])
-
+markers = c('CD3D','CD3E','CD3G','CD27','CD28',
+            'CD4',
+            'CD8B',
+            'CD4','FOXP3','IL2RA','CTLA4',
+            'CD19','MS4A1','CD79A','CD79B','BLNK',
+            'CD14','CD68','CD163','CSF1R','FCGR3A',
+            'IL3RA','CLEC4C','NRP1',
+            'FCGR3A','FCGR3B','NCAM1','KLRB1','KLRB1','KLRC1','KLRD1','KLRF1','KLRK1',
+            'VWF','CDH5','SELE',
+            'FAP','THY1','COL1A1','COL3A1',
+            'WFDC2','EPCAM','MCAM',
+            'PMEL','MLANA','TYR','MITF',
+            'CD74', 'HLA-DRA', 'HLA-DRB5', 'HLA-DRB1', 'HLA-DPA1', 'HLA-DPB1', 'ACTB', 'LYZ','CST3'
+)
+ind = which(genenames %in% markers)
 par(mfrow = c(2,3))
-for (i in 1:6){
-  plot(log.cpm[ind[i], sorted_type], col = as.factor(out$result[sorted_type]),
+for (i in 1:length(ind)){
+  plot(log.cpm[ind[i], sorted_type], col = rainbow(11)[as.factor(out$result[sorted_type])],
        main = genenames[ind[i]], cex=0.5,
        xlab = 'cells', ylab = 'pre-processed log expression')
 }
 ```
 
-```{r ggplots1, echo=FALSE}
+```{r ggplots1, echo=FALSE, eval = FALSE}
 g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
 g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1A)) + geom_point(size=0.1) +
@@ -275,7 +283,6 @@ g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = LST1)) + geom_point(size=0.1) +
   scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LST1')
 g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = AIF1)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('AIF1')
 g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = HLA_DRA)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('HLA-DRA')
-
 grid.arrange(g1,g2,g3,g4,
              g5,g6, nrow=2)
 ```

@@ -17,12 +17,13 @@ cellFilter = function(X, genenames, minGene = -Inf, maxGene = Inf, maxMitoProp =
   }else{
     percent.mito = rep(0, ncol(X))
   }
-  keep.cells = nGene > minGene & nGene < maxGene & percent.mito < 0.1
+  keep.cells = which(nGene > minGene & nGene < maxGene & percent.mito < 0.1)
   X = X[,keep.cells]
   nUMI = nUMI[keep.cells]
   det.rate = det.rate[keep.cells]
   nGene = nGene[keep.cells]
   percent.mito = percent.mito[keep.cells]
   det.rate = Matrix::colSums(X>0) / nrow(X)
-  return(list(X=X, keep.cells = keep.cells, nUMI = nUMI, nGene = nGene, percent.mito = percent.mito, det.rate = det.rate))
+  return(list(X=X, keep.cells = keep.cells,
+              nUMI = nUMI, nGene = nGene, percent.mito = percent.mito, det.rate = det.rate))
 }

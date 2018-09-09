@@ -28,38 +28,36 @@
 #' @export
 SLSL = function(X,
                 numClust = NA,
-                log = T,
-                filter = F,
-                filter_p1 = 0.9,
-                filter_p2 = 0,
-                correct_detection_rate = F,
                 kernel_type = "combined",
-                klist = seq(15,25,by=5),
+                klist = NA,
                 sigmalist=seq(1,2,by=0.5),
                 tau = 5,
                 gamma = 0,
                 k = NA,
                 verbose=FALSE,
                 measuretime = FALSE,
-                warning=TRUE
-){
+                warning=TRUE){
   # X           : each column is one cell, each row is one gene
   # k           : number of neighbors for kernel computation and network diffusion
   # numClust    : number of clusters
   # kernel_type : possible options: "pearson", "euclidean", "spearman", "combined"# klist       : kernel parameters
   # sigmalist   : kernel parameters
 
-
+  if(length(klist)==1 & is.na(klist[1])){
+    tmp = max(round(ncol(X)/10), 10)
+    klist = c(round(tmp)*0.05, round(tmp)*0.1, round(tmp)*0.15, round(tmp)*0.2)
+  }
   if(ncol(X)>5000 & warning){
-    stop("We detected more than 3,000 cells, and system might crash due to memory requirement.
+    stop("We detected more than 5,000 cells, and system might crash due to memory requirement.
          We recommend LSLSL function for large matrices.
          If you'd like to use SLSL anyway, set warning=FALSE")
   }
-  if(!kernel_type %in% c("pearson","euclidean","spearman","combined","kendall")){
-    stop("kernel_type must be one of 'pearson','euclidean','spearman', 'kendall',or,'combined'")
+  if(!kernel_type %in% c("pearson","euclidean","spearman","combined")){
+    stop("kernel_type must be one of 'pearson','euclidean','spearman',or,'combined'")
   }
   if(is.na(k)){
-    k = max(10,ncol(X)/20)
+    # k = max(10,ncol(X)/20)
+    k = round(mean(klist))
   }
 
   if(!is.matrix(X)){
@@ -68,23 +66,6 @@ SLSL = function(X,
 
   # start measuring time
   t1 = Sys.time()
-
-  # Filter the genes
-  if(filter){
-    X = genefilter(X, filter_p1, filter_p2)
-  }
-
-  t2 = Sys.time()    #t2 - t1 : gene filtering
-
-  if(log){X = log(X+1)}
-
-  if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
-    det = colSums(X!=0) / nrow(X)
-    det2 = qr(det)
-    X = t(qr.resid(det2, t(X)))
-  }
-
-  X = scale(X)
 
   # Construct kernel..
   if(verbose){print('constructing kernel..')}

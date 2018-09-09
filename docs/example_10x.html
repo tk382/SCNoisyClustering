@@ -354,12 +354,11 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-31</p>
+<p><strong>Last updated:</strong> 2018-09-07</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -378,7 +377,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/732a07715be8d38ebd2dba8701b1f159ca8ff6ba" target="_blank">732a077</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/29d6c3fca77d635f65dd8d83b65819705684e849" target="_blank">29d6c3f</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -386,7 +385,6 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    R/.Rhistory
     Ignored:    analysis/.Rhistory
-    Ignored:    analysis/figure/
     Ignored:    analysis/pipeline/.Rhistory
 
 Untracked files:
@@ -400,6 +398,7 @@ Untracked files:
     Untracked:  analysis/consistency_check.R
     Untracked:  analysis/dropseq_heatmap.pdf
     Untracked:  analysis/example_dropseq_cache/
+    Untracked:  analysis/example_smartseq2.Rmd
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
@@ -407,6 +406,8 @@ Untracked files:
     Untracked:  analysis/pipeline/3_smallsets/
     Untracked:  analysis/slsl_10x.Rdata
     Untracked:  analysis/slsl_dropseq.Rdata
+    Untracked:  analysis/supervised_10x_label.txt
+    Untracked:  analysis/supervised_markers_6types.txt
     Untracked:  analysis/writeup/cite.log
     Untracked:  analysis/writeup/paper.aux
     Untracked:  analysis/writeup/paper.bbl
@@ -438,6 +439,7 @@ Untracked files:
     Untracked:  analysis/writeup/writeup3.tex
     Untracked:  data/unnecessary_in_building/
     Untracked:  dropseq_heatmap.pdf
+    Untracked:  markerref.pdf
     Untracked:  normalized_out_1.Rdata
     Untracked:  not_normalized_out_1.Rdata
     Untracked:  src/.gitignore
@@ -447,10 +449,15 @@ Unstaged changes:
     Modified:   NAMESPACE
     Modified:   R/RcppExports.R
     Modified:   R/SLSL.R
+    Modified:   R/cellfilter.R
+    Modified:   R/correct_detection_rate.R
+    Modified:   R/dispersion.R
+    Modified:   analysis/example_10x.Rmd
     Modified:   analysis/example_dropseq.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -479,6 +486,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/29d6c3fca77d635f65dd8d83b65819705684e849/docs/example_10x.html" target="_blank">29d6c3f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-31
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -615,7 +639,7 @@ orig_genenames =<span class="st"> </span><span class="kw">read.table</span>(<spa
 <p>Get summary of the cells. The function “cellFilter” removes abnormal cells based on the gene counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGene =<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">colSums</span>(orig <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
 <span class="kw">hist</span>(nGene)</code></pre></div>
-<p><img src="figure/example_10x.Rmd/cell_filter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/example_10x.Rmd/cell_filter-1.png" width="5" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of cell_filter-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -657,12 +681,12 @@ nGene =<span class="st"> </span>summaryX<span class="op">$</span>nGene
 percent.mito =<span class="st"> </span>summaryX<span class="op">$</span>percent.mito
 det.rate =<span class="st"> </span>summaryX<span class="op">$</span>det.rate
 
-<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>))
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))
 <span class="kw">boxplot</span>(nUMI, <span class="dt">main=</span><span class="st">&#39;nUMI&#39;</span>); 
 <span class="kw">boxplot</span>(nGene, <span class="dt">main=</span><span class="st">&#39;nGene&#39;</span>); 
 <span class="kw">boxplot</span>(percent.mito, <span class="dt">main=</span><span class="st">&#39;mitogene prop&#39;</span>); 
 <span class="kw">boxplot</span>(det.rate, <span class="dt">main=</span><span class="st">&#39;detection rate&#39;</span>)</code></pre></div>
-<p><img src="figure/example_10x.Rmd/cell_filter-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/example_10x.Rmd/cell_filter-2.png" width="5" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of cell_filter-2.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -693,6 +717,8 @@ tk382
 </tbody>
 </table>
 <p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">supervised_label =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;analysis/supervised_markers_6types.txt&#39;</span>)<span class="op">$</span>V1
+<span class="co"># supervised_label = supervised_label[summaryX$keep.cells]</span></code></pre></div>
 </div>
 <div id="gene-filtering" class="section level2">
 <h2>Gene Filtering</h2>
@@ -790,7 +816,8 @@ log.cpm =<span class="st"> </span>logX <span class="co">#not correct the detecti
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc.base =<span class="st"> </span><span class="kw">irlba</span>(log.cpm, <span class="dv">20</span>)
 tsne.base =<span class="st"> </span><span class="kw">Rtsne</span>(pc.base<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">dims=</span><span class="dv">2</span>, <span class="dt">perplexity =</span> <span class="dv">100</span>, <span class="dt">pca=</span><span class="ot">FALSE</span>)
 <span class="kw">rm</span>(pc.base)
-<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">cex=</span><span class="fl">0.5</span>)</code></pre></div>
+<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">cex=</span><span class="fl">0.5</span>, <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">11</span>)[supervised_label],
+     <span class="dt">xlab =</span> <span class="st">&quot;tsne1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;tsne2&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Clusters using Markers&quot;</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/tsne-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of tsne-1.png:</em></summary>
 <table style="border-collapse:separate; border-spacing:5px;">
@@ -836,16 +863,19 @@ tk382
 </div>
 <div id="run-slsl" class="section level2">
 <h2>Run SLSL</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># out = SLSL(log.cpm, log=FALSE,</span>
-<span class="co">#            filter = FALSE,</span>
-<span class="co">#            correct_detection_rate = FALSE,</span>
-<span class="co">#            klist = c(200,250,300),</span>
-<span class="co">#            sigmalist = c(1,1.5,2),</span>
-<span class="co">#            kernel_type = &quot;pearson&quot;,</span>
-<span class="co">#            verbose=FALSE)</span>
-<span class="kw">load</span>(<span class="st">&#39;analysis/slsl_10x.Rdata&#39;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(log.cpm, <span class="dt">log=</span><span class="ot">FALSE</span>,
+           <span class="dt">filter =</span> <span class="ot">FALSE</span>,
+           <span class="dt">correct_detection_rate =</span> <span class="ot">FALSE</span>,
+           <span class="dt">klist =</span> <span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">250</span>,<span class="dv">300</span>),
+           <span class="dt">sigmalist =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>),
+           <span class="dt">numClust =</span> <span class="dv">11</span>,
+           <span class="dt">kernel_type =</span> <span class="st">&quot;pearson&quot;</span>,
+           <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+<span class="co"># load(&#39;analysis/slsl_10x.Rdata&#39;)</span>
 tab =<span class="st"> </span><span class="kw">table</span>(out<span class="op">$</span>result)
-<span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">7</span>)[out<span class="op">$</span>result],
+<span class="kw">adj.rand.index</span>(out<span class="op">$</span>result, supervised_label)</code></pre></div>
+<pre><code>[1] 0.3573011</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(tsne.base<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="dv">11</span>)[out<span class="op">$</span>result],
      <span class="dt">xlab =</span> <span class="st">&#39;tsne1&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;tsne2&#39;</span>, <span class="dt">main=</span><span class="st">&quot;SLSL result&quot;</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="figure/example_10x.Rmd/slsl-1.png" width="672" style="display: block; margin: auto;" /></p>
 <details> <summary><em>Expand here to see past versions of slsl-1.png:</em></summary>
@@ -979,20 +1009,24 @@ tk382
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sorted_type =<span class="st"> </span><span class="kw">sort</span>(out<span class="op">$</span>result, <span class="dt">index.return=</span><span class="ot">TRUE</span>)<span class="op">$</span>ix
 
 <span class="co">#list comes from 10X paper and Seurat</span>
-ind =<span class="st"> </span><span class="kw">which</span>(genenames <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CD3D&#39;</span>, <span class="st">&#39;CD8A&#39;</span>, <span class="st">&#39;NKG7&#39;</span>, <span class="st">&#39;FCER1A&#39;</span>, <span class="st">&#39;CD16&#39;</span>, <span class="st">&#39;S100A8&#39;</span>,
-                                     <span class="st">&#39;MS4A1&#39;</span>, <span class="st">&#39;GNLY&#39;</span>, <span class="st">&#39;CD3E&#39;</span>, <span class="st">&#39;CD14&#39;</span>, <span class="st">&#39;FCGR3A&#39;</span>,
-                                     <span class="st">&#39;LYZ&#39;</span>,<span class="st">&#39;PPBP&#39;</span>))
-df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">tsne1 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">1</span>], <span class="dt">tsne2 =</span> tsne.base<span class="op">$</span>Y[,<span class="dv">2</span>],
-                <span class="dt">S100A8 =</span> log.cpm[ind[<span class="dv">1</span>], ],
-                <span class="dt">FCER1A =</span> log.cpm[ind[<span class="dv">2</span>], ],
-                <span class="dt">GNLY =</span> log.cpm[ind[<span class="dv">3</span>], ],
-                <span class="dt">PPBP =</span> log.cpm[ind[<span class="dv">4</span>], ],
-                <span class="dt">LYZ =</span> log.cpm[ind[<span class="dv">5</span>], ],
-                <span class="dt">NKG7 =</span> log.cpm[ind[<span class="dv">6</span>], ])
-
+markers =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CD3D&#39;</span>,<span class="st">&#39;CD3E&#39;</span>,<span class="st">&#39;CD3G&#39;</span>,<span class="st">&#39;CD27&#39;</span>,<span class="st">&#39;CD28&#39;</span>,
+            <span class="st">&#39;CD4&#39;</span>,
+            <span class="st">&#39;CD8B&#39;</span>,
+            <span class="st">&#39;CD4&#39;</span>,<span class="st">&#39;FOXP3&#39;</span>,<span class="st">&#39;IL2RA&#39;</span>,<span class="st">&#39;CTLA4&#39;</span>,
+            <span class="st">&#39;CD19&#39;</span>,<span class="st">&#39;MS4A1&#39;</span>,<span class="st">&#39;CD79A&#39;</span>,<span class="st">&#39;CD79B&#39;</span>,<span class="st">&#39;BLNK&#39;</span>,
+            <span class="st">&#39;CD14&#39;</span>,<span class="st">&#39;CD68&#39;</span>,<span class="st">&#39;CD163&#39;</span>,<span class="st">&#39;CSF1R&#39;</span>,<span class="st">&#39;FCGR3A&#39;</span>,
+            <span class="st">&#39;IL3RA&#39;</span>,<span class="st">&#39;CLEC4C&#39;</span>,<span class="st">&#39;NRP1&#39;</span>,
+            <span class="st">&#39;FCGR3A&#39;</span>,<span class="st">&#39;FCGR3B&#39;</span>,<span class="st">&#39;NCAM1&#39;</span>,<span class="st">&#39;KLRB1&#39;</span>,<span class="st">&#39;KLRB1&#39;</span>,<span class="st">&#39;KLRC1&#39;</span>,<span class="st">&#39;KLRD1&#39;</span>,<span class="st">&#39;KLRF1&#39;</span>,<span class="st">&#39;KLRK1&#39;</span>,
+            <span class="st">&#39;VWF&#39;</span>,<span class="st">&#39;CDH5&#39;</span>,<span class="st">&#39;SELE&#39;</span>,
+            <span class="st">&#39;FAP&#39;</span>,<span class="st">&#39;THY1&#39;</span>,<span class="st">&#39;COL1A1&#39;</span>,<span class="st">&#39;COL3A1&#39;</span>,
+            <span class="st">&#39;WFDC2&#39;</span>,<span class="st">&#39;EPCAM&#39;</span>,<span class="st">&#39;MCAM&#39;</span>,
+            <span class="st">&#39;PMEL&#39;</span>,<span class="st">&#39;MLANA&#39;</span>,<span class="st">&#39;TYR&#39;</span>,<span class="st">&#39;MITF&#39;</span>,
+            <span class="st">&#39;CD74&#39;</span>, <span class="st">&#39;HLA-DRA&#39;</span>, <span class="st">&#39;HLA-DRB5&#39;</span>, <span class="st">&#39;HLA-DRB1&#39;</span>, <span class="st">&#39;HLA-DPA1&#39;</span>, <span class="st">&#39;HLA-DPB1&#39;</span>, <span class="st">&#39;ACTB&#39;</span>, <span class="st">&#39;LYZ&#39;</span>,<span class="st">&#39;CST3&#39;</span>
+)
+ind =<span class="st"> </span><span class="kw">which</span>(genenames <span class="op">%in%</span><span class="st"> </span>markers)
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))
-<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>){
-  <span class="kw">plot</span>(log.cpm[ind[i], sorted_type], <span class="dt">col =</span> <span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type]),
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(ind)){
+  <span class="kw">plot</span>(log.cpm[ind[i], sorted_type], <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dv">11</span>)[<span class="kw">as.factor</span>(out<span class="op">$</span>result[sorted_type])],
        <span class="dt">main =</span> genenames[ind[i]], <span class="dt">cex=</span><span class="fl">0.5</span>,
        <span class="dt">xlab =</span> <span class="st">&#39;cells&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;pre-processed log expression&#39;</span>)
 }</code></pre></div>
@@ -1013,6 +1047,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/29d6c3fca77d635f65dd8d83b65819705684e849/docs/figure/example_10x.Rmd/biomarkers-1.png" target="_blank">29d6c3f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-31
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/5cd6432f42f4baa2b1db8ba6297781da8b4b576b/docs/figure/example_10x.Rmd/biomarkers-1.png" target="_blank">5cd6432</a>
@@ -1048,8 +1093,37 @@ tk382
 </tr>
 </tbody>
 </table>
+<p></details> <img src="figure/example_10x.Rmd/biomarkers-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of biomarkers-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/3018a28878ebd648ea724838f2234a0fee4d132a/docs/figure/example_10x.Rmd/biomarkers-2.png" target="_blank">3018a28</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+</tr>
+</tbody>
+</table>
 <p></details></p>
-<p><img src="figure/example_10x.Rmd/ggplots1-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="differentially-expressed-genes" class="section level2">
 <h2>Differentially Expressed Genes</h2>
@@ -1086,6 +1160,17 @@ Date
 <tbody>
 <tr>
 <td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/29d6c3fca77d635f65dd8d83b65819705684e849/docs/figure/example_10x.Rmd/find_markers-1.png" target="_blank">29d6c3f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <a href="https://github.com/tk382/SCNoisyClustering/blob/5cd6432f42f4baa2b1db8ba6297781da8b4b576b/docs/figure/example_10x.Rmd/find_markers-1.png" target="_blank">5cd6432</a>
 </td>
 <td style="text-align:left;">
@@ -1110,6 +1195,36 @@ tk382
 </table>
 <p></details></p>
 <p><img src="figure/example_10x.Rmd/ggplots2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of ggplots2-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/29d6c3fca77d635f65dd8d83b65819705684e849/docs/figure/example_10x.Rmd/ggplots2-1.png" target="_blank">29d6c3f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-31
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
