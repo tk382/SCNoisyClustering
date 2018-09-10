@@ -5,11 +5,6 @@
 #'
 #' @param X Expression level matrix in count, cells in columns, genes in rows
 #' @param numClust Number of Clusters. If unknown, NA. If set to NA, it will be estimated with minimum 3.
-#' @param log If set to TRUE, SLSL will take log from X. If it is already log-transformed, set FALSE.
-#' @param filter If set to TRUE, remove rows with little information
-#' @param filter_p1 Upper threshold for percentage of zeros in each row
-#' @param filter_p2 Lower threshold for percentage of zeros in each row
-#' @param correct_detection_rate If set to TRUE, detection rate will be regressed out
 #' @param kernel_type distance measure to use: one of "euclidean", "pearson", "spearman", or "combined"
 #' @param klist Kernel parameters setting.
 #' @param sigmalist Kernel parameters setting.
@@ -35,13 +30,7 @@ SLSL = function(X,
                 gamma = 0,
                 k = NA,
                 verbose=FALSE,
-                measuretime = FALSE,
                 warning=TRUE){
-  # X           : each column is one cell, each row is one gene
-  # k           : number of neighbors for kernel computation and network diffusion
-  # numClust    : number of clusters
-  # kernel_type : possible options: "pearson", "euclidean", "spearman", "combined"# klist       : kernel parameters
-  # sigmalist   : kernel parameters
 
   if(length(klist)==1 & is.na(klist[1])){
     tmp = max(round(ncol(X)/10), 10)
@@ -50,7 +39,7 @@ SLSL = function(X,
   if(ncol(X)>5000 & warning){
     stop("We detected more than 5,000 cells, and system might crash due to memory requirement.
          We recommend LSLSL function for large matrices.
-         If you'd like to use SLSL anyway, set warning=FALSE")
+         If you'd like to use SLSL anyway with enough RAM, set warning=FALSE")
   }
   if(!kernel_type %in% c("pearson","euclidean","spearman","combined")){
     stop("kernel_type must be one of 'pearson','euclidean','spearman',or,'combined'")

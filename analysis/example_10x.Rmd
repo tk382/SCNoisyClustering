@@ -9,7 +9,11 @@ output:
     toc_float: 
       collapsed: true
       smooth_scroll: true
+    fig_width: 6
+    fig_height: 4
 ---
+
+## Load Package
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
@@ -18,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 library(MultiAssayExperiment)
 library(ggplot2)
+library(plyr)
 library(irlba)
 library(matrixStats)
 library(inline)
@@ -28,7 +33,7 @@ library(caret)
 library(fossil)
 library(pracma)
 library(scatterplot3d)
-library(igraph) #for nmi
+library(igraph)
 library(Rtsne)
 library(diceR)
 library(gplots)
@@ -38,8 +43,6 @@ library(SCNoisyClustering)
 library(SingleCellExperiment)
 library(SC3)
 library(gridExtra)
-R.utils::sourceDirectory("../R/", modifiedOnly=FALSE)
-Rcpp::sourceCpp('../src/SCNoisyClustering.cpp')
 ```
 
 ## Read Data : PBMC 27K
@@ -47,17 +50,17 @@ Rcpp::sourceCpp('../src/SCNoisyClustering.cpp')
 Read data and keep the gene names separately.
 
 ```{r read_data}
-orig = readMM('../data/unnecessary_in_building/pbmc3k/matrix.mtx')
-orig_genenames = read.table('../data/unnecessary_in_building/pbmc3k/genes.tsv',
+orig = readMM('data/unnecessary_in_building/pbmc3k/matrix.mtx')
+orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
                             stringsAsFactors = FALSE)
 ```
 
 
 ## Quality Control and Cell Selections
 
-Get summary of the cells. The function "cellFilter" removes abnormal cells based on the gene counts. The arguments minGene and maxGene restrict the number of genes detected in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2000 detected genes are likeliy to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to inspect the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
+First, "cellFilter" function inspects the UMI distribution of each cell and remove abnormal ones. The arguments minGene and maxGene restrict the number of genes detected (at least 1 UMI) in each cell. In 10X and Drop-seq data, having lower limit of 500 and upper limit of 2000 are generally appropriate. The cells with greater than 2,000 detected genes are likely to be doublets, and those with less than 500 have too many dropouts and does not have enough information. The default values are -Inf and Inf, so users are recommended to look at the histogram of gene counts and determine the bounds. The function also requires the gene names to discover the mito-genes. Cells with high mitochondrial read proportion can indicate apoptosis. The default is 0.1. 
 
-```{r cell_filter, out.width = 5}
+```{r cell_filter}
 nGene = Matrix::colSums(orig > 0)
 hist(nGene)
 summaryX = cellFilter(X = orig, 
@@ -71,13 +74,11 @@ nGene = summaryX$nGene
 percent.mito = summaryX$percent.mito
 det.rate = summaryX$det.rate
 
-par(mfrow = c(2,2))
+par(mfrow = c(1,4))
 boxplot(nUMI, main='nUMI'); 
 boxplot(nGene, main='nGene'); 
 boxplot(percent.mito, main='mitogene prop'); 
 boxplot(det.rate, main='detection rate')
-supervised_label = read.table('../analysis/supervised_markers_6types.txt')$V1
-# supervised_label = supervised_label[summaryX$keep.cells]
 ```
 
 
@@ -88,11 +89,20 @@ Next find variable genes using normalized dispersion. First, remove the genes wh
 ```{r basic_gene_filtering}
 X = tmpX[Matrix::rowSums(tmpX) > 0, ]
 genenames = orig_genenames[Matrix::rowSums(tmpX) > 0, 2]
-disp = dispersion(X, bins = 20)
-plot(disp$z ~ disp$genemeans,
+
+disp = dispersion(X, bins = 20, robust = F)
+
+outliers = which(disp$normalized_dispersion>5)
+plot(disp$normalized_dispersion[-outliers] ~ disp$genemeans[-outliers],
      xlab = "mean expression",
-     ylab = "normalized dispersion")
-select = which(abs(disp$z) > 1)
+     ylab = "normalized dispersion",
+     ylim = c(min(disp$normalized_dispersion),
+              max(disp$normalized_dispersion, na.rm=TRUE)))
+text(disp$normalized_dispersion[outliers] ~ disp$genemeans[outliers],
+     labels = genenames[outliers],
+     cex=0.5)
+
+select = which(abs(disp$normalized_dispersion) > 1)
 X = X[select, ]
 genenames = genenames[select]
 ```
@@ -106,10 +116,9 @@ Use quantile-normalization to make the distribution of each cell the same.
 X = quantile_normalize(as.matrix(X))
 ```
 
+<!-- ## Correct Detection Rate -->
 
-## Correct Detection Rate
-
-```{r log_transform_and_det_correction}
+```{r log_transform_and_det_correction, echo=FALSE, eval=FALSE}
 #take log
 logX = as.matrix(log(X + 1))
 
@@ -124,31 +133,43 @@ log.cpm = logX #not correct the detection rate (no strict linear pattern)
 
 ## Dimension reduction and visualization
 ```{r tsne}
+log.cpm = as.matrix(log(X + 1))
 pc.base = irlba(log.cpm, 20)
 tsne.base = Rtsne(pc.base$v[,1:10], dims=2, perplexity = 100, pca=FALSE)
 rm(pc.base)
-plot(tsne.base$Y, cex=0.5, xlab = "tsne1", ylab = "tsne2")
+plot(tsne.base$Y, cex=0.7, xlab = "tsne1", ylab = "tsne2")
 ```
 
 ## Run SLSL
 
-
+Run the clustering algorithm SLSL based on the filtered matrix. There are three main parameters. First, "klist" determines the number of neighbors to use to build initial similarity matrix, and around 1/10 of the number of cells is appropriate. "sigmalist" determines the nonlinear structure of Gaussian kernel, and the default of 1, 1.5, and 2.5 work well. The kernel_type determines the distance measure. The four options are "spearman", "pearson", "euclidean", and "combined" which combines information across three different distance measures. 
 
 ```{r slsl, cahce=TRUE}
-out = SLSL(log.cpm,
-           klist = c(150,200,250,300,350),
-           sigmalist = c(1,1.5,2,2.5),
-           kernel_type = "combined",
-           verbose=FALSE)
-# save(out, file = "../analysis/slsl_spearman_10x.Rdata")
-# load('../analysis/slsl_spearman_10x.Rdata')
+# out = SLSL(log.cpm,
+#            klist = c(200,400,600),
+#            sigmalist = c(1, 2, 3),
+#            kernel_type = "combined",
+#            verbose=FALSE)
+# tab = table(out$result)
+# save(out, file='slsl_10x.Rdata')
+load('analysis/slsl_10x.Rdata')
 tab = table(out$result)
-adj.rand.index(out$result, supervised_label)
+```
+
+## Analyze result
+
+First visualize the tSNE plot with the clustering result. Also the output includes the similarity matrix that can be visualized using heatmap function, given that there is enough RAM space. 
+
+```{r slsl_analyze}
 plot(tsne.base$Y, col=rainbow(11)[out$result],
      xlab = 'tsne1', ylab='tsne2', main="SLSL result", cex = 0.5)
 S = as.matrix(out$S)
+
 ind = sort(out$result, index.return=TRUE)$ix
-palette.gr.marray <- colorRampPalette(c("ivory", "pink", "red", "brown"))(50)
+```
+
+```{r visualize_s, echo=F, eval=F}
+palette.gr.marray <- colorRampPalette(c("ivory", "red", "brown", "black"))(30)
 heatmap.2(S[ind, ind],
           trace = "none",
           col = palette.gr.marray,
@@ -159,7 +180,7 @@ heatmap.2(S[ind, ind],
           labRow = NA,
           labCol = NA,
           key = F,
-          breaks = seq(min(S), max(S),length=51),
+          breaks = seq(0, 0.01,length=31),
           cexRow = 1,
           symbreaks = T,
           main = "Similarity Matrix (sorted)")
@@ -198,12 +219,11 @@ plot(tsne.base$Y, col=rainbow(11)[col_data_selected$sc3_9_clusters], cex=0.5,
 
 ## Known Markers
 
-I also check the markers provided in the past works about the same data set. The gene names used below are from either Seurat's tutorial or the original 10X paper about PBMC cells Zheng et al. 
+If there are known markers, you can check how differentially they are expressed in the clustering result. The markers used below are from the supplementary table of (Schelker et al., 2017)
 
 ```{r biomarkers}
 sorted_type = sort(out$result, index.return=TRUE)$ix
 
-#list comes from 10X paper and Seurat
 markers = c('CD3D','CD3E','CD3G','CD27','CD28',
             'CD4',
             'CD8B',
@@ -215,36 +235,24 @@ markers = c('CD3D','CD3E','CD3G','CD27','CD28',
             'VWF','CDH5','SELE',
             'FAP','THY1','COL1A1','COL3A1',
             'WFDC2','EPCAM','MCAM',
-            'PMEL','MLANA','TYR','MITF',
-            'CD74', 'HLA-DRA', 'HLA-DRB5', 'HLA-DRB1', 'HLA-DPA1', 'HLA-DPB1', 'ACTB', 'LYZ','CST3'
+            'PMEL','MLANA','TYR','MITF'
 )
-ind = which(genenames %in% markers)
+ind = which(orig_genenames$V2 %in% markers)
 par(mfrow = c(2,3))
 for (i in 1:length(ind)){
-  plot(log.cpm[ind[i], sorted_type], col = rainbow(11)[as.factor(out$result[sorted_type])],
-       main = genenames[ind[i]], cex=0.5,
+  if(sum(tmpX[ind[i], sorted_type]!=0) > 50){
+      plot(tmpX[ind[i], sorted_type], col = rainbow(11)[as.factor(out$result[sorted_type])],
+       main = orig_genenames[ind[i],2], cex=0.5,
        xlab = 'cells', ylab = 'pre-processed log expression')
+  }
 }
 ```
 
-```{r ggplots1, echo=FALSE, eval = FALSE}
-g1 = ggplot(df, aes(x=tsne1, y=tsne2, col = S100A8)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('S100A8')
-g2 = ggplot(df, aes(x=tsne1, y=tsne2, col = FCER1A)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('FCER1A')
-g3 = ggplot(df, aes(x=tsne1, y=tsne2, col = GNLY)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('GNLY')
-g4 = ggplot(df, aes(x=tsne1, y=tsne2, col = PPBP)) + geom_point(size=0.1) +
-  scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('PPBP')
-g5 = ggplot(df, aes(x=tsne1, y=tsne2, col = LYZ)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('LYZ')
-g6 = ggplot(df, aes(x=tsne1, y=tsne2, col = NKG7)) + geom_point(size=0.1) + scale_colour_gradient(low="pink", high="black") + guides(color = FALSE) + ggtitle('NKG7')
-
-grid.arrange(g1,g2,g3,g4,
-             g5,g6, nrow=2)
-```
-
+Based on the biomarkers, we can infer that B cells are red, T cells are orange, NK cells are yelow, and monocytes are green. 
 
 ## Differentially Expressed Genes
+
+Using Kruskal test, we order the p-values to find the top differentially expressed genes. Below we present 6. 
 
 ```{r find_markers}
 p = rep(0, nrow(log.cpm))
@@ -257,12 +265,13 @@ sorted_type = sort(out$result, index.return=TRUE)$ix
 par(mfrow = c(2,3))
 for (i in 1:6){
   plot(log.cpm[sorted_p$ix[i], sorted_type], 
-       col = rainbow(length(tab))[as.factor(out$result[sorted_type])],
+       col = rainbow(11)[as.factor(out$result[sorted_type])],
        main = genenames[sorted_p$ix[i]], cex=0.5,
        ylab = "pre-processed log expression", xlab = "cells")
 }
 
 ```
+
 
 ```{r ggplots2, echo=FALSE}
 ind = which(genenames %in% c('S100A9', 'S100A8', 'FCER1G', 'LST1', 'AIF1', 'HLA-DRA'))
