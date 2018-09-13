@@ -9,12 +9,10 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "10X Pipeline"
-      href: example_10x.html
-    - text: "Drop-seq Pipeline"
-      href: example_dropseq.html
-    - text: "Smart-seq Pipeline"
-      href: example_smartseq.html
+    - text: "Drop-seq / 10X Pipeline"
+      href: large.html
+    - text: "High Coverage Pipeline"
+      href: small.html
     - text: "License"
       href: license.html
   right:

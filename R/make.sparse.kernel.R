@@ -7,7 +7,7 @@
 #' @param verbose Show progress if set to TRUE
 #'
 #' @export
-makesparsekernel = function(X,
+make.sparse.kernel = function(X,
                             kernel_type = kernel_type,
                             klist = seq(15,25,by=5),
                             sigmalist=seq(1,2,by=0.5),
@@ -45,7 +45,7 @@ makesparsekernel = function(X,
     P3 = rep(list(Matrix(0, nrow=ncol(X), ncol = ncol(X), sparse=T)),
              length(klist) * length(sigmalist))
     # diff3 = 1-cor(as.matrix(X), method = "spearman")
-    diff3 = 1-rankingcor(as.matrix(X))
+    diff3 = 1-ranking.cor(as.matrix(X))
     for (kk in klist){
       for (ss in sigmalist){
         tmp = get_kernel_matrix(X, diff3, kk, ss)
@@ -59,7 +59,7 @@ makesparsekernel = function(X,
   if(kernel_type=="jaccard"){
     P4 = rep(list(Matrix(0, nrow=ncol(X), ncol = ncol(X), sparse=T)),
              length(klist) * length(sigmalist))
-    diff4 = 1-cor(as.matrix(X), method = "kendall")
+    diff4 = 1-cor(as.matrix(X), method = "jaccard")
     for (kk in klist){
       for (ss in sigmalist){
         tmp = get_kernel_matrix(X, diff4, kk, ss)

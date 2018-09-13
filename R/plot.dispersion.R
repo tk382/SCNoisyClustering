@@ -5,16 +5,18 @@
 #' @param bins number of bins to divide genes by their mean expression level
 
 #' @return data frame with mean and variance of expression level for each gene, bins they belong to, and normalized dispersion level
-#' @examples
-#' X = matrix(sample(0:10, size = 10000, replace = TRUE, prob = c(0.9, rep(0.1/10, 10))), nrow = 200) #create expression level matrix
-#' newX = genefilter(X, 0.9, 0)
-#' dim(newX)
 #' @export
-dispersion = function(X, bins=20, robust = FALSE){
+plot.dispersion = function(X,
+                           genenames,
+                           bins=NA, median = FALSE,
+                           outliers.mean.thresh = c(30,Inf),
+                           outliers.vmr.thresh = c(3,Inf)){
   if(sum(X<0) > 0){
     warning("The input matrix X should be count without log-transformation")
   }
-
+  if(is.na(bins)){
+    bins=10
+  }
   genemeans  = Matrix::rowMeans(X)
   genevars   = apply(X, 1, var)
   disp       = genevars / genemeans
@@ -23,7 +25,7 @@ dispersion = function(X, bins=20, robust = FALSE){
                            genevars   = genevars,
                            disp       = disp,
                            quartile   = quartile )
-  if(!robust){
+  if(!median){
     newdf = df %>%
       dplyr::group_by(quartile) %>%
       dplyr::mutate(normalized_dispersion = scale(disp))
@@ -38,7 +40,22 @@ dispersion = function(X, bins=20, robust = FALSE){
     newdf$normalized_dispersion[!is.finite(newdf$normalized_dispersion)] = 0
     newdf$normalized_dispersion[is.na(newdf$normalized_dispersion)] = 0
   }
+  newdf$vmr = log(newdf$normalized_dispersion+1)
+  ind = 1:nrow(df)
+  outliers = which((newdf$vmr>outliers.vmr.thresh[1] &
+                     newdf$vmr < outliers.vmr.thresh[2]) |
+                     (newdf$genemeans > outliers.mean.thresh[1] &
+                     newdf$genemeans < outliers.mean.thresh[2]))
+  plot(newdf$vmr[-outliers] ~ newdf$genemeans[-outliers],
+       ylab="log(vmr)",
+       xlab="",
+       main="log of normalized dispersion",
+       ylim = c(min(newdf$vmr), max(newdf$vmr)),
+       xlim = c(min(newdf$genemeans), max(newdf$genemeans)),
+       cex = 0.5)
+  text(newdf$vmr[outliers] ~ newdf$genemeans[outliers],
+       labels = genenames[outliers],
+       cex=0.7)
   return(newdf)
-
-
 }
+

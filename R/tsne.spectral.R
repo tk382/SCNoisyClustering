@@ -6,7 +6,7 @@
 #' @examples
 #'
 #' @export
-tsne_spectral = function(A, numClust, numEigen = NA){
+tsne.spectral = function(A, numClust, numEigen = NA){
   # compute the eigenvalues and eigenvectors of P
   if(is.na(numEigen)){numEigen = numClust}
   rs = rowSums(A) + 1

@@ -8,7 +8,7 @@
 #' @param verbose Show progress if set to TRUE
 #'
 #' @export
-savesparsekernel = function(X,
+save.sparse.kernel = function(X,
                             dir = ".",
                             kernel_type = kernel_type,
                             klist = seq(15,25,by=5),
