@@ -1,12 +1,14 @@
-#' Remove genes (rows) with little information.
-#' Genes that are not expressed in any of the samples, or most of the samples, and in some cases, genes that are expressed in most the samples, will be removed.
+#' Show distribution of normalized dispersion for each gene
 #'
-#' @param X data matrix with zeros
+#'
+#' @param X data matrix
+#' @param genenames name of the genes
 #' @param bins number of bins to divide genes by their mean expression level
-
-#' @return data frame with mean and variance of expression level for each gene, bins they belong to, and normalized dispersion level
+#' @param median whether to use median instead of mean, MAD instead of SD
+#' @param outliers.mean.thresh x-axis threshold to show outliergene names instead of simple plotting
+#' @param outliers.vmr.thresh y-axis threshold to show outlier gene names instead of simple plotting
 #' @export
-plot.dispersion = function(X,
+plot_dispersion = function(X,
                            genenames,
                            bins=NA, median = FALSE,
                            outliers.mean.thresh = c(30,Inf),

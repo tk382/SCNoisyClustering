@@ -3,7 +3,7 @@
 #' @param X matrix to quantile-normalize
 #'
 #' @export
-quantile.normalize = function(X){
+quantile_normalize = function(X){
   X.rank = apply(X, 2, rank, ties.method="min")
   X.sorted = apply(X, 2, sort)
   X.mean = apply(X.sorted, 1, mean)

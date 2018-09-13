@@ -3,7 +3,7 @@
 #' @param X log-transformed expression level matrix with cells at columns, genes at rows
 #' @param genenames : gene names for each row of X
 #' @export
-explore.data = function(X, genenames){
+explore_data = function(X, genenames){
   nUMI = Matrix::colSums(X)
   nGene = Matrix::colSums(X>0)
   det.rate = nGene / nrow(X)

@@ -48,7 +48,7 @@ SLSL = function(X,
   }
 
   if(verbose){print('constructing kernel..')}
-  P = make.sparse.kernel(X,
+  P = make_sparse_kernel(X,
                        kernel_type,
                        klist,
                        sigmalist)
@@ -63,10 +63,10 @@ SLSL = function(X,
   rm(P); gc();
 
   if(verbose){print('network diffusion..')}
-  S = network.diffusion(res$S, k)
+  S = network_diffusion(res$S, k)
 
   if(is.na(numClust)){
-    numClust = get.cluster.number(S)
+    numClust = get_cluster_number(S)
   }
 
   if(verbose){print("dimension reduction..")}
@@ -76,10 +76,11 @@ SLSL = function(X,
   eigen_L = eigen(L, symmetric = TRUE)
   U = eigen_L$vectors
   U_index = seq(ncol(U), (ncol(U)-numClust+1))
-  tmp = kmeans(U[,U_index], centers=numClust, nstart=50)
+  tmp = kmeans(U[,U_index], centers=numClust, nstart=500)
   if(plot){
     tsne = Rtsne(U[,U_index], 2, pca=FALSE, perplexity=50)
-    plot(tsne$Y, col=tmp$cluster)
+    plot(tsne$Y, col=tmp$cluster,
+         ylab="tsne2", xlab="tsne1")
   }
 
   return(list(S=Matrix(S, sparse=TRUE),

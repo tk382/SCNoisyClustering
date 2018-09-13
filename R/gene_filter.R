@@ -6,7 +6,7 @@
 #' @param dispersion.thresh : numeric vector of length 2 for lower and upper bound for log variance to mean ratio
 #' @return expression level matrix containing only highly variable genes
 #' @export
-gene.filter = function(X, genenames, dispersion, mean.thresh, dispersion.thresh){
+gene_filter = function(X, genenames, dispersion, mean.thresh, dispersion.thresh){
   ind = which(dispersion$genemeans > mean.thresh[1] &
           dispersion$genemeans < mean.thresh[2] &
           dispersion$vmr > dispersion.thresh[1] &

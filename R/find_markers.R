@@ -9,7 +9,7 @@
 #' @param plot.n : number of genes to plot for each cluster
 #' @return expression level matrix containing only highly variable genes
 #' @export
-find.markers = function(X, genenames, cluster, tsne, top.n = 100, plot.n=3){
+find_markers = function(X, genenames, cluster, tsne, top.n = 100, plot.n=3){
   numClust = length(unique(cluster))
   li = list()
   plotlist = list()

@@ -4,7 +4,7 @@
 #' @param k Number of neighbors for knn
 #' @param alpha diffusion parameter
 #' @export
-network.diffusion = function( S, K, alpha=0.7) {
+network_diffusion = function( S, K, alpha=0.7) {
 
     S = as.matrix(S)
 

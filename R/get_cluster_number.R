@@ -7,7 +7,7 @@
 #' S= t(X) %*% X
 #' getClustNum(S)
 #' @export
-get.cluster.number = function(S){
+get_cluster_number = function(S){
   s = svd(S)
   eigengap = abs(diff(s$d))
   c = max(3, which.max(eigengap[-1])+1)

@@ -6,7 +6,7 @@
 #' @param dispersion.thresh : numeric vector of length 2 for lower and upper bound for log variance to mean ratio
 #' @return expression level matrix containing only highly variable genes
 #' @export
-de.genes = function(X, genenames, cluster, top.n = 100, plot = 6){
+de_genes = function(X, genenames, cluster, top.n = 100, plot = 6){
   p = rep(0, nrow(X))
   for (i in 1:nrow(X)){
     p[i] = kruskal.test(X[i,], as.factor(out$result))$p.value
