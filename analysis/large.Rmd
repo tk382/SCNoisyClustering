@@ -61,8 +61,8 @@ orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
 First, "explore.data" function shows the distribution of the number of UNI, detection rate, and the proportion of mitochondrial genes for each cell. Then users can decide on the cut-offs to filter the cells using "cell.filter" function, which returns the indices of cells that satisfy the input criteria. 
 
 ```{r cell_filter}
-summary = SCNoisyClustering::explore.data(orig, orig_genenames)
-ind = cell.filter(summary, 
+summary = explore_data(orig, orig_genenames)
+ind = cell_filter(summary, 
                   nUMI.thresh = c(0,10000), 
                   det.rate.thresh = c(0.02, 0.067), 
                   percent.mito.thresh = c(0,0.1))
@@ -76,13 +76,13 @@ tmpX = orig[,ind]
 Next find variable genes using normalized dispersion. First, "plot.dispersion" function shows the distribution log of normalized dispersion (variance to mean ratio) against the gene means. The convention is to normalize the dispersion by converting them to z-scores, but one can also use median and MAD (median absolute deviation) which is less sensitive to outliers. Based on the scatterplot, users can decide on the cut-offs for the mean expression value and the dispersion to use "gene.filter" function. "gene.filter" function returns the new expression level matrix of filtered genes and the corresponding gene names. 
 
 ```{r basic_gene_filtering}
-disp = plot.dispersion(X = tmpX, 
+disp = plot_dispersion(X = tmpX, 
                        genenames = orig_genenames, 
                        bins=NA, 
                        median = FALSE, 
                        outliers.mean.thresh = c(30,Inf),
                        outliers.vmr.thresh = c(3,Inf))
-X = gene.filter(tmpX, orig_genenames, disp, 
+X = gene_filter(tmpX, orig_genenames, disp, 
                 mean.thresh=c(0.001, Inf), 
                 dispersion.thresh = c(0.5, Inf))
 genenames = X$genenames
@@ -95,18 +95,15 @@ X = X$X
 Use quantile-normalization to make the distribution of each cell the same. "quantile.normalize" function also performs the log transformation. 
 
 ```{r normalize_library}
-X = quantile.normalize(as.matrix(X))
+X = quantile_normalize(as.matrix(X))
 ```
 
 ## Run SLSL
 
-Run the clustering algorithm SLSL based on the filtered matrix. There are three main parameters. First, "klist" determines the number of neighbors to use to build initial similarity matrix, and around 1/10 of the number of cells is appropriate. "sigmalist" determines the nonlinear structure of Gaussian kernel, and the default of 1, 1.5, and 2.5 work well. The kernel_type determines the distance measure. The four options are "spearman", "pearson", "euclidean", and "combined" which combines information across three different distance measures. 
+Run the clustering algorithm SLSL based on the filtered matrix. It automatically plots the final tSNE plot based on the Laplacian matrix. 
 
 ```{r slsl, cahce=TRUE}
-out = SLSL(X,
-           kernel_type = "combined",
-           verbose=FALSE)
-plot(out$tsne$Y, col=rainbow(length(unique(out$result)))[out$result])
+out = SLSL(X, verbose=FALSE)
 ```
 
 <!-- ## Known Markers -->
@@ -147,7 +144,7 @@ for (i in 1:length(ind)){
 Using Kruskal test, we order the p-values to find the top differentially expressed genes. Below we present 6. 
 
 ```{r DE}
-degenes = de.genes(X, genenames, out$result, top.n=100, plot=12)
+degenes = de_genes(X, genenames, out$result, top.n=100, plot=12)
 head(degenes)
 ```
 
@@ -155,7 +152,7 @@ head(degenes)
 ## Markers for Each Cluster
 
 ```{r ggplots2, echo=FALSE}
-bio.markers = find.markers(X, genenames, out$result, out$tsne$Y, top.n = 50, plot.n=3)
+bio.markers = find_markers(X, genenames, out$result, out$tsne$Y, top.n = 50, plot.n=3)
 bio.markers$plots[[1]]
 head(bio.markers$markers[[1]])
 
@@ -164,5 +161,14 @@ head(bio.markers$markers[[2]])
 
 bio.markers$plots[[3]]
 head(bio.markers$markers[[3]])
+
+bio.markers$plots[[4]]
+head(bio.markers$markers[[4]])
+
+bio.markers$plots[[5]]
+head(bio.markers$markers[[5]])
+
+bio.markers$plots[[6]]
+head(bio.markers$markers[[6]])
 ```
 

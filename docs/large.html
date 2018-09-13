@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>10X Example</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Single Cell Clustering</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="large.html">Drop-seq / 10X Pipeline</a>
+</li>
+<li>
+  <a href="small.html">High Coverage Pipeline</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tk382/SCNoisyClustering">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">10X Example</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-09-12</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180618)</code> </summary></p>
+<p>The command <code>set.seed(20180618)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/a34244af4f3f75ba98f6724ae47e0f950b344a5e" target="_blank">a34244a</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    R/.Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/pipeline/.Rhistory
+
+Untracked files:
+    Untracked:  ..gif
+    Untracked:  .DS_Store
+    Untracked:  R/.DS_Store
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/10x_labeled.Rmd
+    Untracked:  analysis/normalization_test.R
+    Untracked:  analysis/pipeline/0_dropseq/
+    Untracked:  analysis/pipeline/1_10X/
+    Untracked:  analysis/pipeline/2_zeisel/
+    Untracked:  analysis/pipeline/3_smallsets/
+    Untracked:  analysis/slsl_10x.Rdata
+    Untracked:  analysis/slsl_dropseq.Rdata
+    Untracked:  analysis/small.Rmd
+    Untracked:  analysis/writeup/bibliography.bib
+    Untracked:  analysis/writeup/draft1.aux
+    Untracked:  analysis/writeup/draft1.bbl
+    Untracked:  analysis/writeup/draft1.blg
+    Untracked:  analysis/writeup/draft1.log
+    Untracked:  analysis/writeup/draft1.out
+    Untracked:  analysis/writeup/draft1.pdf
+    Untracked:  analysis/writeup/draft1.synctex.gz
+    Untracked:  analysis/writeup/draft1.tex
+    Untracked:  analysis/writeup/jabbrv-ltwa-all.ldf
+    Untracked:  analysis/writeup/jabbrv-ltwa-en.ldf
+    Untracked:  analysis/writeup/jabbrv.sty
+    Untracked:  analysis/writeup/naturemag-doi.bst
+    Untracked:  analysis/writeup/wlscirep.cls
+    Untracked:  data/unnecessary_in_building/
+    Untracked:  docs/figure/example_10x.Rmd/.DS_Store
+    Untracked:  docs/figure/large.Rmd/
+    Untracked:  dropseq_heatmap.pdf
+    Untracked:  src/.gitignore
+
+Unstaged changes:
+    Modified:   NAMESPACE
+    Modified:   analysis/large.Rmd
+    Modified:   analysis/pipeline/.DS_Store
+    Modified:   analysis/writeup/.DS_Store
+    Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
+    Modified:   man/UMI_normalize.Rd
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/03a7f75e0943d7220dc2c6a37a98fd820ea1df43/analysis/large.Rmd" target="_blank">03a7f75</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-12
+</td>
+<td style="text-align:left;">
+notation change, adding visualization, general code structure
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<div id="load-package" class="section level2">
+<h2>Load Package</h2>
+</div>
+<div id="read-data-pbmc-27k" class="section level2">
+<h2>Read Data : PBMC 27K</h2>
+<p>Read data and keep the gene names separately.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">orig =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;data/unnecessary_in_building/pbmc3k/matrix.mtx&#39;</span>)
+orig_genenames =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;data/unnecessary_in_building/pbmc3k/genes.tsv&#39;</span>,
+                            <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)<span class="op">$</span>V2</code></pre></div>
+</div>
+<div id="quality-control-and-cell-selections" class="section level2">
+<h2>Quality Control and Cell Selections</h2>
+<p>First, “explore.data” function shows the distribution of the number of UNI, detection rate, and the proportion of mitochondrial genes for each cell. Then users can decide on the cut-offs to filter the cells using “cell.filter” function, which returns the indices of cells that satisfy the input criteria.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary =<span class="st"> </span><span class="kw">explore_data</span>(orig, orig_genenames)</code></pre></div>
+<p><img src="figure/large.Rmd/cell_filter-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind =<span class="st"> </span><span class="kw">cell_filter</span>(summary, 
+                  <span class="dt">nUMI.thresh =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10000</span>), 
+                  <span class="dt">det.rate.thresh =</span> <span class="kw">c</span>(<span class="fl">0.02</span>, <span class="fl">0.067</span>), 
+                  <span class="dt">percent.mito.thresh =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))
+tmpX =<span class="st"> </span>orig[,ind]</code></pre></div>
+</div>
+<div id="gene-filtering" class="section level2">
+<h2>Gene Filtering</h2>
+<p>Next find variable genes using normalized dispersion. First, “plot.dispersion” function shows the distribution log of normalized dispersion (variance to mean ratio) against the gene means. The convention is to normalize the dispersion by converting them to z-scores, but one can also use median and MAD (median absolute deviation) which is less sensitive to outliers. Based on the scatterplot, users can decide on the cut-offs for the mean expression value and the dispersion to use “gene.filter” function. “gene.filter” function returns the new expression level matrix of filtered genes and the corresponding gene names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">disp =<span class="st"> </span><span class="kw">plot_dispersion</span>(<span class="dt">X =</span> tmpX, 
+                       <span class="dt">genenames =</span> orig_genenames, 
+                       <span class="dt">bins=</span><span class="ot">NA</span>, 
+                       <span class="dt">median =</span> <span class="ot">FALSE</span>, 
+                       <span class="dt">outliers.mean.thresh =</span> <span class="kw">c</span>(<span class="dv">30</span>,<span class="ot">Inf</span>),
+                       <span class="dt">outliers.vmr.thresh =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="ot">Inf</span>))</code></pre></div>
+<p><img src="figure/large.Rmd/basic_gene_filtering-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">gene_filter</span>(tmpX, orig_genenames, disp, 
+                <span class="dt">mean.thresh=</span><span class="kw">c</span>(<span class="fl">0.001</span>, <span class="ot">Inf</span>), 
+                <span class="dt">dispersion.thresh =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="ot">Inf</span>))
+genenames =<span class="st"> </span>X<span class="op">$</span>genenames
+X =<span class="st"> </span>X<span class="op">$</span>X</code></pre></div>
+</div>
+<div id="umi-normalization" class="section level2">
+<h2>UMI Normalization</h2>
+<p>Use quantile-normalization to make the distribution of each cell the same. “quantile.normalize” function also performs the log transformation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">quantile_normalize</span>(<span class="kw">as.matrix</span>(X))</code></pre></div>
+</div>
+<div id="run-slsl" class="section level2">
+<h2>Run SLSL</h2>
+<p>Run the clustering algorithm SLSL based on the filtered matrix. It automatically plots the final tSNE plot based on the Laplacian matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="figure/large.Rmd/slsl-1.png" width="576" style="display: block; margin: auto;" /></p>
+<!-- ## Known Markers -->
+<!-- If there are known markers, you can check how differentially they are expressed in the clustering result. The markers used below are from the supplementary table of (Schelker et al., 2017) -->
+<!-- Based on the biomarkers, we can infer that B cells are red, T cells are orange, NK cells are yelow, and monocytes are green.  -->
+</div>
+<div id="differentially-expressed-genes" class="section level2">
+<h2>Differentially Expressed Genes</h2>
+<p>Using Kruskal test, we order the p-values to find the top differentially expressed genes. Below we present 6.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">degenes =<span class="st"> </span><span class="kw">de_genes</span>(X, genenames, out<span class="op">$</span>result, <span class="dt">top.n=</span><span class="dv">100</span>, <span class="dt">plot=</span><span class="dv">12</span>)</code></pre></div>
+<p><img src="figure/large.Rmd/DE-1.png" width="576" style="display: block; margin: auto;" /><img src="figure/large.Rmd/DE-2.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(degenes)</code></pre></div>
+<pre><code>  de_genes   log10p
+1     CST3      Inf
+2   TYROBP      Inf
+3    CD79A      Inf
+4   LGALS2      Inf
+5     LST1 322.2270
+6   FCER1G 314.1417</code></pre>
+</div>
+<div id="markers-for-each-cluster" class="section level2">
+<h2>Markers for Each Cluster</h2>
+<p><img src="figure/large.Rmd/ggplots2-1.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust1_genenames clust1_log10p
+1             GZMB      280.5690
+2           FGFBP2      249.4204
+3             CST7      239.9105
+4             PRF1      220.0278
+5             NKG7      213.0282
+6             CCL4      167.3846</code></pre>
+<p><img src="figure/large.Rmd/ggplots2-2.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust2_genenames clust2_log10p
+1         SERPINF1     152.41836
+2           FCER1A     143.19380
+3             ENHO      79.10624
+4           CLEC4C      77.80362
+5           LRRC26      52.64777
+6              SCT      52.64777</code></pre>
+<p><img src="figure/large.Rmd/ggplots2-3.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust3_genenames clust3_log10p
+1            CD79A           Inf
+2         HLA-DQA1      181.1766
+3            CD79B      178.5284
+4         HLA-DQB1      147.7264
+5            FCRLA      134.5673
+6             CD74      105.0767</code></pre>
+<p><img src="figure/large.Rmd/ggplots2-4.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust4_genenames clust4_log10p
+1           LGALS2           Inf
+2           S100A8      297.9284
+3           S100A9      259.9251
+4             FCN1      250.8238
+5              LYZ      207.8968
+6             CST3      204.0437</code></pre>
+<p><img src="figure/large.Rmd/ggplots2-5.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust5_genenames clust5_log10p
+1             TPT1      203.0014
+2              LTB      202.5040
+3            RPS12      192.9751
+4           RPS27A      165.8921
+5           RPL10A      164.1815
+6             RPS5      154.5735</code></pre>
+<p><img src="figure/large.Rmd/ggplots2-6.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>  clust6_genenames clust6_log10p
+1           FCGR3A     144.34980
+2           IFITM3     124.06185
+3             LST1     118.87115
+4             AIF1     107.61418
+5           FCER1G     107.49510
+6            C5AR1      77.95185</code></pre>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] bindrcpp_0.2.2              gridExtra_2.3              
+ [3] SC3_1.8.0                   SingleCellExperiment_1.2.0 
+ [5] SummarizedExperiment_1.10.1 DelayedArray_0.6.2         
+ [7] BiocParallel_1.14.2         Biobase_2.40.0             
+ [9] GenomicRanges_1.32.6        GenomeInfoDb_1.16.0        
+[11] IRanges_2.14.10             S4Vectors_0.18.3           
+[13] BiocGenerics_0.26.0         SCNoisyClustering_0.1.0    
+[15] plotly_4.8.0                gplots_3.0.1               
+[17] diceR_0.5.1                 Rtsne_0.13                 
+[19] igraph_1.2.2                scatterplot3d_0.3-41       
+[21] pracma_2.1.4                fossil_0.3.7               
+[23] shapefiles_0.7              foreign_0.8-71             
+[25] maps_3.3.0                  sp_1.3-1                   
+[27] caret_6.0-80                lattice_0.20-35            
+[29] reshape_0.8.7               dplyr_0.7.6                
+[31] quadprog_1.5-5              inline_0.3.15              
+[33] matrixStats_0.54.0          irlba_2.3.2                
+[35] Matrix_1.2-14               plyr_1.8.4                 
+[37] ggplot2_3.0.0               MultiAssayExperiment_1.6.0 
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.2           workflowr_1.1.1          
+  [3] lazyeval_0.2.1            splines_3.5.1            
+  [5] digest_0.6.15             foreach_1.4.4            
+  [7] htmltools_0.3.6           gdata_2.18.0             
+  [9] magrittr_1.5              cluster_2.0.7-1          
+ [11] doParallel_1.0.11         ROCR_1.0-7               
+ [13] sfsmisc_1.1-2             recipes_0.1.3            
+ [15] gower_0.1.2               dimRed_0.1.0             
+ [17] R.utils_2.6.0             colorspace_1.3-2         
+ [19] rrcov_1.4-4               WriteXLS_4.0.0           
+ [21] crayon_1.3.4              RCurl_1.95-4.11          
+ [23] jsonlite_1.5              RcppArmadillo_0.8.600.0.0
+ [25] bindr_0.1.1               survival_2.42-6          
+ [27] iterators_1.0.10          glue_1.3.0               
+ [29] DRR_0.0.3                 registry_0.5             
+ [31] gtable_0.2.0              ipred_0.9-6              
+ [33] zlibbioc_1.26.0           XVector_0.20.0           
+ [35] kernlab_0.9-26            ddalpha_1.3.4            
+ [37] DEoptimR_1.0-8            abind_1.4-5              
+ [39] scales_0.5.0              mvtnorm_1.0-8            
+ [41] pheatmap_1.0.10           rngtools_1.3.1           
+ [43] bibtex_0.4.2              Rcpp_0.12.18             
+ [45] viridisLite_0.3.0         xtable_1.8-2             
+ [47] magic_1.5-8               mclust_5.4.1             
+ [49] lava_1.6.2                prodlim_2018.04.18       
+ [51] htmlwidgets_1.2           httr_1.3.1               
+ [53] RColorBrewer_1.1-2        pkgconfig_2.0.1          
+ [55] R.methodsS3_1.7.1         nnet_7.3-12              
+ [57] labeling_0.3              later_0.7.3              
+ [59] tidyselect_0.2.4          rlang_0.2.1              
+ [61] reshape2_1.4.3            munsell_0.5.0            
+ [63] tools_3.5.1               pls_2.6-0                
+ [65] broom_0.5.0               evaluate_0.11            
+ [67] geometry_0.3-6            stringr_1.3.1            
+ [69] yaml_2.2.0                ModelMetrics_1.1.0       
+ [71] knitr_1.20                robustbase_0.93-2        
+ [73] caTools_1.17.1.1          purrr_0.2.5              
+ [75] nlme_3.1-137              doRNG_1.7.1              
+ [77] mime_0.5                  whisker_0.3-2            
+ [79] R.oo_1.22.0               RcppRoll_0.3.0           
+ [81] compiler_3.5.1            e1071_1.7-0              
+ [83] tibble_1.4.2              pcaPP_1.9-73             
+ [85] stringi_1.2.4             pillar_1.3.0             
+ [87] data.table_1.11.4         bitops_1.0-6             
+ [89] httpuv_1.4.5              R6_2.2.2                 
+ [91] promises_1.0.1            KernSmooth_2.23-15       
+ [93] codetools_0.2-15          MASS_7.3-50              
+ [95] gtools_3.8.1              assertthat_0.2.0         
+ [97] CVST_0.2-2                pkgmaker_0.27            
+ [99] rprojroot_1.3-2           withr_2.1.2              
+[101] GenomeInfoDbData_1.1.0    grid_3.5.1               
+[103] rpart_4.1-13              timeDate_3043.102        
+[105] tidyr_0.8.1               class_7.3-14             
+[107] rmarkdown_1.10            git2r_0.23.0             
+[109] shiny_1.1.0               lubridate_1.7.4          </code></pre>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
