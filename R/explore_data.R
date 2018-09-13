@@ -17,5 +17,6 @@ explore_data = function(X, genenames){
   boxplot(det.rate, main = "detection rate")
   boxplot(percent.mito, main = "proportion of mito-genes")
   summary = data.frame(nUMI = nUMI, det.rate = det.rate, percent.mito = percent.mito)
+  par(mfrow=c(1,1))
   return(summary)
 }
