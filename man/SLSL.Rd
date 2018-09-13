@@ -8,30 +8,26 @@ The only critical parameter is log. If X has been log-transformed and log is not
 \usage{
 SLSL(X, plot = TRUE, numClust = NA, kernel_type = "combined",
   klist = NA, sigmalist = seq(1, 2, by = 0.5), tau = 5, gamma = 0,
-  k = NA, verbose = FALSE, warning = TRUE)
+  verbose = FALSE, warning = TRUE)
 }
 \arguments{
 \item{X}{Expression level matrix in count, cells in columns, genes in rows}
+
+\item{plot}{if set to TRUE, shows the plot of the dimension reduction result}
 
 \item{numClust}{Number of Clusters. If unknown, NA. If set to NA, it will be estimated with minimum 3.}
 
 \item{kernel_type}{distance measure to use: one of "euclidean", "pearson", "spearman", or "combined"}
 
-\item{klist}{Kernel parameters setting.}
+\item{klist}{kernel parameters setting}
 
-\item{sigmalist}{Kernel parameters setting.}
+\item{sigmalist}{kernel parameters setting.}
 
 \item{tau}{Regularization parameter for L1 norm}
 
 \item{gamma}{Regularization parameter for Frobenius norm}
 
-\item{k}{Number of neighbors to use for knn procedure.}
-
 \item{verbose}{To show progress, set to TRUE}
-
-\item{warning}{Warns if the data size is too large. To ignore, set to FALSE.}
-
-\item{measuretime}{Measure the time it takes for each step}
 }
 \description{
 Wrapper function for similarity learning algorithm. For details, refer to the manuscript.
