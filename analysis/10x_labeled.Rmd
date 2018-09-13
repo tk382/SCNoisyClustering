@@ -1,0 +1,88 @@
+---
+title: "Example in 10X"
+author: "Tae Kim"
+date: "9/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(irlba)
+library(Matrix)
+library(SCNoisyClustering)
+library(fossil)
+library(dplyr)
+```
+
+```{r}
+xb = readMM('~/Downloads/10x/B/hg19/matrix.mtx')
+xb = xb[, colSums(xb)>1000]
+xm = readMM('~/Downloads/10x/monocytes/hg19/matrix.mtx')
+xm = xm[, colSums(xm) > 1000]
+xn = readMM('~/Downloads/10x/naiveT/hg19/matrix.mtx')
+xn = xn[, colSums(xn) > 1000]
+xk = readMM('~/Downloads/10x/NK/hg19/matrix.mtx')
+xk = xk[, colSums(xk) > 1000]
+xb = xb[,1:500]; xm = xm[,1:500]; xk = xk[,1:500]; xn = xn[,1:500]
+genenames = read.table('~/Downloads/10x/B/hg19/genes.tsv', stringsAsFactors = F)$V2
+
+X = cbind(xb, xm, xn, xk)
+label = as.numeric(as.factor(c(rep("B", ncol(xb)),
+          rep("Monocyte", ncol(xm)),
+          rep("NaiveT", ncol(xn)),
+          rep("NK", ncol(xk)))))
+rm(xb, xm, xn, xk)
+gc()
+
+
+summary = explore_data(X, genenames)
+ind = cell_filter(summary, c(1000,5000),
+                  c(0.01, 0.04),
+                  c(0, 0.1))
+X = X[,ind]
+label = label[ind]
+
+library(dplyr)
+par(mfrow=c(1,1))
+ind = which(rowSums(X)==0)
+X = X[-ind, ]; genenames = genenames[-ind]
+
+disp = plot_dispersion(X = X,
+                       genenames = genenames,
+                       bins=20,
+                       median=FALSE,
+                       outliers.mean.thresh = c(10,Inf),
+                       outliers.vmr.thresh=c(2, Inf))
+X = gene_filter(X, genenames, disp, c(0,25), c(0.5, Inf))
+genenames = X$genenames
+X = X$X
+
+X = quantile_normalize(X)
+
+par(mfrow=c(1,1))
+
+plot(irlba(X, 20)$v[,1:2], col=label)
+library(Rtsne)
+tsne = Rtsne(irlba(X,10)$v[,1:10], pca=F, perplexity=30)
+plot(tsne$Y, col=as.numeric(as.factor(label)))
+
+out = SLSL(X, plot=TRUE, verbose=TRUE)
+
+degenes = de_genes(X, genenames, out$result, top.n=100, plot=6)
+head(degenes)
+
+bio.markers = find_markers(X, genenames, out$result, out$tsne$Y, top.n = 50, plot.n=3)
+bio.markers$plots[[1]]
+head(bio.markers$markers[[1]])
+
+bio.markers$plots[[2]]
+head(bio.markers$markers[[2]])
+
+bio.markers$plots[[3]]
+head(bio.markers$markers[[3]])
+
+bio.markers$plots[[4]]
+head(bio.markers$markers[[4]])
+
+adj.rand.index(label, out$result)
+```
