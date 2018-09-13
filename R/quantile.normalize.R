@@ -1,6 +1,7 @@
 #' quantile normalize the gene expression level matrix
 #'
 #' @param X matrix to quantile-normalize
+#'
 #' @export
 quantile.normalize = function(X){
   X.rank = apply(X, 2, rank, ties.method="min")

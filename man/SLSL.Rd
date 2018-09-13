@@ -6,26 +6,14 @@
 We recommend users to start with default setting for filter, kernel_type, klist, sigmalist, tau, gamma, and k.
 The only critical parameter is log. If X has been log-transformed and log is not set to FALSE, it will produce an error.}
 \usage{
-SLSL(X, numClust = NA, log = T, filter = F, filter_p1 = 0.9,
-  filter_p2 = 0, correct_detection_rate = F,
-  kernel_type = "combined", klist = seq(15, 25, by = 5),
-  sigmalist = seq(1, 2, by = 0.5), tau = 5, gamma = 0, k = NA,
-  verbose = FALSE, measuretime = FALSE, warning = TRUE)
+SLSL(X, plot = TRUE, numClust = NA, kernel_type = "combined",
+  klist = NA, sigmalist = seq(1, 2, by = 0.5), tau = 5, gamma = 0,
+  k = NA, verbose = FALSE, warning = TRUE)
 }
 \arguments{
 \item{X}{Expression level matrix in count, cells in columns, genes in rows}
 
 \item{numClust}{Number of Clusters. If unknown, NA. If set to NA, it will be estimated with minimum 3.}
-
-\item{log}{If set to TRUE, SLSL will take log from X. If it is already log-transformed, set FALSE.}
-
-\item{filter}{If set to TRUE, remove rows with little information}
-
-\item{filter_p1}{Upper threshold for percentage of zeros in each row}
-
-\item{filter_p2}{Lower threshold for percentage of zeros in each row}
-
-\item{correct_detection_rate}{If set to TRUE, detection rate will be regressed out}
 
 \item{kernel_type}{distance measure to use: one of "euclidean", "pearson", "spearman", or "combined"}
 
@@ -41,19 +29,12 @@ SLSL(X, numClust = NA, log = T, filter = F, filter_p1 = 0.9,
 
 \item{verbose}{To show progress, set to TRUE}
 
-\item{measuretime}{Measure the time it takes for each step}
-
 \item{warning}{Warns if the data size is too large. To ignore, set to FALSE.}
+
+\item{measuretime}{Measure the time it takes for each step}
 }
 \description{
 Wrapper function for similarity learning algorithm. For details, refer to the manuscript.
 We recommend users to start with default setting for filter, kernel_type, klist, sigmalist, tau, gamma, and k.
 The only critical parameter is log. If X has been log-transformed and log is not set to FALSE, it will produce an error.
-}
-\examples{
-
-#create sample count matrix
-X = matrix(rpois(100000, 1), nrow = 1000)
-result = SLSL(X)
-
 }
