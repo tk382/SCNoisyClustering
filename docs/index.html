@@ -173,13 +173,10 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="example_10x.html">10X Pipeline</a>
+  <a href="large.html">Drop-seq / 10X Pipeline</a>
 </li>
 <li>
-  <a href="example_dropseq.html">Drop-seq Pipeline</a>
-</li>
-<li>
-  <a href="example_smartseq.html">Smart-seq Pipeline</a>
+  <a href="small.html">High Coverage Pipeline</a>
 </li>
 <li>
   <a href="license.html">License</a>
@@ -213,7 +210,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-30</p>
+<p><strong>Last updated:</strong> 2018-09-14</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -222,7 +219,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fa8da961c77d65ecc65e8e3bd353852aad53acfd" target="_blank">fa8da96</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/86bd1c0f000a21c6808555e251878756a7afcc5b" target="_blank">86bd1c0</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -236,68 +233,46 @@ Untracked files:
     Untracked:  ..gif
     Untracked:  .DS_Store
     Untracked:  R/.DS_Store
-    Untracked:  R/myheatmap.R
     Untracked:  analysis/.DS_Store
-    Untracked:  analysis/10x_heatmap.pdf
-    Untracked:  analysis/SLSL_marker_based_logcpm.pdf
-    Untracked:  analysis/biomarkers.R
-    Untracked:  analysis/cellref.pdf
-    Untracked:  analysis/consistency_check.R
-    Untracked:  analysis/dropseq_heatmap.pdf
-    Untracked:  analysis/dropseq_sc3_result.Rdata
-    Untracked:  analysis/dropseq_slsl1.Rdata
-    Untracked:  analysis/marker-based.pdf
     Untracked:  analysis/normalization_test.R
-    Untracked:  analysis/pbmcheat.pdf
-    Untracked:  analysis/pbmcref.pdf
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
     Untracked:  analysis/pipeline/2_zeisel/
     Untracked:  analysis/pipeline/3_smallsets/
-    Untracked:  analysis/writeup/cite.log
-    Untracked:  analysis/writeup/paper.aux
-    Untracked:  analysis/writeup/paper.bbl
-    Untracked:  analysis/writeup/paper.blg
-    Untracked:  analysis/writeup/paper.log
-    Untracked:  analysis/writeup/paper.out
-    Untracked:  analysis/writeup/paper.synctex.gz
-    Untracked:  analysis/writeup/paper.tex
-    Untracked:  analysis/writeup/writeup.aux
-    Untracked:  analysis/writeup/writeup.bbl
-    Untracked:  analysis/writeup/writeup.blg
-    Untracked:  analysis/writeup/writeup.dvi
-    Untracked:  analysis/writeup/writeup.log
-    Untracked:  analysis/writeup/writeup.out
-    Untracked:  analysis/writeup/writeup.synctex.gz
-    Untracked:  analysis/writeup/writeup.tex
-    Untracked:  analysis/writeup/writeup2.aux
-    Untracked:  analysis/writeup/writeup2.bbl
-    Untracked:  analysis/writeup/writeup2.blg
-    Untracked:  analysis/writeup/writeup2.log
-    Untracked:  analysis/writeup/writeup2.out
-    Untracked:  analysis/writeup/writeup2.pdf
-    Untracked:  analysis/writeup/writeup2.synctex.gz
-    Untracked:  analysis/writeup/writeup2.tex
-    Untracked:  analysis/writeup/writeup3.aux
-    Untracked:  analysis/writeup/writeup3.log
-    Untracked:  analysis/writeup/writeup3.out
-    Untracked:  analysis/writeup/writeup3.synctex.gz
-    Untracked:  analysis/writeup/writeup3.tex
+    Untracked:  analysis/slsl_10x.Rdata
+    Untracked:  analysis/slsl_dropseq.Rdata
+    Untracked:  analysis/writeup/bibliography.bib
+    Untracked:  analysis/writeup/draft1.aux
+    Untracked:  analysis/writeup/draft1.bbl
+    Untracked:  analysis/writeup/draft1.blg
+    Untracked:  analysis/writeup/draft1.log
+    Untracked:  analysis/writeup/draft1.out
+    Untracked:  analysis/writeup/draft1.pdf
+    Untracked:  analysis/writeup/draft1.synctex.gz
+    Untracked:  analysis/writeup/draft1.tex
+    Untracked:  analysis/writeup/jabbrv-ltwa-all.ldf
+    Untracked:  analysis/writeup/jabbrv-ltwa-en.ldf
+    Untracked:  analysis/writeup/jabbrv.sty
+    Untracked:  analysis/writeup/naturemag-doi.bst
+    Untracked:  analysis/writeup/wlscirep.cls
     Untracked:  data/unnecessary_in_building/
+    Untracked:  docs/figure/10x_labeled.Rmd/
+    Untracked:  docs/figure/example_10x.Rmd/.DS_Store
+    Untracked:  docs/figure/large.Rmd/
+    Untracked:  docs/figure/small.Rmd/
     Untracked:  dropseq_heatmap.pdf
-    Untracked:  normalized_out_1.Rdata
-    Untracked:  not_normalized_out_1.Rdata
-    Untracked:  src/.gitignore
-    Untracked:  tutorial2.Rmd
+    Untracked:  man/correct_detection_rate.Rd
 
 Unstaged changes:
     Modified:   NAMESPACE
-    Modified:   R/RcppExports.R
-    Modified:   analysis/example_10x.Rmd
-    Modified:   analysis/example_dropseq.Rmd
+    Modified:   R/SLSL.R
+    Modified:   R/correct_detection_rate.R
+    Modified:   R/find_markers.R
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
+    Modified:   docs/figure/.DS_Store
+    Deleted:    man/correct.detection.rate.Rd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -326,6 +301,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/1333c7f4da9fc6dec4abe302ea0ca99aee9d48bf/docs/index.html" target="_blank">1333c7f</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-08-30
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 html

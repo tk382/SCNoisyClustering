@@ -354,11 +354,12 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-09-13</p>
+<p><strong>Last updated:</strong> 2018-09-14</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </details>
 </li>
 <li>
@@ -377,7 +378,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/2a0555a93704653a5650794659f443c6119c7957" target="_blank">2a0555a</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/86bd1c0f000a21c6808555e251878756a7afcc5b" target="_blank">86bd1c0</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -399,7 +400,6 @@ Untracked files:
     Untracked:  analysis/pipeline/3_smallsets/
     Untracked:  analysis/slsl_10x.Rdata
     Untracked:  analysis/slsl_dropseq.Rdata
-    Untracked:  analysis/small.Rmd
     Untracked:  analysis/writeup/bibliography.bib
     Untracked:  analysis/writeup/draft1.aux
     Untracked:  analysis/writeup/draft1.bbl
@@ -415,18 +415,22 @@ Untracked files:
     Untracked:  analysis/writeup/naturemag-doi.bst
     Untracked:  analysis/writeup/wlscirep.cls
     Untracked:  data/unnecessary_in_building/
-    Untracked:  docs/figure/10x_labeled.Rmd/
     Untracked:  docs/figure/example_10x.Rmd/.DS_Store
     Untracked:  docs/figure/large.Rmd/
+    Untracked:  docs/figure/small.Rmd/
     Untracked:  dropseq_heatmap.pdf
+    Untracked:  man/correct_detection_rate.Rd
 
 Unstaged changes:
+    Modified:   NAMESPACE
     Modified:   R/SLSL.R
-    Modified:   analysis/10x_labeled.Rmd
+    Modified:   R/correct_detection_rate.R
+    Modified:   R/find_markers.R
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
     Modified:   docs/figure/.DS_Store
+    Deleted:    man/correct.detection.rate.Rd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -455,6 +459,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/32ed2c018f9c28a5faf3d48d2bb82245145f8e7b/analysis/10x_labeled.Rmd" target="_blank">32ed2c0</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-13
+</td>
+<td style="text-align:left;">
+small edits
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/32ed2c018f9c28a5faf3d48d2bb82245145f8e7b/docs/10x_labeled.html" target="_blank">32ed2c0</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-13
+</td>
+<td style="text-align:left;">
+small edits
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -513,8 +551,8 @@ label =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="
 <span class="kw">rm</span>(xb, xm, xn, xk)
 <span class="kw">gc</span>()</code></pre></div>
 <pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-Ncells 2692943 143.9    4244807 226.7         NA  4244807 226.7
-Vcells 6398206  48.9   53847116 410.9      16384 84054272 641.3</code></pre>
+Ncells 2689777 143.7    4206551 224.7         NA  4206551 224.7
+Vcells 6391288  48.8   53827846 410.7      16384 84047351 641.3</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary =<span class="st"> </span><span class="kw">explore_data</span>(X, genenames)</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind =<span class="st"> </span><span class="kw">cell_filter</span>(summary, <span class="kw">c</span>(<span class="dv">1000</span>,<span class="dv">5000</span>),
@@ -578,20 +616,9 @@ bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
 4            RPL10     122.48698
 5            RPL13      82.12768
 6             RPS2      66.40305</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">1</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust1_genenames clust1_log10p
-1             RPL3     165.26328
-2             RPS6     159.30385
-3              LTB     139.64251
-4            RPL10     122.48698
-5            RPL13      82.12768
-6             RPS2      66.40305</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">2</span>
 bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
 <pre><code>  clust2_genenames clust2_log10p
 1            CD79B           Inf
@@ -602,7 +629,7 @@ bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
 6         HLA-DPB1      180.5268</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">3</span>
 bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
 <pre><code>  clust3_genenames clust3_log10p
 1            HOXA9     168.87212
@@ -613,7 +640,7 @@ bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
 6            PRSS1      85.12048</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">4</span>
 bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
 <pre><code>  clust4_genenames clust4_log10p
 1             GNLY           Inf
@@ -624,7 +651,7 @@ bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
 6           FGFBP2      267.1927</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">5</span>
 bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
 <pre><code>  clust5_genenames clust5_log10p
 1           S100A9           Inf
@@ -649,7 +676,7 @@ label   1   2   3   4   5
 <span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(<span class="kw">unique</span>(label)))[label],
      <span class="dt">xlab =</span> <span class="st">&quot;tsne1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;tsne2&quot;</span>,
      <span class="dt">main=</span><span class="st">&quot;true label&quot;</span>)</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
