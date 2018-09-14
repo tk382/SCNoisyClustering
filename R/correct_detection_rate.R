@@ -13,8 +13,8 @@
 #' X = out$residual #if you decide to regress out the detection rate
 #'
 #' @export
-correct.detection.rate = function(X, det.rate){
-  pc1 = irlba(X,1)$v[,1]
+correct_detection_rate = function(X, det.rate){
+  pc1 = irlba(X,10)$v[,1]
   det.rate2 = qr(cbind(rep(1,length(det.rate)), det.rate))
 
   residual = t(qr.resid(det.rate2, t(X)))

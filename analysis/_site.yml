@@ -9,7 +9,7 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "Drop-seq / 10X Pipeline"
+    - text: "Low Coverage Pipeline"
       href: large.html
     - text: "High Coverage Pipeline"
       href: small.html

@@ -83,7 +83,7 @@ SLSL = function(X,
   U_index = seq(ncol(U), (ncol(U)-numClust+1))
   tmp = kmeans(U[,U_index], centers=numClust, nstart=500)
   if(plot){
-    tsne = Rtsne(U[,U_index], 2, pca=FALSE, perplexity=50)
+    tsne = Rtsne(U[,U_index], 2, pca=FALSE, perplexity=(ncol(X)-1)/3)
     plot(tsne$Y, col=rainbow(numClust)[tmp$cluster],
          ylab="tsne2", xlab="tsne1")
   }

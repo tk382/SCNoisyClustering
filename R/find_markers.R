@@ -34,32 +34,10 @@ find_markers = function(X, genenames, cluster, tsne, top.n = 100, plot.n=3){
     colnames(out2) = markers
     out2 = melt(out2)
     out = cbind(out2, out1)
-    plotlist[[i]] = ggplot(out, aes(x=tsne1, y=tsne2, col=value)) + geom_point(size = 0.2, alpha = 0.5) +
+    plotlist[[i]] = ggplot(out, aes(x=tsne1, y=tsne2, col=value)) + geom_point(size = 0.5, alpha = 0.5) +
       facet_grid(.~X2) +
-      scale_color_gradient(high="black", low="antiquewhite1") +
+      scale_color_gradient(high="black", low="white") +
       ggtitle(paste0('cluster', i))
   }
   return(list(plots = plotlist, markers = li))
 }
-
-# get_marker_genes <- function(dataset, labels) {
-#   res <- apply(dataset, 1, get_auroc, labels = labels)
-#   res <- data.frame(matrix(unlist(res), ncol = 3, byrow = T))
-#   colnames(res) <- c("auroc", "clusts", "pvalue")
-#   res$pvalue <- p.adjust(res$pvalue)
-#   return(res)
-# }
-# get_auroc = function(gene, labels) {
-#   score = rank(gene)
-#   ms = aggregate(score ~ labels, FUN = mean)
-#   posgroup <- ms[ms$score == max(ms$score), ]$labels
-#   if (length(posgroup) > 1) {
-#     return(c(NA, NA, NA))
-#   }
-#   truth <- as.numeric(labels == posgroup)
-#   # Make predictions & get auc using RCOR package.
-#   pred <- prediction(score, truth)
-#   val <- unlist(performance(pred, "auc")@y.values)
-#   pval <- suppressWarnings(wilcox.test(score[truth == 1], score[truth == 0])$p.value)
-#   return(c(val, posgroup, pval))
-# }
