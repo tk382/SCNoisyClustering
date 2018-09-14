@@ -1,0 +1,110 @@
+---
+title: "Smart-seq Example2"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    theme: yeti
+    highlight: tango
+    toc: true
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, comment = NA)
+library(SCNoisyClustering)
+library(matrixStats)
+library(inline)
+library(parallel)
+library(quadprog)
+library(irlba)
+library(ggplot2)
+library(dplyr)
+library(reshape)
+library(caret)
+library(fossil)
+library(pracma)
+library(scatterplot3d)
+library(igraph) #for nmi
+library(Rtsne)
+library(diceR)
+library(gplots)
+library(broom)
+library(abind)
+library(stargazer)
+library(gdata)
+library(gridExtra)
+```
+
+## Read Data : Yan
+
+```{r read data}
+load('data/Yan.rda')
+X         = as.matrix(yan)
+genenames = rownames(X)
+truelabel = as.numeric(as.factor(ann$cell_type1))
+numClust = length(unique(truelabel))
+```
+
+## Quality Control and Cell Filtering
+
+```{r cell_filter}
+summary = explore_data(X, genenames)
+```
+
+## Gene Filtering
+
+```{r gene_filter}
+disp = plot_dispersion(X = X, 
+                       genenames = genenames, 
+                       bins=NA, 
+                       median = TRUE)
+X = gene_filter(X, genenames, disp, 
+                mean.thresh=c(-Inf, 4000), 
+                dispersion.thresh = c(0.5, Inf))
+
+genenames = X$genenames
+X = X$X
+```
+
+## Normalization and Bias Correction
+
+```{r normalize_and_correction}
+X = quantile_normalize(X)
+cd = correct_detection_rate(as.matrix(X), det.rate = colMeans(X>0)/nrow(X))
+```
+
+
+
+
+## Run the algorithm
+
+Run SLSL on the log.cpm matrix.
+
+```{r slsl}
+out = SLSL(X, numClust = numClust)
+adj.rand.index(out$result, truelabel)
+```
+
+## Analyze : Differentially Expressed Genes
+
+```{r de}
+degenes = de_genes(X, genenames, out$result, top.n=100, plot=6)
+head(degenes)
+```
+
+## Markers for Each Cluster
+
+```{r bio}
+bio.markers = find_markers(X, genenames, out$result, out$tsne$Y, top.n = 50, plot.n=3)
+bio.markers$plots[[1]]
+head(bio.markers$markers[[1]])
+
+bio.markers$plots[[2]]
+head(bio.markers$markers[[2]])
+
+bio.markers$plots[[3]]
+head(bio.markers$markers[[3]])
+```
+

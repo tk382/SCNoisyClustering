@@ -56,7 +56,7 @@ orig_genenames = read.table('data/unnecessary_in_building/pbmc3k/genes.tsv',
 ```
 
 
-## Quality Control and Cell Selections
+## Quality Control and Cell Filtering
 
 First, "explore.data" function shows the distribution of the number of UNI, detection rate, and the proportion of mitochondrial genes for each cell. Then users can decide on the cut-offs to filter the cells using "cell.filter" function, which returns the indices of cells that satisfy the input criteria. 
 
