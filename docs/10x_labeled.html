@@ -315,7 +315,7 @@ div.tocify {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="large.html">Drop-seq / 10X Pipeline</a>
+  <a href="large.html">Low Coverage Pipeline</a>
 </li>
 <li>
   <a href="small.html">High Coverage Pipeline</a>
@@ -358,8 +358,7 @@ div.section {
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -378,7 +377,7 @@ div.section {
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/86bd1c0f000a21c6808555e251878756a7afcc5b" target="_blank">86bd1c0</a> </summary></p>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/tk382/SCNoisyClustering/tree/fad298414d3c8b76e73eccc912a714ec4bafbd66" target="_blank">fad2984</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -393,6 +392,7 @@ Untracked files:
     Untracked:  .DS_Store
     Untracked:  R/.DS_Store
     Untracked:  analysis/.DS_Store
+    Untracked:  analysis/make_labeled_data.R
     Untracked:  analysis/normalization_test.R
     Untracked:  analysis/pipeline/0_dropseq/
     Untracked:  analysis/pipeline/1_10X/
@@ -416,21 +416,16 @@ Untracked files:
     Untracked:  analysis/writeup/wlscirep.cls
     Untracked:  data/unnecessary_in_building/
     Untracked:  docs/figure/example_10x.Rmd/.DS_Store
-    Untracked:  docs/figure/large.Rmd/
-    Untracked:  docs/figure/small.Rmd/
     Untracked:  dropseq_heatmap.pdf
-    Untracked:  man/correct_detection_rate.Rd
 
 Unstaged changes:
     Modified:   NAMESPACE
-    Modified:   R/SLSL.R
-    Modified:   R/correct_detection_rate.R
-    Modified:   R/find_markers.R
+    Modified:   R/explore_data.R
+    Modified:   analysis/10x_labeled.Rmd
     Modified:   analysis/pipeline/.DS_Store
     Modified:   analysis/writeup/.DS_Store
     Modified:   data/.DS_Store
     Modified:   docs/figure/.DS_Store
-    Deleted:    man/correct.detection.rate.Rd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
@@ -459,6 +454,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/tk382/SCNoisyClustering/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/10x_labeled.html" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -532,35 +544,65 @@ labeled data 10x
 </ul>
 <p></details></p>
 <hr />
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xb =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;~/Downloads/10x/B/hg19/matrix.mtx&#39;</span>)
-xb =<span class="st"> </span>xb[, Matrix<span class="op">::</span><span class="kw">colSums</span>(xb)<span class="op">&gt;</span><span class="dv">1000</span>]
-xm =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;~/Downloads/10x/monocytes/hg19/matrix.mtx&#39;</span>)
-xm =<span class="st"> </span>xm[, Matrix<span class="op">::</span><span class="kw">colSums</span>(xm) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>]
-xn =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;~/Downloads/10x/naiveT/hg19/matrix.mtx&#39;</span>)
-xn =<span class="st"> </span>xn[, Matrix<span class="op">::</span><span class="kw">colSums</span>(xn) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>]
-xk =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&#39;~/Downloads/10x/NK/hg19/matrix.mtx&#39;</span>)
-xk =<span class="st"> </span>xk[, Matrix<span class="op">::</span><span class="kw">colSums</span>(xk) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>]
-xb =<span class="st"> </span>xb[,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>]; xm =<span class="st"> </span>xm[,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>]; xk =<span class="st"> </span>xk[,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>]; xn =<span class="st"> </span>xn[,<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>]
-genenames =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;~/Downloads/10x/B/hg19/genes.tsv&#39;</span>, <span class="dt">stringsAsFactors =</span> F)<span class="op">$</span>V2
+<div id="slsl-result" class="section level2">
+<h2>SLSL result</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## read labeled data
+X =<span class="st"> </span><span class="kw">readMM</span>(<span class="st">&quot;~/Downloads/10x/combined/hg19/matrix.mtx&quot;</span>)
+genenames =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;~/Downloads/10x/combined/hg19/genes.tsv&quot;</span>,
+                       <span class="dt">stringsAsFactors =</span> F)<span class="op">$</span>V2
+barcodes =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;~/Downloads/10x/combined/hg19/barcodes.tsv&quot;</span>,
+                      <span class="dt">stringsAsFactors =</span> F)<span class="op">$</span>V1
+truelabel =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;~/Downloads/10x/combined/hg19/truelabel.txt&quot;</span>)<span class="op">$</span>V1
 
-X =<span class="st"> </span><span class="kw">cbind</span>(xb, xm, xn, xk)
-label =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">as.factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="kw">ncol</span>(xb)),
-          <span class="kw">rep</span>(<span class="st">&quot;Monocyte&quot;</span>, <span class="kw">ncol</span>(xm)),
-          <span class="kw">rep</span>(<span class="st">&quot;NaiveT&quot;</span>, <span class="kw">ncol</span>(xn)),
-          <span class="kw">rep</span>(<span class="st">&quot;NK&quot;</span>, <span class="kw">ncol</span>(xk)))))
-<span class="kw">rm</span>(xb, xm, xn, xk)
-<span class="kw">gc</span>()</code></pre></div>
-<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-Ncells 2689777 143.7    4206551 224.7         NA  4206551 224.7
-Vcells 6391288  48.8   53827846 410.7      16384 84047351 641.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary =<span class="st"> </span><span class="kw">explore_data</span>(X, genenames)</code></pre></div>
+## reduce size
+ind =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(X), <span class="dv">2000</span>)
+X =<span class="st"> </span>X[,ind]; barcodes =<span class="st"> </span>barcodes[ind]; truelabel =<span class="st"> </span>truelabel[ind]
+<span class="kw">table</span>(truelabel)</code></pre></div>
+<pre><code>truelabel
+   1    2    3    4 
+ 249   96 1408  247 </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeMM</span>(X, <span class="st">&quot;~/Downloads/10x/combined/smallerhg19/matrix.mtx&quot;</span>)</code></pre></div>
+<pre><code>NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.table</span>(barcodes, <span class="st">&quot;~/Downloads/10x/combined/smallerhg19/barcodes.tsv&quot;</span>, <span class="dt">col.names=</span>F,<span class="dt">row.names=</span>F,<span class="dt">quote=</span>F)
+<span class="kw">write.table</span>(truelabel, <span class="st">&quot;~/Downloads/10x/combined/smallerhg19/truelabel.txt&quot;</span>, <span class="dt">col.names=</span>F,<span class="dt">row.names=</span>F,<span class="dt">quote=</span>F)
+
+summary =<span class="st"> </span><span class="kw">explore_data</span>(X, genenames)</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-1.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-1.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ind =<span class="st"> </span><span class="kw">cell_filter</span>(summary, <span class="kw">c</span>(<span class="dv">1000</span>,<span class="dv">5000</span>),
                   <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.04</span>),
                   <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>))
 X =<span class="st"> </span>X[,ind]
-label =<span class="st"> </span>label[ind]
-<span class="co"># label = as.numeric(as.factor(label))</span>
+truelabel =<span class="st"> </span>truelabel[ind]
 
 <span class="kw">library</span>(dplyr)
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
@@ -574,109 +616,321 @@ disp =<span class="st"> </span><span class="kw">plot_dispersion</span>(<span cla
                        <span class="dt">outliers.mean.thresh =</span> <span class="kw">c</span>(<span class="dv">10</span>,<span class="ot">Inf</span>),
                        <span class="dt">outliers.vmr.thresh=</span><span class="kw">c</span>(<span class="dv">2</span>, <span class="ot">Inf</span>))</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-2.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-2.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="kw">gene_filter</span>(X, genenames, disp, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">25</span>), <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="ot">Inf</span>))
 genenames =<span class="st"> </span>X<span class="op">$</span>genenames
 X =<span class="st"> </span>X<span class="op">$</span>X
-
 X =<span class="st"> </span><span class="kw">quantile_normalize</span>(X)
 
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-
-<span class="kw">plot</span>(<span class="kw">irlba</span>(X, <span class="dv">20</span>)<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(<span class="kw">unique</span>(label)))[label],
-     <span class="dt">xlab =</span> <span class="st">&quot;pc1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;pc2&quot;</span>)</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne =<span class="st"> </span><span class="kw">Rtsne</span>(<span class="kw">irlba</span>(X,<span class="dv">10</span>)<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">pca=</span>F, <span class="dt">perplexity=</span><span class="dv">30</span>)
-
-out =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">plot=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
+out =<span class="st"> </span><span class="kw">SLSL</span>(X, <span class="dt">plot=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">numClust=</span><span class="dv">4</span>)</code></pre></div>
 <pre><code>[1] &quot;constructing kernel..&quot;
 [1] &quot;optimizing..&quot;
 [1] &quot;network diffusion..&quot;
 [1] &quot;dimension reduction..&quot;</code></pre>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-3.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-3.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(out<span class="op">$</span>tsne<span class="op">$</span>Y[,<span class="dv">1</span>], out<span class="op">$</span>tsne<span class="op">$</span>Y[,<span class="dv">2</span>], <span class="dt">col=</span>truelabel,
+     <span class="dt">ylab=</span><span class="st">&quot;tsne2&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;tsne1&quot;</span>, <span class="dt">main=</span><span class="st">&quot;true labels&quot;</span>)</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">degenes =<span class="st"> </span><span class="kw">de_genes</span>(X, genenames, out<span class="op">$</span>result, <span class="dt">top.n=</span><span class="dv">100</span>, <span class="dt">plot=</span><span class="dv">6</span>)</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-5.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(degenes)</code></pre></div>
-<pre><code>  de_genes log10p
-1   S100A9    Inf
-2   S100A8    Inf
-3     GNLY    Inf
-4     GZMA    Inf
-5  HLA-DRA    Inf
-6 HLA-DRB1    Inf</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bio.markers =<span class="st"> </span><span class="kw">find_markers</span>(X, genenames, out<span class="op">$</span>result, out<span class="op">$</span>tsne<span class="op">$</span>Y, <span class="dt">top.n =</span> <span class="dv">50</span>, <span class="dt">plot.n=</span><span class="dv">3</span>)
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-4.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-4.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(truelabel, out<span class="op">$</span>result)</code></pre></div>
+<pre><code>[1] 0.9804337</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(truelabel, out<span class="op">$</span>result)</code></pre></div>
+<pre><code>         
+truelabel    1    2    3    4
+        1    0    0    0  249
+        2   92    1    3    0
+        3    2    3 1403    0
+        4    0  233    4    0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># par(mfrow=c(1,1))</span>
+<span class="co"># plot(irlba(X, 20)$v[,1:2], col=rainbow(length(unique(truelabel)))[truelabel],</span>
+<span class="co">#      xlab = &quot;pc1&quot;, ylab = &quot;pc2&quot;)</span>
+<span class="co"># tsne = Rtsne(irlba(X,10)$v[,1:10], pca=F, perplexity=50)</span>
+<span class="co"># plot(tsne$Y, col=truelabel)</span>
 
-i=<span class="dv">1</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
+<span class="co"># degenes = de_genes(X, genenames, out$result, top.n=100, plot=3)</span>
+<span class="co"># head(degenes)</span>
+
+bio.markers =<span class="st"> </span><span class="kw">find_markers</span>(X, genenames, out<span class="op">$</span>result, out<span class="op">$</span>tsne<span class="op">$</span>Y, <span class="dt">top.n =</span> <span class="dv">50</span>, <span class="dt">plot.n=</span><span class="dv">3</span>)
+bio.markers<span class="op">$</span>plots[[<span class="dv">1</span>]]</code></pre></div>
+<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-5.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-5.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-5.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bio.markers<span class="op">$</span>plots[[<span class="dv">2</span>]]</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-6.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust1_genenames clust1_log10p
-1             RPL3     165.26328
-2             RPS6     159.30385
-3              LTB     139.64251
-4            RPL10     122.48698
-5            RPL13      82.12768
-6             RPS2      66.40305</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">2</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-6.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-6.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bio.markers<span class="op">$</span>plots[[<span class="dv">3</span>]]</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust2_genenames clust2_log10p
-1            CD79B           Inf
-2            CD79A           Inf
-3         HLA-DPA1      222.8551
-4          HLA-DRA      209.3305
-5             CD74      206.5588
-6         HLA-DPB1      180.5268</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">3</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-7.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-7.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bio.markers<span class="op">$</span>plots[[<span class="dv">4</span>]]</code></pre></div>
 <p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust3_genenames clust3_log10p
-1            HOXA9     168.87212
-2           LRRC26     168.87212
-3            SMIM5     112.87565
-4             DNTT     112.75970
-5            BEND6      85.12048
-6            PRSS1      85.12048</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">4</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust4_genenames clust4_log10p
-1             GNLY           Inf
-2             GZMA           Inf
-3            CLIC3           Inf
-4             GZMB           Inf
-5             NKG7           Inf
-6           FGFBP2      267.1927</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i=<span class="dv">5</span>
-bio.markers<span class="op">$</span>plots[[i]]</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(bio.markers<span class="op">$</span>markers[[i]])</code></pre></div>
-<pre><code>  clust5_genenames clust5_log10p
-1           S100A9           Inf
-2           S100A8           Inf
-3             AIF1           Inf
-4             FCN1           Inf
-5              LYZ           Inf
-6             CST3           Inf</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(label, out<span class="op">$</span>result)</code></pre></div>
-<pre><code>[1] 0.9748502</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(label, out<span class="op">$</span>result)</code></pre></div>
-<pre><code>     
-label   1   2   3   4   5
-    1   0 500   0   0   0
-    2  16   0   4   7 410
-    3 496   0   1   2   0
-    4   1   0   0 491   0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(<span class="kw">unique</span>(out<span class="op">$</span>result)))[out<span class="op">$</span>result],
-     <span class="dt">xlab=</span><span class="st">&quot;tsne1&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;tsne2&quot;</span>,
-     <span class="dt">main=</span><span class="st">&quot;SLSL result&quot;</span>)
-<span class="kw">plot</span>(tsne<span class="op">$</span>Y, <span class="dt">col=</span><span class="kw">rainbow</span>(<span class="kw">length</span>(<span class="kw">unique</span>(label)))[label],
-     <span class="dt">xlab =</span> <span class="st">&quot;tsne1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;tsne2&quot;</span>,
-     <span class="dt">main=</span><span class="st">&quot;true label&quot;</span>)</code></pre></div>
-<p><img src="figure/10x_labeled.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /></p>
+<details> <summary><em>Expand here to see past versions of unnamed-chunk-1-8.png:</em></summary>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="https://github.com/tk382/SCNoisyClustering/blob/a603da1930d95f9f4ead8f1512ea7ba66631aa42/docs/figure/10x_labeled.Rmd/unnamed-chunk-1-8.png" target="_blank">a603da1</a>
+</td>
+<td style="text-align:left;">
+tk382
+</td>
+<td style="text-align:left;">
+2018-09-14
+</td>
+</tr>
+</tbody>
+</table>
+<p></details></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># par(mfrow = c(1,2))</span>
+<span class="co"># plot(tsne$Y, col=rainbow(length(unique(out$result)))[out$result],</span>
+<span class="co">#      xlab=&quot;tsne1&quot;, ylab=&quot;tsne2&quot;,</span>
+<span class="co">#      main=&quot;SLSL result&quot;)</span>
+<span class="co"># plot(tsne$Y, col=rainbow(length(unique(truelabel)))[truelabel],</span>
+<span class="co">#      xlab = &quot;tsne1&quot;, ylab = &quot;tsne2&quot;,</span>
+<span class="co">#      main=&quot;true label&quot;)</span></code></pre></div>
+</div>
+<div id="seurat-result" class="section level2">
+<h2>Seurat Result</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Seurat)</code></pre></div>
+<pre><code>Loading required package: ggplot2</code></pre>
+<pre><code>Loading required package: cowplot</code></pre>
+<pre><code>
+Attaching package: &#39;cowplot&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:ggplot2&#39;:
+
+    ggsave</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+pbmc.data =<span class="st"> </span><span class="kw">Read10X</span>(<span class="st">&quot;~/Downloads/10x/combined/smallerhg19&quot;</span>)
+truelabel =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;~/Downloads/10x/combined/smallerhg19/truelabel.txt&quot;</span>, <span class="dt">header=</span>F, <span class="dt">stringsAsFactors =</span> F)<span class="op">$</span>V1
+
+pbmc =<span class="st"> </span><span class="kw">CreateSeuratObject</span>(<span class="dt">raw.data =</span> pbmc.data, <span class="dt">min.cells =</span> <span class="dv">3</span>, <span class="dt">min.genes =</span> <span class="dv">200</span>, <span class="dt">project =</span> <span class="st">&quot;10X_PBMC&quot;</span>)
+mito.genes =<span class="st"> </span><span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;^MT-&quot;</span>, <span class="dt">x =</span> <span class="kw">rownames</span>(<span class="dt">x =</span> pbmc<span class="op">@</span>data), <span class="dt">value =</span> <span class="ot">TRUE</span>)
+percent.mito =<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">colSums</span>(pbmc<span class="op">@</span>raw.data[mito.genes, ])<span class="op">/</span>Matrix<span class="op">::</span><span class="kw">colSums</span>(pbmc<span class="op">@</span>raw.data)
+pbmc =<span class="st"> </span><span class="kw">AddMetaData</span>(<span class="dt">object =</span> pbmc, <span class="dt">metadata =</span> percent.mito, <span class="dt">col.name =</span> <span class="st">&quot;percent.mito&quot;</span>)
+<span class="kw">VlnPlot</span>(<span class="dt">object =</span> pbmc, <span class="dt">features.plot =</span> <span class="kw">c</span>(<span class="st">&quot;nGene&quot;</span>, <span class="st">&quot;nUMI&quot;</span>, <span class="st">&quot;percent.mito&quot;</span>), <span class="dt">nCol =</span> <span class="dv">3</span>)</code></pre></div>
+<p><img src="figure/10x_labeled.Rmd/seurat-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">GenePlot</span>(<span class="dt">object =</span> pbmc, <span class="dt">gene1 =</span> <span class="st">&quot;nUMI&quot;</span>, <span class="dt">gene2 =</span> <span class="st">&quot;percent.mito&quot;</span>)
+<span class="kw">GenePlot</span>(<span class="dt">object =</span> pbmc, <span class="dt">gene1 =</span> <span class="st">&quot;nUMI&quot;</span>, <span class="dt">gene2 =</span> <span class="st">&quot;nGene&quot;</span>)</code></pre></div>
+<p><img src="figure/10x_labeled.Rmd/seurat-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbmc &lt;-<span class="st"> </span><span class="kw">FilterCells</span>(<span class="dt">object =</span> pbmc, <span class="dt">subset.names =</span> <span class="kw">c</span>(<span class="st">&quot;nGene&quot;</span>, <span class="st">&quot;percent.mito&quot;</span>), 
+    <span class="dt">low.thresholds =</span> <span class="kw">c</span>(<span class="dv">200</span>, <span class="op">-</span><span class="ot">Inf</span>), <span class="dt">high.thresholds =</span> <span class="kw">c</span>(<span class="dv">2500</span>, <span class="fl">0.05</span>))
+
+ind =<span class="st"> </span><span class="kw">which</span>(<span class="op">!</span><span class="kw">colnames</span>(pbmc<span class="op">@</span>raw.data) <span class="op">%in%</span><span class="st"> </span><span class="kw">colnames</span>(pbmc<span class="op">@</span>data))
+<span class="cf">if</span>(<span class="kw">length</span>(ind)<span class="op">&gt;</span><span class="dv">0</span>){truelabel =<span class="st"> </span>truelabel[<span class="op">-</span>ind]}
+pbmc &lt;-<span class="st"> </span><span class="kw">NormalizeData</span>(<span class="dt">object =</span> pbmc, <span class="dt">normalization.method =</span> <span class="st">&quot;LogNormalize&quot;</span>, 
+    <span class="dt">scale.factor =</span> <span class="dv">10000</span>)
+pbmc &lt;-<span class="st"> </span><span class="kw">FindVariableGenes</span>(<span class="dt">object =</span> pbmc, <span class="dt">mean.function =</span> ExpMean, <span class="dt">dispersion.function =</span> LogVMR, <span class="dt">x.low.cutoff =</span> <span class="fl">0.0125</span>, <span class="dt">x.high.cutoff =</span> <span class="dv">3</span>, <span class="dt">y.cutoff =</span> <span class="fl">0.5</span>)
+<span class="kw">length</span>(<span class="dt">x =</span> pbmc<span class="op">@</span>var.genes)</code></pre></div>
+<pre><code>[1] 2290</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbmc =<span class="st"> </span><span class="kw">ScaleData</span>(<span class="dt">object =</span> pbmc, <span class="dt">vars.to.regress =</span> <span class="kw">c</span>(<span class="st">&quot;nUMI&quot;</span>, <span class="st">&quot;percent.mito&quot;</span>))</code></pre></div>
+<pre><code>Regressing out: nUMI, percent.mito</code></pre>
+<pre><code>
+Time Elapsed:  7.07855296134949 secs</code></pre>
+<pre><code>Scaling data matrix</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbmc =<span class="st"> </span><span class="kw">RunPCA</span>(<span class="dt">object =</span> pbmc, <span class="dt">pc.genes =</span> pbmc<span class="op">@</span>var.genes, <span class="dt">do.print =</span> <span class="ot">FALSE</span>, <span class="dt">pcs.print =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">genes.print =</span> <span class="dv">5</span>)
+pbmc =<span class="st"> </span><span class="kw">FindClusters</span>(<span class="dt">object =</span> pbmc, <span class="dt">reduction.type =</span> <span class="st">&quot;pca&quot;</span>, <span class="dt">dims.use =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, 
+    <span class="dt">resolution =</span> <span class="fl">0.6</span>, <span class="dt">print.output =</span> <span class="dv">0</span>, <span class="dt">save.SNN =</span> <span class="ot">TRUE</span>)
+pbmc =<span class="st"> </span><span class="kw">RunTSNE</span>(<span class="dt">object =</span> pbmc, <span class="dt">dims.use =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">do.fast =</span> <span class="ot">TRUE</span>)
+<span class="kw">TSNEPlot</span>(<span class="dt">object =</span> pbmc)
+<span class="kw">table</span>(pbmc<span class="op">@</span>ident, truelabel)</code></pre></div>
+<pre><code>   truelabel
+      1   2   3   4
+  0   0   4 986   1
+  1   0   0 421   3
+  2 249   0   0   0
+  3   0   0   1 243
+  4   0  92   0   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adj.rand.index</span>(<span class="kw">as.numeric</span>(pbmc<span class="op">@</span>ident), truelabel)</code></pre></div>
+<pre><code>[1] 0.5838871</code></pre>
+<p><img src="figure/10x_labeled.Rmd/seurat-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
@@ -695,56 +949,85 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] bindrcpp_0.2.2          Rtsne_0.13             
- [3] dplyr_0.7.6             fossil_0.3.7           
- [5] shapefiles_0.7          foreign_0.8-71         
- [7] maps_3.3.0              sp_1.3-1               
- [9] SCNoisyClustering_0.1.0 irlba_2.3.2            
-[11] Matrix_1.2-14          
+ [1] Seurat_2.3.4            cowplot_0.9.3          
+ [3] ggplot2_3.0.0           bindrcpp_0.2.2         
+ [5] Rtsne_0.13              dplyr_0.7.6            
+ [7] fossil_0.3.7            shapefiles_0.7         
+ [9] foreign_0.8-71          maps_3.3.0             
+[11] sp_1.3-1                SCNoisyClustering_0.1.0
+[13] irlba_2.3.2             Matrix_1.2-14          
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-137              matrixStats_0.54.0       
- [3] lubridate_1.7.4           dimRed_0.1.0             
- [5] rprojroot_1.3-2           tools_3.5.1              
- [7] backports_1.1.2           R6_2.2.2                 
- [9] rpart_4.1-13              lazyeval_0.2.1           
-[11] colorspace_1.3-2          nnet_7.3-12              
-[13] withr_2.1.2               tidyselect_0.2.4         
-[15] compiler_3.5.1            git2r_0.23.0             
-[17] labeling_0.3              scales_0.5.0             
-[19] sfsmisc_1.1-2             DEoptimR_1.0-8           
-[21] robustbase_0.93-2         stringr_1.3.1            
-[23] digest_0.6.15             rmarkdown_1.10           
-[25] R.utils_2.6.0             pkgconfig_2.0.1          
-[27] htmltools_0.3.6           rlang_0.2.1              
-[29] ddalpha_1.3.4             bindr_0.1.1              
-[31] ModelMetrics_1.1.0        R.oo_1.22.0              
-[33] inline_0.3.15             magrittr_1.5             
-[35] Rcpp_0.12.18              munsell_0.5.0            
-[37] abind_1.4-5               R.methodsS3_1.7.1        
-[39] stringi_1.2.4             whisker_0.3-2            
-[41] yaml_2.2.0                MASS_7.3-50              
-[43] plyr_1.8.4                recipes_0.1.3            
-[45] grid_3.5.1                pls_2.6-0                
-[47] crayon_1.3.4              lattice_0.20-35          
-[49] splines_3.5.1             knitr_1.20               
-[51] pillar_1.3.0              reshape2_1.4.3           
-[53] codetools_0.2-15          stats4_3.5.1             
-[55] CVST_0.2-2                magic_1.5-8              
-[57] glue_1.3.0                evaluate_0.11            
-[59] RcppArmadillo_0.8.600.0.0 data.table_1.11.4        
-[61] foreach_1.4.4             gtable_0.2.0             
-[63] purrr_0.2.5               tidyr_0.8.1              
-[65] reshape_0.8.7             kernlab_0.9-26           
-[67] assertthat_0.2.0          ggplot2_3.0.0            
-[69] DRR_0.0.3                 gower_0.1.2              
-[71] prodlim_2018.04.18        broom_0.5.0              
-[73] pracma_2.1.4              class_7.3-14             
-[75] survival_2.42-6           geometry_0.3-6           
-[77] timeDate_3043.102         RcppRoll_0.3.0           
-[79] tibble_1.4.2              iterators_1.0.10         
-[81] workflowr_1.1.1           lava_1.6.2               
-[83] caret_6.0-80              ipred_0.9-6              </code></pre>
+  [1] snow_0.4-2                backports_1.1.2          
+  [3] Hmisc_4.1-1               workflowr_1.1.1          
+  [5] igraph_1.2.2              plyr_1.8.4               
+  [7] lazyeval_0.2.1            splines_3.5.1            
+  [9] inline_0.3.15             digest_0.6.15            
+ [11] foreach_1.4.4             htmltools_0.3.6          
+ [13] lars_1.2                  gdata_2.18.0             
+ [15] magrittr_1.5              checkmate_1.8.5          
+ [17] cluster_2.0.7-1           mixtools_1.1.0           
+ [19] ROCR_1.0-7                sfsmisc_1.1-2            
+ [21] recipes_0.1.3             gower_0.1.2              
+ [23] dimRed_0.1.0              matrixStats_0.54.0       
+ [25] R.utils_2.6.0             colorspace_1.3-2         
+ [27] jsonlite_1.5              crayon_1.3.4             
+ [29] RcppArmadillo_0.8.600.0.0 bindr_0.1.1              
+ [31] zoo_1.8-3                 survival_2.42-6          
+ [33] iterators_1.0.10          ape_5.1                  
+ [35] glue_1.3.0                DRR_0.0.3                
+ [37] gtable_0.2.0              ipred_0.9-6              
+ [39] kernlab_0.9-26            ddalpha_1.3.4            
+ [41] prabclus_2.2-6            DEoptimR_1.0-8           
+ [43] abind_1.4-5               scales_0.5.0             
+ [45] mvtnorm_1.0-8             bibtex_0.4.2             
+ [47] Rcpp_0.12.18              metap_1.0                
+ [49] dtw_1.20-1                htmlTable_1.12           
+ [51] magic_1.5-8               reticulate_1.10          
+ [53] bit_1.1-14                proxy_0.4-22             
+ [55] mclust_5.4.1              SDMTools_1.1-221         
+ [57] Formula_1.2-3             tsne_0.1-3               
+ [59] stats4_3.5.1              lava_1.6.2               
+ [61] prodlim_2018.04.18        httr_1.3.1               
+ [63] htmlwidgets_1.2           gplots_3.0.1             
+ [65] RColorBrewer_1.1-2        fpc_2.1-11.1             
+ [67] acepack_1.4.1             modeltools_0.2-22        
+ [69] ica_1.0-2                 pkgconfig_2.0.1          
+ [71] reshape_0.8.7             R.methodsS3_1.7.1        
+ [73] flexmix_2.3-14            nnet_7.3-12              
+ [75] caret_6.0-80              tidyselect_0.2.4         
+ [77] labeling_0.3              rlang_0.2.1              
+ [79] reshape2_1.4.3            munsell_0.5.0            
+ [81] tools_3.5.1               pls_2.6-0                
+ [83] broom_0.5.0               ggridges_0.5.0           
+ [85] evaluate_0.11             geometry_0.3-6           
+ [87] stringr_1.3.1             yaml_2.2.0               
+ [89] bit64_0.9-7               ModelMetrics_1.1.0       
+ [91] knitr_1.20                fitdistrplus_1.0-9       
+ [93] robustbase_0.93-2         caTools_1.17.1.1         
+ [95] purrr_0.2.5               RANN_2.6                 
+ [97] pbapply_1.3-4             nlme_3.1-137             
+ [99] whisker_0.3-2             R.oo_1.22.0              
+[101] RcppRoll_0.3.0            pracma_2.1.4             
+[103] hdf5r_1.0.0               compiler_3.5.1           
+[105] rstudioapi_0.7            png_0.1-7                
+[107] tibble_1.4.2              stringi_1.2.4            
+[109] lattice_0.20-35           trimcluster_0.1-2.1      
+[111] pillar_1.3.0              lmtest_0.9-36            
+[113] Rdpack_0.9-0              data.table_1.11.4        
+[115] bitops_1.0-6              gbRd_0.4-11              
+[117] R6_2.2.2                  latticeExtra_0.6-28      
+[119] KernSmooth_2.23-15        gridExtra_2.3            
+[121] codetools_0.2-15          MASS_7.3-50              
+[123] gtools_3.8.1              assertthat_0.2.0         
+[125] CVST_0.2-2                rprojroot_1.3-2          
+[127] withr_2.1.2               diptest_0.75-7           
+[129] parallel_3.5.1            doSNOW_1.0.16            
+[131] grid_3.5.1                rpart_4.1-13             
+[133] timeDate_3043.102         tidyr_0.8.1              
+[135] class_7.3-14              rmarkdown_1.10           
+[137] segmented_0.5-3.0         git2r_0.23.0             
+[139] lubridate_1.7.4           base64enc_0.1-3          </code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using

@@ -3,7 +3,7 @@
 #' @param X log-transformed expression level matrix with cells at columns, genes at rows
 #' @param genenames : gene names for each row of X
 #' @export
-explore_data = function(X, genenames){
+explore_data = function(X, genenames, plot = TRUE){
   nUMI = Matrix::colSums(X)
   nGene = Matrix::colSums(X>0)
   det.rate = nGene / nrow(X)
@@ -12,10 +12,12 @@ explore_data = function(X, genenames){
   if(length(mito.genes)>0){
     percent.mito = Matrix::colSums(X[mito.genes,]) / nUMI
   }
-  par(mfrow = c(1, 3))
-  plot(nUMI ~ det.rate, xlab="detection rate", ylab="nUMI", main="nUMI and detection rate")
-  boxplot(det.rate, main = "detection rate")
-  boxplot(percent.mito, main = "proportion of mito-genes")
+  if(plot){
+    par(mfrow = c(1, 3))
+    plot(nUMI ~ det.rate, xlab="detection rate", ylab="nUMI", main="nUMI and detection rate")
+    boxplot(det.rate, main = "detection rate")
+    boxplot(percent.mito, main = "proportion of mito-genes")
+  }
   summary = data.frame(nUMI = nUMI, det.rate = det.rate, percent.mito = percent.mito)
   par(mfrow=c(1,1))
   return(summary)
