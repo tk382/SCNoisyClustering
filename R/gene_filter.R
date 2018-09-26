@@ -11,8 +11,6 @@ gene_filter = function(X, genenames, dispersion, mean.thresh, dispersion.thresh)
           dispersion$genemeans < mean.thresh[2] &
           dispersion$vmr > dispersion.thresh[1] &
           dispersion$vmr < dispersion.thresh[2])
-  X = X[ind, ]
-  genenames = genenames[ind]
-  return(list(X=X, genenames=genenames))
+  return(ind)
 }
 

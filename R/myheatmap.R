@@ -1,4 +1,3 @@
-#' @export
 myheatmap = function(mat, min, max, title){
 
   palette.gr.marray <- colorRampPalette(c("darkblue", "blue", "white", "red", "brown"))(30)

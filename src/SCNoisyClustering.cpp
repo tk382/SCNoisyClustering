@@ -15,20 +15,6 @@ arma::sp_mat sparse_sum(Rcpp::List P, int length){
   return out;
 }
 
-// // [[Rcpp::export]]
-// arma::mat dist_c(arma::mat X){
-//   int n = X.n_rows;
-//   arma::mat out = arma::zeros<arma::mat>(n,n);
-//   for (int i=0; i<(n-1); ++i){
-//     for (int j=(i+1); j<n; ++j){
-//       arma::rowvec diff = X.row(i) - X.row(j);
-//       out(i,j) = sqrt(accu(diff%diff));
-//       out(j,i) = out(i,j);
-//     }
-//   }
-//   return out;
-// }
-
 //' @export
 // [[Rcpp::export]]
 arma::vec QminusPslice(arma::sp_mat Q,
@@ -119,11 +105,6 @@ arma::sp_mat get_kernel_matrix(arma::mat X,
   arma::mat Sig = arma::zeros<arma::mat>(N,N);
   Sig.each_col() = TT.col(0);
   Sig = (Sig + Sig.t())/2;
-  // Sig.elem(find(Sig < arma::datum::eps)).zeros();
-  // Sig = Sig + arma::datum::eps;
-  // arma::mat Sig_valid = arma::zeros<arma::mat>(N,N);
-  // Sig_valid.elem(find(Sig > arma::datum::eps)).ones();
-  // Sig = Sig % Sig_valid + arma::datum::eps;
   arma::mat W = (normpdf(Diff, arma::zeros<arma::mat>(N,N), sigma*Sig));
   arma::mat K = (W + W.t())/2;
   arma::vec dinv = 1/sqrt(K.diag()+1);
@@ -251,76 +232,77 @@ Rcpp::List sparse_scaledlasso_list_c(Rcpp::List P,
     // Rcpp::Named("noise") = noise
   );
 }
-//' @export
-// [[Rcpp::export]]
-arma::mat tsne_c(arma::mat X,
-                 arma::mat initial_config,
-                 int k,
-                 int max_iter=1000,
-                 double min_cost = 1e-3,
-                 int epoch = 100){
-
-  double momentum = 0.8;  //double final_momentum = 0.8;
-  double epsilon = 500;   //double mom_switch_iter = 250;
-  double min_gain = 0.01; double initial_P_gain = 4;
-  double eps = arma::datum::eps;
-  arma::vec gaincheck = arma::zeros<arma::vec>(1000);
-  arma::mat ydata = initial_config;
-  initial_P_gain = 1;
-
-  arma::mat P = (X + X.t())/2;
-  P.elem(find(P<eps)).fill(eps);
-  P = P / accu(P);
-  P = P*initial_P_gain;
-  arma::mat grads = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
-  arma::mat incs = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
-  arma::mat gains = arma::ones<arma::mat>(ydata.n_rows, ydata.n_cols);
-  arma::mat Q; arma::mat stiffness;
-  arma::vec costs = arma::zeros<arma::vec>(max_iter);
-  arma::mat ydata_old = ydata;
-  for (int niter = 0; niter < max_iter; niter++){
-
-    arma::vec sum_ydata = sum(ydata%ydata, 1);
-    arma::mat tmp1 = -2 * ydata * ydata.t();
-    arma::mat tmp2 = tmp1;
-    for (int i=0; i < tmp2.n_cols; ++i){
-      tmp2.row(i) = tmp2.row(i) + sum_ydata.t();
-    }
-    arma::mat tmp3 = tmp2;
-    for (int i=0; i < tmp3.n_cols; ++i){
-      tmp3.col(i) = tmp3.col(i) + sum_ydata + arma::ones<arma::vec>(sum_ydata.size());
-    }
-    arma::mat num = 1/(tmp3);
-    num.diag().fill(0);
-    Q = num/accu(num);
-    Q.elem(find(Q<eps)).fill(eps);
-    arma::mat stiffness = (P-Q) % num;
-    grads = 4 * (diagmat(sum(stiffness, 0)) - stiffness) * ydata;
-    gains = (gains + 0.2) % abs(sign(grads) != sign(incs)) +
-      gains*0.8 % abs(sign(grads) == sign(incs));
-    gains.elem(find(gains < min_gain)).fill(min_gain);
-
-    incs = momentum*incs - epsilon*(gains%grads);
-    ydata = ydata + incs;
-    for (int i=0; i < ydata.n_cols; ++i){
-      arma::vec tmpy = ydata.col(i);
-      tmpy = tmpy - mean(tmpy);
-      ydata.col(i) = tmpy;
-    }
-    ydata.elem(find(ydata<-100)).fill(-100);
-    ydata.elem(find(ydata>100)).fill(100);
-
-    //convergence criterion
-    if(niter % epoch == 99){
-      double cost = norm(ydata-ydata_old, "fro") / (ydata.n_rows * ydata.n_cols);
-      if(cost < min_cost){
-        break;
-      }
-    }
-    ydata_old = ydata;
-  }
-  return ydata;
-}
+// //' @export
+// // [[Rcpp::export]]
+// arma::mat tsne_c(arma::mat X,
+//                  arma::mat initial_config,
+//                  int k,
+//                  int max_iter=1000,
+//                  double min_cost = 1e-3,
+//                  int epoch = 100){
+//
+//   double momentum = 0.8;  //double final_momentum = 0.8;
+//   double epsilon = 500;   //double mom_switch_iter = 250;
+//   double min_gain = 0.01; double initial_P_gain = 4;
+//   double eps = arma::datum::eps;
+//   arma::vec gaincheck = arma::zeros<arma::vec>(1000);
+//   arma::mat ydata = initial_config;
+//   initial_P_gain = 1;
+//
+//   arma::mat P = (X + X.t())/2;
+//   P.elem(find(P<eps)).fill(eps);
+//   P = P / accu(P);
+//   P = P*initial_P_gain;
+//   arma::mat grads = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
+//   arma::mat incs = arma::zeros<arma::mat>(ydata.n_rows, ydata.n_cols);
+//   arma::mat gains = arma::ones<arma::mat>(ydata.n_rows, ydata.n_cols);
+//   arma::mat Q; arma::mat stiffness;
+//   arma::vec costs = arma::zeros<arma::vec>(max_iter);
+//   arma::mat ydata_old = ydata;
+//   for (int niter = 0; niter < max_iter; niter++){
+//
+//     arma::vec sum_ydata = sum(ydata%ydata, 1);
+//     arma::mat tmp1 = -2 * ydata * ydata.t();
+//     arma::mat tmp2 = tmp1;
+//     for (int i=0; i < tmp2.n_cols; ++i){
+//       tmp2.row(i) = tmp2.row(i) + sum_ydata.t();
+//     }
+//     arma::mat tmp3 = tmp2;
+//     for (int i=0; i < tmp3.n_cols; ++i){
+//       tmp3.col(i) = tmp3.col(i) + sum_ydata + arma::ones<arma::vec>(sum_ydata.size());
+//     }
+//     arma::mat num = 1/(tmp3);
+//     num.diag().fill(0);
+//     Q = num/accu(num);
+//     Q.elem(find(Q<eps)).fill(eps);
+//     arma::mat stiffness = (P-Q) % num;
+//     grads = 4 * (diagmat(sum(stiffness, 0)) - stiffness) * ydata;
+//     gains = (gains + 0.2) % abs(sign(grads) != sign(incs)) +
+//       gains*0.8 % abs(sign(grads) == sign(incs));
+//     gains.elem(find(gains < min_gain)).fill(min_gain);
+//
+//     incs = momentum*incs - epsilon*(gains%grads);
+//     ydata = ydata + incs;
+//     for (int i=0; i < ydata.n_cols; ++i){
+//       arma::vec tmpy = ydata.col(i);
+//       tmpy = tmpy - mean(tmpy);
+//       ydata.col(i) = tmpy;
+//     }
+//     ydata.elem(find(ydata<-100)).fill(-100);
+//     ydata.elem(find(ydata>100)).fill(100);
+//
+//     //convergence criterion
+//     if(niter % epoch == 99){
+//       double cost = norm(ydata-ydata_old, "fro") / (ydata.n_rows * ydata.n_cols);
+//       if(cost < min_cost){
+//         break;
+//       }
+//     }
+//     ydata_old = ydata;
+//   }
+//   return ydata;
+// }
+//
 
 // // [[Rcpp::export]]
 // arma::vec tsne_spectral_c(arma::mat A, int numClust, int numEigen = 0){

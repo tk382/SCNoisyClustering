@@ -27,19 +27,14 @@
 #'
 #' @export
 LSLSL = function(X,
-                 seed = NA,
+                 plot = TRUE,
                  numClust = NA,
+                 seed = NA,
                  core = NA,
                  shuffle=TRUE,
-                 cluster_method = "CSPA",
-                 k=NA,
-                 log = T,
-                 filter = T,
-                 filter_p1 = 0.9,
-                 filter_p2 = 0,
-                 correct_detection_rate = F,
-                 kernel_type = "combined",
-                 klist = seq(15,25,by=5),
+                 cluster_method = c("CSPA", "LCE", "majority_voting"),
+                 kernel_type = c("pearson", "spearman", "euclidean", "combined"),
+                 klist = NA,
                  sigmalist=seq(1,2,by=0.5),
                  tau = 5,
                  gamma = 0,
@@ -50,37 +45,14 @@ LSLSL = function(X,
 
   if(is.na(seed)){set.seed(sample(1:1000))}
 
-  if(!kernel_type %in% c("pearson","euclidean","spearman","combined")){
-    stop("kernel_type must be one of 'pearson','euclidean','spearman', or,'combined'")
-  }
-  if(is.na(k)){
-    k = max(10,ncol(X)/20)
+  if(length(klist)==1 & is.na(klist[1])){
+    tmp = max((ncol(X)/10), 10)
+    klist = c(round(tmp/3), round(tmp/2), round(tmp), round(tmp*3/2), round(tmp*2))
   }
 
   if(!is.matrix(X)){
     X = as.matrix(X)
   }
-
-  # start measuring time
-  t1 = Sys.time()
-
-  # Filter the genes
-  if(filter){
-    X = genefilter(X, filter_p1, filter_p2)
-  }
-
-  t2 = Sys.time()    #t2 - t1 : gene filtering
-
-  if(log){X = log(X+1)}
-
-  if(correct_detection_rate & kernel_type %in% c('euclidean','combined')){
-    det = colSums(X!=0) / nrow(X)
-    det2 = qr(det)
-    X = t(qr.resid(det2, t(X)))
-    X = scale(X)
-  }
-
-  X = t(scale(t(X)))
 
   #shuffle the data (so that labels are mixed up)
   if(shuffle){

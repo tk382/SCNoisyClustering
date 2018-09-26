@@ -10,14 +10,11 @@
 #' @export
 plot_dispersion = function(X,
                            genenames,
-                           bins=NA, median = FALSE,
+                           bins=10, median = TRUE,
                            outliers.mean.thresh = c(30,Inf),
-                           outliers.vmr.thresh = c(3,Inf)){
+                           outliers.vmr.thresh = c(5,Inf)){
   if(sum(X<0) > 0){
     warning("The input matrix X should be count without log-transformation")
-  }
-  if(is.na(bins)){
-    bins=10
   }
   genemeans  = Matrix::rowMeans(X)
   genevars   = apply(X, 1, var)
@@ -48,16 +45,22 @@ plot_dispersion = function(X,
                      newdf$vmr < outliers.vmr.thresh[2]) |
                      (newdf$genemeans > outliers.mean.thresh[1] &
                      newdf$genemeans < outliers.mean.thresh[2]))
-  plot(newdf$vmr[-outliers] ~ newdf$genemeans[-outliers],
+  if(length(outliers)>0){
+    plot(newdf$vmr[-outliers] ~ newdf$genemeans[-outliers],
        ylab="log(vmr)",
        xlab="",
        main="log of normalized dispersion",
-       ylim = c(min(newdf$vmr), max(newdf$vmr)),
-       xlim = c(min(newdf$genemeans), max(newdf$genemeans)),
+       ylim = c(min(newdf$vmr, na.rm=T), max(newdf$vmr, na.rm=T)),
+       xlim = c(min(newdf$genemeans, na.rm=T), max(newdf$genemeans, na.rm=T)),
        cex = 0.5)
-  text(newdf$vmr[outliers] ~ newdf$genemeans[outliers],
-       labels = genenames[outliers],
-       cex=0.7)
+    text(newdf$vmr[outliers] ~ newdf$genemeans[outliers],
+         labels = genenames[outliers],
+         cex=0.7)
+  }else{
+    plot(newdf$vmr ~ newdf$genemeans,
+         ylab="log(vmr)", xlab="", main="log of normalized dispersion")
+  }
+
   return(newdf)
 }
 
